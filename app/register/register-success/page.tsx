@@ -1,6 +1,5 @@
 import React from 'react'
 import Image from "next/image";
-import Link from "next/link";
 
 const SuccessRegistration = () => {
     return (
@@ -12,11 +11,6 @@ const SuccessRegistration = () => {
                         <div className="text-lg mx-2 font-bold">Registration successful</div>
                         <div className="text-lg mx-2">Your account has been created successfully.</div>
                         <div className="text-lg mx-2">Please check your email for verification.</div>
-                        <Link href="/">
-                            <button className="rounded-lg bg-[#10B981] text-white h-[50px] px-20 hover:cursor-pointer hover:bg-green-200">
-                                Continue to Dashboard
-                            </button>
-                        </Link>
                     </div>
                 </div>
             </div>
