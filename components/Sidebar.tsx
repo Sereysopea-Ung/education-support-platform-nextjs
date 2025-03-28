@@ -8,16 +8,16 @@ const Sidebar = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     return(
         <div className="grid grid-cols-12 flex-col">
-            <div className="hidden md: border-2 border-[#E5E7EB] col-span-2 w-full mt-16 h-dvh">
-                <div className="flex w-full gap-3 mt-5 pl-3 items-center justify-between h-auto">
-                    <div className="rounded-4xl border-[#E5E7EB] border-1 min-w-[40px] min-h-[40px]"> </div>
+            <div className="hidden md:grid col-span-2 border-2 border-[#E5E7EB] w-full h-auto items-start ">
+                <div className="flex w-full gap-3 mt-20 pl-3 items-center justify-between max-h-[100px]">
+                    <div className="flex rounded-4xl border-[#E5E7EB] border-1 min-w-[40px] min-h-[40px]"> </div>
                     <div className="flex flex-col w-full">
                         <div className="lg:text-xl md:text-lg sm:text-md text-sm w-full">Name</div>
-                        <div className="lg:text-lg md:text-md sm:text-sm text-3xs w-full">Computer Science</div>
-                        <div className="lg:text-lg md:text-md sm:text-sm text-3xs">• Year 3</div>
+                        <div className="lg:text-md md:text-sm sm:text-3xs text-2xs w-full">Computer Science</div>
+                        <div className="lg:text-md md:text-sm sm:text-3xs text-2xs">• Year 3</div>
                     </div>
                 </div>
-                <div className="flex flex-col w-full">
+                <div className="flex flex-col w-full mb-100">
                     <Link href="/" className="py-3 flex items-center gap-3 p-1 lg:px-2 transition cursor-pointer hover:text-white w-full bg-transparent hover:bg-blue-600 duration-300">
                         <Image src="/home.svg" alt="home" width={32} height={32} className="min-w-[16px] min-h-[16px] max-w-[32px] max-h-[32px] pb-1"/>
                         <h1 className="lg:text-xl md:text-lg sm:text-md text-sm">Home</h1>
@@ -36,7 +36,7 @@ const Sidebar = () => {
                 <button className="rounded-4xl border-[#E5E7EB] border-1 min-w-[40px] min-h-[40px] z-5" onClick={() => setMenuOpen(!menuOpen)}> </button>
             </div>
             {menuOpen && (
-                <div className="absolute top-16 left-0 w-full bg-white flex flex-col items-center shadow-lg md:hidden transition-all duration-300 z-10">
+                <div className="absolute top-16 left-0 w-full bg-white flex flex-col items-center shadow-lg md:hidden transition-all duration-300 z-50">
                     <div className="flex w-full gap-3 mt-5 pl-3 items-center justify-between h-auto">
                         <div className="rounded-4xl border-[#E5E7EB] border-1 min-w-[40px] min-h-[40px]"> </div>
                         <div className="flex flex-col w-full">

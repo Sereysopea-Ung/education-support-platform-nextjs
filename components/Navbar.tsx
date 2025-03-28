@@ -42,7 +42,7 @@ const Navbar = () => {
 
 
                 {/* Desktop Menu */}
-                <div className="hidden md:flex items-center justify-between text-black lg:text-xl md:text-3xs">
+                <div className="hidden md:flex items-center justify-between text-black lg:text-xl text-2xs">
                     {session?.user?.name ? (
                         <Link href="/" className="group relative p-1 lg:px-2  transition cursor-pointer">
                             <span className="z-10">Newsfeed</span>
@@ -80,12 +80,6 @@ const Navbar = () => {
                     </Link>
                 </div>
 
-
-                {/* Mobile Menu Button */}
-                <button className="md:hidden absolute top-20 left-4 rounded-lg flex items-center justify-center w-8 h-8 gap-2 text-black text-2xl bg-gray-300 cursor-pointer hover:bg-white py-2 transition z-5" onClick={() => setMenuOpen(!menuOpen)}>
-                    ☰
-                </button>
-
                 {/* Mobile Menu Dropdown */}
                 {menuOpen && (
                     <div className="absolute top-16 left-0 w-full bg-white flex text-center flex-col items-center shadow-lg md:hidden transition-all duration-300 z-10">
@@ -99,14 +93,11 @@ const Navbar = () => {
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">News</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Jobs</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Scholarships</Link>
-                        <button className="absolute top-4 left-4 rounded-lg flex items-center justify-center w-8 h-8 gap-2 text-black text-2xl bg-gray-300 cursor-pointer hover:bg-white py-2 transition" onClick={() => setMenuOpen(false)}>
-                            x
-                        </button>
                     </div>
                 )}
 
                 {/* Search Bar */}
-                <button className="flex border border-black rounded-4xl h-[30px] max-w-[250px] w-full items-center justify-left px-2 gap-2 mx-2">
+                <button className="flex border border-black rounded-4xl h-[30px] max-w-[250px] md:w-40 w-full lg:w-full items-center justify-left px-2 gap-2 mx-2">
                     <Image src="/Search.svg" alt="Search" width={8} height={8} className="max-w-[16px] max-h-[16px] w-full h-full" />
                     <input
                         type="text"
@@ -115,21 +106,33 @@ const Navbar = () => {
                     />
                 </button>
 
+                {/* Mobile Menu Button */}
+                <button className="md:hidden rounded-lg flex items-center justify-center px-1 gap-2 text-black text-2xl transition z-5 hover:cursor-pointer hover:bg-gray-200" onClick={() => setMenuOpen(!menuOpen)}>
+                    ☰
+                </button>
+
                 {/* Auth Buttons */}
                 {session?.user?.name ? (
                     <div>
-                        <button className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-2">
-                            Post a Query
+                        <button className="border bg-blue-600 text-white px-6 py-1 rounded-4xl hover:bg-blue-700 transition cursor-pointer text-nowrap" onClick={doLogout}>
+                            Log out
+                        </button>
+                        <button className="border bg-blue-600 text-white px-6 py-1 rounded-4xl hover:bg-blue-700 transition cursor-pointer text-nowrap">
+                            + Post
                         </button>
                     </div>
                 ) : (
-                    <div className="flex gap-4">
-                        <button className="hidden lg:flex bg-blue-600 text-white px-6 py-1 rounded-4xl hover:bg-blue-700 transition text-nowrap cursor-pointer">
-                            Sign Up
-                        </button>
-                        <button className="border border-blue-600 text-gray-600 px-6 py-1 rounded-4xl hover:bg-blue-600 hover:text-white transition cursor-pointer text-nowrap">
-                            Login
-                        </button>
+                    <div className="flex lg:gap-4">
+                        <Link href="/register">
+                            <button className="hidden lg:flex bg-blue-600 text-white px-6 py-1 rounded-4xl hover:bg-blue-700 transition text-nowrap cursor-pointer">
+                                Sign Up
+                            </button>
+                        </Link>
+                        <Link href="/login">
+                            <button className="border border-blue-600 text-gray-600 px-6 py-1 rounded-4xl hover:bg-blue-600 hover:text-white transition cursor-pointer text-nowrap">
+                                Login
+                            </button>
+                        </Link>
                     </div>
                 )}
             </nav>

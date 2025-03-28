@@ -1,9 +1,9 @@
-'use client'
+"use client";
 
 import { doCredentialLogin } from '@/pages/api/auth/loginAndLogout';
 import { useRouter } from 'next/navigation';
-import { SignInResponse } from "next-auth/react";
-import React from "react"; // Import the correct type
+import React from "react";
+import Link from "next/link"; // Import the correct type
 
 export default function LoginForm() {
     const router = useRouter();
@@ -31,14 +31,37 @@ export default function LoginForm() {
     }
 
     return (
-        <div>
-            <form onSubmit={handleFormSubmit}>
-                <label htmlFor="email">Email:</label>
-                <input type="email" name="email" id="email" required />
-                <label htmlFor="password">Password:</label>
-                <input type="password" name="password" id="password" required />
-                <button type="submit">Login</button>
-            </form>
+        <div className="flex justify-center items-center h-screen bg-gray-100">
+            <div className="border border-gray-300 rounded-lg p-6 w-96 shadow-lg bg-white">
+                <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
+                <form onSubmit={handleFormSubmit} className="flex flex-col space-y-4">
+                    <label htmlFor="email" className="text-lg font-medium">Email:</label>
+                    <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        required
+                        className="p-2 border border-gray-300 rounded-lg w-full"
+                    />
+                    <label htmlFor="password" className="text-lg font-medium">Password:</label>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        required
+                        className="p-2 border border-gray-300 rounded-lg w-full"
+                    />
+                    <button
+                        type="submit"
+                        className="bg-blue-600 text-white py-2 rounded-lg text-lg hover:bg-blue-700 w-full"
+                    >
+                        Login
+                    </button>
+                </form>
+                <div className="flex justify-center items-center w-full">
+                    Don't have an account? <Link href="/register" className="text-[#2563EB] ml-2">Sign up</Link>
+                </div>
+            </div>
         </div>
     );
 }

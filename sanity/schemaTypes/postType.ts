@@ -26,6 +26,21 @@ export const postType = defineType({
             name:'pitch',
             title:'Pitch',
             type: 'text'
+        }),
+        defineField({
+            name:'postimage',
+            title:'Post Image',
+            type: 'image'
+        }),
+        defineField({
+            name:'upvote',
+            title:'Up votes',
+            type: 'number'
+        }),
+        defineField({
+            name:'comments',
+            title:'Comments',
+            type: 'number'
         })
     ]
 });
