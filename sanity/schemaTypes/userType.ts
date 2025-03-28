@@ -29,7 +29,7 @@ export const userType = defineType({
         }),
         defineField({
             name:'name',
-            title:'Email',
+            title:'Name',
             type:'string',
             validation: (Rule)=>Rule.required()
         }),
@@ -58,7 +58,30 @@ export const userType = defineType({
         defineField({
             name:'major',
             type: 'string'
-        })
+        }),
+        defineField({
+            name: 'year',
+            title: 'Year',
+            type: 'number',
+            validation: Rule => Rule.min(1).max(5).error('Year must be between 1 and 5'),
+        }),
+        defineField({
+            name:'id',
+            type: 'string'
+        }),
+        defineField({
+            name:'department',
+            type: 'string'
+        }),
+        defineField({
+            name:'experience',
+            type: 'number'
+        }),
+        defineField({
+            name:'term',
+            type: 'boolean'
+        }),
+
     ],
     preview: {
         select: {
