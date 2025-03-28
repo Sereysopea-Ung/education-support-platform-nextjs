@@ -1,46 +1,66 @@
-import {defineType, defineField} from 'sanity'
+import { defineType, defineField } from 'sanity';
+
 export const postType = defineType({
-    name:'post',
+    name: 'post',
     title: 'Post',
     type: 'document',
     fields: [
         defineField({
             name: 'author',
             type: 'reference',
-            to: {type: 'user'}
-        }),
-        defineField({
-            name:'id',
-            type:'number'
+            to: { type: 'user' },
         }),
         defineField({
             name: 'slug',
             title: 'Slug',
             type: 'slug',
             options: {
-                source: 'title',
+                source: 'title', // Assuming 'title' exists as a string field
                 maxLength: 96,
-            }
+            },
         }),
         defineField({
-            name:'pitch',
-            title:'Pitch',
-            type: 'text'
+            name: 'title', // Adding title field as a string
+            title: 'Title',
+            type: 'string',
         }),
         defineField({
-            name:'postimage',
-            title:'Post Image',
-            type: 'image'
+            name: 'pitch',
+            title: 'Pitch',
+            type: 'text',
         }),
         defineField({
-            name:'upvote',
-            title:'Up votes',
-            type: 'number'
+            name: 'postImage',
+            title: 'Post Image',
+            type: 'image',
         }),
         defineField({
-            name:'comments',
-            title:'Comments',
-            type: 'number'
-        })
-    ]
+            name: 'upvote',
+            title: 'Upvotes',
+            type: 'number',
+        }),
+        defineField({
+            name: 'downvote',
+            title: 'Downvotes',
+            type: 'number',
+        }),
+        defineField({
+            name: 'typePost',
+            title: 'TypePost',
+            type: 'string',
+        }),
+        defineField({
+            name: 'pdfFile',
+            title: 'PDF File',
+            type: 'file',
+            options: {
+                accept: 'application/pdf',
+            },
+        }),
+    ],
+    preview: {
+        select: {
+            title: 'title', // Change this to 'title' or 'slug.current' if you prefer the slug
+        },
+    },
 });
