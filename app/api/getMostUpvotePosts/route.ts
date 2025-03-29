@@ -9,7 +9,17 @@ const client = createClient({
 
 const getMostUpvotePosts = async () => {
     try {
-        const query = `*[_type == "post"] | order(upvote desc) [0...2]`;
+        // Corrected query definition
+        const query = `*[_type == "post"] | order(upvote desc) [0...2] {
+            _id,
+            title,
+            upvote,
+            author->{
+                username,
+                profile_pic
+            }
+        }`;
+
         const posts = await client.fetch(query);
         return posts;
     } catch (error: unknown) {
@@ -22,7 +32,6 @@ const getMostUpvotePosts = async () => {
         }
     }
 }
-
 
 export async function GET(req: Request) {
     try {

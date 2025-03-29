@@ -5,8 +5,23 @@ import Link from "next/link";
 import Image from "next/image";
 import Arrow from "@/components/Arrow";
 import {useEffect, useState} from "react";
+import imageUrlBuilder from '@sanity/image-url';
 import UserPostQ from "@/components/ProfilePostQ";
 import UserPostL from "@/components/ProfilePostLesson";
+import {createClient} from "@sanity/client";
+
+const client = createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+    useCdn: false,
+    token: process.env.SANITY_API_TOKEN,
+});
+
+const builder = imageUrlBuilder(client);
+
+function urlFor(source:any) {
+    return builder.image(source);
+}
 
 
 export default function LandingPage() {
@@ -48,6 +63,8 @@ export default function LandingPage() {
     //SOPEA CODE DON'T TOUCH
     const [posts, setPosts] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [postsByComment, setPostsByComment] = useState<any[]>([]);
+
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -64,8 +81,23 @@ export default function LandingPage() {
             }
         };
 
+        const fetchPostsByComment = async () => {
+            try {
+                const res = await fetch('/api/getMostCommentPosts');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch posts by comment');
+                }
+                const data = await res.json();
+                setPostsByComment(data);
+            } catch (err) {
+                setError('Error fetching posts by comment');
+                console.error(err);
+            }
+        };
+
         fetchPosts();
     }, []);
+
 
     if (status === 'loading') {
         return <div className="mt-20">Loading...</div>; // Show loading while the session is being fetched
@@ -169,9 +201,16 @@ export default function LandingPage() {
                                         </div>
                                     </div>
                                     <div>
-                                        <ul id="top-q-and-a" className="flex flex-col">
-                                            <li>1</li>
-                                            <li>2</li>
+                                        <ul id="top-q-and-a" className="flex flex-col gap-1">
+                                            {posts.map((post: any) => (
+                                                <li key={post._id} className="flex gap-1">
+                                                    <div className="w-[40px] h-[50px]"><img className="rounded-full" src={urlFor(post.author.profile_pic).width(40).height(40).fit('crop').url()} alt="fetch_image"/></div>
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="font-bold">{post.title}</div>
+                                                        <div><span className="text-blue-600">{post.upvote}</span>&nbsp;upvotes</div>
+                                                    </div>
+                                                </li>
+                                            ))}
                                         </ul>
                                     </div>
 
