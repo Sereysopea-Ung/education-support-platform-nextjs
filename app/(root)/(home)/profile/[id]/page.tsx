@@ -112,13 +112,13 @@ export default function Profile() {
                             </button>
                             {isOpen && (
                                 <div className="absolute top-8 right-0 bg-white shadow-lg rounded-xl mt-2 text-sm w-full z-20">
-                                    <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm rounded-t-xl" onClick={() => handleSelectFilter("Popular")}>
+                                    <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm" onClick={() => handleSelectFilter("Popular")}>
                                         Popular
                                     </div>
                                     <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm" onClick={() => handleSelectFilter("Recent")}>
                                         Recent
                                     </div>
-                                    <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm rounded-b-xl" onClick={() => handleSelectFilter("Oldest")}>
+                                    <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm" onClick={() => handleSelectFilter("Oldest")}>
                                         Oldest
                                     </div>
                                 </div>
@@ -258,24 +258,24 @@ export default function Profile() {
                         <h3 className="text-lg font-semibold mt-6 hidden lg:block">Contact</h3>
                         <div className="flex items-center justify-center lg:justify-start mt-2 row-span-1 lg:flex-col gap-6">
                             <div className="flex lg:w-full justify-center gap-6">
-                                <Link href="/public">
+                                <Link href="/">
                                     <Image src="/phone.svg" alt="Phone number" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
                                 </Link>
-                                <Link href="/public">
+                                <Link href="/">
                                     <Image src="/X.svg" alt="X" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
                                 </Link>
-                                <Link href="/public">
+                                <Link href="/">
                                     <Image src="/google.svg" alt="Google" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
                                 </Link>
                             </div>
                             <div className="flex lg:w-full justify-center gap-6">
-                                <Link href="/public">
+                                <Link href="/">
                                     <Image src="/facebook.svg" alt="Facebook" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
                                 </Link>
-                                <Link href="/public">
+                                <Link href="/">
                                     <Image src="/messager.svg" alt="Messager" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
                                 </Link>
-                                <Link href="/public">
+                                <Link href="/">
                                     <Image src="/tele.svg" alt="Telegram" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
                                 </Link>
                             </div>

@@ -4,9 +4,26 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import Arrow from "@/components/Arrow";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import imageUrlBuilder from '@sanity/image-url';
 import UserPostQ from "@/components/ProfilePostQ";
 import UserPostL from "@/components/ProfilePostLesson";
+import {createClient} from "@sanity/client";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
+
+const client = createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+    useCdn: false,
+    token: process.env.SANITY_API_TOKEN,
+});
+
+const builder = imageUrlBuilder(client);
+
+function urlFor(source:any) {
+    return builder.image(source);
+}
 
 
 export default function LandingPage() {
@@ -45,7 +62,65 @@ export default function LandingPage() {
         { icon: "⚖️", title: "Integrity", description: "Maintaining honest and ethical practices in all we do" },
     ];
 
+    //SOPEA CODE DON'T TOUCH
+    const [posts, setPosts] = useState<any[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [postsByComment, setPostsByComment] = useState<any[]>([]);
 
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const res = await fetch('/api/getMostUpvotePosts');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch posts');
+                }
+                const data = await res.json();
+                setPosts(data);
+            } catch (err) {
+                setError('Error fetching posts');
+                console.error(err);
+            }
+        };
+
+        const fetchPostsByComment = async () => {
+            try {
+                const res = await fetch('/api/getMostCommentPosts');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch posts by comment');
+                }
+                const data = await res.json();
+                setPostsByComment(data);
+            } catch (err) {
+                setError('Error fetching posts by comment');
+                console.error(err);
+            }
+        };
+
+        fetchPosts();
+    }, []);
+
+    const [isUpvoted, setIsUpvoted] = useState(false);
+    const [isDownvoted, setIsDownvoted] = useState(false);
+
+    // Move state setting logic inside the handlers to avoid conditional hook calls
+    const handleUpvoteClick = () => {
+        if (!isUpvoted) {
+            setIsUpvoted(true); // Set to upvoted
+            if (isDownvoted) setIsDownvoted(false); // Remove downvote if upvoted
+        } else {
+            setIsUpvoted(false); // Remove upvote
+        }
+    };
+
+    const handleDownvoteClick = () => {
+        if (!isDownvoted) {
+            setIsDownvoted(true); // Set to downvoted
+            if (isUpvoted) setIsUpvoted(false); // Remove upvote if downvoted
+        } else {
+            setIsDownvoted(false); // Remove downvote
+        }
+    };
 
     if (status === 'loading') {
         return <div className="mt-20">Loading...</div>; // Show loading while the session is being fetched
@@ -54,15 +129,124 @@ export default function LandingPage() {
     return (
         <div>
             {session?.user ? (
-                <div className="grid grid-cols-12">
-                    <div className="col-span-7 col-start-3 bg-[#F9FAFB] w-full h-dvh">
+                <div className="grid grid-cols-12 mt-16">
+                    {/*middle section*/}
+                    <div className="lg:col-span-7 lg:col-start-3 col-span-12 md:col-span-8 bg-[#F9FAFB] w-full h-dvh lg:px-10 md:px-5">
+                        <div className="flex flex-col border-1 border-black w-full h-full lg:mt-5 gap-5">
 
+                            <div className="flex border-1 border-[#DDE3EF] w-full min-h-20 rounded-xl px-2 py-2">
+                                <div className="flex h-full w-15">
+                                    <div id="curent-user profile picture" className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
+
+                                    </div>
+                                </div>
+                                <div className="flex flex-col w-full">
+                                    <div className="flex h-10 w-full">
+                                        <textarea
+                                            placeholder="Share something with your community..."
+                                            className="outline-none text-black w-full resize-none mt-2"
+                                        />
+                                        <Image src="/go.svg" alt="Enter" width={50} height={50} className="max-h-5 max-w-5 mt-3 mr-2 "></Image>
+                                    </div>
+                                    <div className="flex h-10 w-full ">
+                                        <Image src="/file.svg" alt="File" width={50} height={50} className="max-h-5 max-w-5 mt-3 mr-1 "></Image>
+                                        <Image src="/image.svg" alt="Image" width={50} height={50} className="max-h-5 max-w-5 mt-3 mr-1 "></Image>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="flex border-1 border-[#DDE3EF] w-full h-auto min-h-75 rounded-xl px-2 py-2">
+                                <div className="w-full h-full flex-col gap-5">
+                                    <div className="flex">
+                                        <div className="flex h-12 w-12 ">
+                                            <div id="profile picture" className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
+
+                                            </div>
+                                        </div>
+                                        <div className="flex w-full h-12">
+                                            <div className="flex-1 h-12 w-1/2">
+                                                <div className="h-1/2 justify-between flex">
+                                                    <div id="username" className="h-full flex">
+                                                        Dr. Sarah Wilson
+                                                    </div>
+                                                    <div id="role" className="bg-[#DBEAFE] text-[#2563EB] border-1 h-full flex rounded-lg px-2">
+                                                        Student
+                                                    </div>
+                                                    <div id="verify?" className=" h-full flex">
+                                                        verify picture
+                                                    </div>
+                                                </div>
+                                                <div id="year and major" className="h-1/2 justify-between flex gap-3 text-[#6B7280] text-center text-md  ">
+                                                    2nd • ITE
+                                                </div>
+                                            </div>
+                                            <div id="type" className="h-full flex rounded-lg px-2 w-1/2 justify-end">
+                                                <div className="bg-[#C7FFDE] text-[#27AE60] border-1 h-1/2 flex rounded-lg px-2 text-center">
+                                                    Q&A
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="post" className="h-1/2 w-full pl-10 pr-15 mt-3">
+                                        <div id="post" className=" border-[#6B7280]  border-1 h-8/10 w-3/4">
+                                            Post
+                                        </div>
+                                        <div id="date" className="text-[#6B7280] h-2/10 w-3/4 text-sm ">
+                                            11.FEB.2025 • 11:11PM
+                                        </div>
+                                    </div>
+
+                                    <div className="w-full pl-10 pr-15 mt-[-5]">
+                                        <div id="pitch" className="w-full">
+                                            Important announcement regarding the upcoming Database Management Systems exam
+                                            <span className="text-gray-600">  ...see more</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="w-full pl-10 pr-15 mt-3 flex gap-5">
+                                        <div className="flex gap-3">
+                                            <div
+                                                id="upvote"
+                                                onClick={handleUpvoteClick}
+                                                className={`flex gap-3 items-center cursor-pointer ${isUpvoted ? 'text-blue-500' : 'text-gray-500'}`}
+                                            >
+                                                <FontAwesomeIcon icon={faCircleUp} />
+                                                <span>24</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            id="downvote"
+                                            onClick={handleDownvoteClick}
+                                            className={`flex gap-3 items-center cursor-pointer ${isDownvoted ? 'text-red-500' : 'text-gray-500'}`}
+                                        >
+                                            <FontAwesomeIcon icon={faCircleDown} />
+                                        </div>
+                                        <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
+                                            <FontAwesomeIcon icon={faComment} />
+                                            12
+                                        </div>
+                                        <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
+                                            <FontAwesomeIcon icon={faComment} />
+                                            12
+                                        </div>
+                                        <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
+                                            •••
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
-                    <div className="col-span-3 col-start-10 bg-white w-full h-dvh">
+                    {/*right section*/}
+                    <div className="lg:col-span-3 lg:col-start-10 col-span-12 md:col-span-4 bg-white w-full h-dvh border-1 border-gray-200">
 
                     </div>
                 </div>
-            ) : (
+                ) : (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 bg-white pl-8 pr-8 duration-300">
                         <div className="flex p-4 pt-20 w-full min-h-[300px] row-span-1 md:col-span-12 flex-col items-center justify-between">
@@ -157,7 +341,17 @@ export default function LandingPage() {
                                         </div>
                                     </div>
                                     <div>
-
+                                        <ul id="top-q-and-a" className="flex flex-col gap-1">
+                                            {posts.map((post: any) => (
+                                                <li key={post._id} className="flex gap-1">
+                                                    <div className="w-[40px] h-[50px]"><img className="rounded-full" src={urlFor(post.author.profile_pic).width(40).height(40).fit('crop').url()} alt="fetch_image"/></div>
+                                                    <div className="flex flex-col gap-1">
+                                                        <div className="font-bold">{post.title}</div>
+                                                        <div><span className="text-blue-600">{post.upvote}</span>&nbsp;upvotes</div>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
 
                                 </div>
@@ -386,7 +580,7 @@ export default function LandingPage() {
                         © 2025 UniConnect. All rights reserved.
                     </div>
                 </>
-            )}
+                )}
         </div>
     );
 }
