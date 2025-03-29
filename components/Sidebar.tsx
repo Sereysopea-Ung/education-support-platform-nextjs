@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faBriefcase,
-    faBullhorn,
+    faBullhorn, faGear,
     faGraduationCap,
     faHome,
     faStar,
@@ -25,8 +25,8 @@ const Sidebar = () => {
                     </div>
 
                     <div>
-                        <h3 className="text-lg font-normal text-gray-800">Meow Meow</h3>
-                        <p className="font-mono text-xs text-gray-600">
+                        <h3 className="text-md font-normal text-gray-800">Meow Meow</h3>
+                        <p className="font-mono text-[10px] text-gray-600">
                             Computer Science <br /> • Year 3
                         </p>
                     </div>
@@ -78,9 +78,9 @@ const Sidebar = () => {
                     </ul>
 
                     <ul className="space-y-4">
-                        <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
-                            <FontAwesomeIcon icon={faUsers} size="lg" />
-                            <span >Community</span>
+                        <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
+                            <FontAwesomeIcon icon={faGear} size="lg" />
+                            <span >Setting</span>
                         </div>
                     </ul>
                 </div>

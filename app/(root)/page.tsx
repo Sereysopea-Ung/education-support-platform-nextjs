@@ -6,13 +6,9 @@ import Image from "next/image";
 import Arrow from "@/components/Arrow";
 import {useEffect, useState} from "react";
 import imageUrlBuilder from '@sanity/image-url';
-import UserPostQ from "@/components/ProfilePostQ";
-import UserPostL from "@/components/ProfilePostLesson";
 import {createClient} from "@sanity/client";
-
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
-=======
 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -102,7 +98,6 @@ export default function LandingPage() {
         fetchPosts();
     }, []);
 
-
     const [isUpvoted, setIsUpvoted] = useState(false);
     const [isDownvoted, setIsDownvoted] = useState(false);
 
@@ -124,11 +119,12 @@ export default function LandingPage() {
             setIsDownvoted(false); // Remove downvote
         }
     };
-=======
+
 
     if (status === 'loading') {
         return <div className="mt-20">Loading...</div>; // Show loading while the session is being fetched
     }
+
 
     return (
         <div>
@@ -136,7 +132,7 @@ export default function LandingPage() {
                 <div className="grid grid-cols-12 mt-16">
                     {/*middle section*/}
                     <div className="lg:col-span-7 lg:col-start-3 col-span-12 md:col-span-8 bg-[#F9FAFB] w-full h-dvh lg:px-10 md:px-5">
-                        <div className="flex flex-col border-1 border-black w-full h-full lg:mt-5 gap-5">
+                        <div className="flex flex-col w-full h-full lg:mt-5 gap-5">
 
                             <div className="flex border-1 border-[#DDE3EF] w-full min-h-20 rounded-xl px-2 py-2">
                                 <div className="flex h-full w-15">
@@ -168,8 +164,8 @@ export default function LandingPage() {
                                             </div>
                                         </div>
                                         <div className="flex w-full h-12">
-                                            <div className="flex-1 h-12 w-1/2">
-                                                <div className="h-1/2 justify-between flex">
+                                            <div className="flex-1 h-12 w-5/6">
+                                                <div className="h-1/2 gap-3 flex">
                                                     <div id="username" className="h-full flex">
                                                         Dr. Sarah Wilson
                                                     </div>
@@ -184,7 +180,7 @@ export default function LandingPage() {
                                                     2nd • ITE
                                                 </div>
                                             </div>
-                                            <div id="type" className="h-full flex rounded-lg px-2 w-1/2 justify-end">
+                                            <div id="type" className="h-full flex rounded-lg px-2 w-1/6 justify-end">
                                                 <div className="bg-[#C7FFDE] text-[#27AE60] border-1 h-1/2 flex rounded-lg px-2 text-center">
                                                     Q&A
                                                 </div>
@@ -203,8 +199,8 @@ export default function LandingPage() {
 
                                     <div className="w-full pl-10 pr-15 mt-[-5]">
                                         <div id="pitch" className="w-full">
-                                            Important announcement regarding the upcoming Database Management Systems exam
-                                            <span className="text-gray-600">  ...see more</span>
+                                            Important announcement regarding the exam
+                                            <span className="text-gray-600 text-nowrap">  ...see more</span>
                                         </div>
                                     </div>
 
@@ -231,10 +227,6 @@ export default function LandingPage() {
                                             12
                                         </div>
                                         <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
-                                            <FontAwesomeIcon icon={faComment} />
-                                            12
-                                        </div>
-                                        <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
                                             •••
                                         </div>
                                     </div>
@@ -245,9 +237,180 @@ export default function LandingPage() {
 
                         </div>
                     </div>
-                    {/*right section*/}
-                    <div className="lg:col-span-3 lg:col-start-10 col-span-12 md:col-span-4 bg-white w-full h-dvh border-1 border-gray-200">
 
+                    {/*right section*/}
+                    <div className="lg:col-span-3 lg:col-start-10 col-span-12 md:col-span-4 bg-white w-full h-dvh border-1 border-gray-200 px-2 pt-3">
+                        <div className="flex border-1 border-[#DDE3EF] w-full min-h-60 rounded-xl px-2 py-2 flex-col gap-2">
+                            <div className="h-1/2 justify-between flex w-full items-center">
+                                <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">
+                                    People to follow
+                                </div>
+                                <div className="h-full flex text-[10px] text-[#1E3A8A]">
+                                    view more
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                                <div className="flex items-center">
+                                    <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+
+                                    </div>
+
+                                    <div>
+                                        <div className="flex gap-4">
+                                            <h3 id="name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <div id="famous?" className=" h-full flex">
+                                                icon
+                                            </div>
+                                        </div>
+                                        <p id="major and year" className="font-mono md:text-[9px] lg:text-md text-xs text-gray-600">
+                                            Data Science • Year 3
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-3 items-center text-[#2563EB]">
+                                    follow
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                                <div className="flex items-center">
+                                    <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+
+                                    </div>
+
+                                    <div>
+                                        <div className="flex gap-4">
+                                            <h3 id="name" className="text-md font-normal text-gray-800">Name</h3>
+                                        </div>
+                                        <p id="major and year" className="font-mono text-[10px] text-gray-600 md:text-[9px] lg:text-md text-xs">
+                                            Data Science • Year 3
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-3 items-center text-[#2563EB]">
+                                    follow
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                                <div className="flex items-center">
+                                    <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+
+                                    </div>
+
+                                    <div>
+                                        <div className="flex gap-4">
+                                            <h3 id="name" className="text-md font-normal text-gray-800">Name</h3>
+                                        </div>
+                                        <p id="major and year" className="font-mono text-[10px] text-gray-600 md:text-[9px] lg:text-md text-xs">
+                                            Data Science • Year 3
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="flex gap-3 items-center text-[#2563EB]">
+                                    follow
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div className="flex border-1 border-[#DDE3EF] w-full min-h-60 rounded-xl px-2 py-2 flex-col gap-2 mt-5">
+                            <div className="h-1/2 justify-between flex w-full items-center">
+                                <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">
+                                    Popular Communities
+                                </div>
+                                <div className="h-full flex text-[10px] text-[#1E3A8A]">
+                                    view more
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex cursor-pointer flex-col">
+                                <div className="flex items-center justify-between">
+                                    <div className="h-full flex text-lg items-center">
+                                        <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                                        </div>
+                                        <div>
+                                            <h3 id="community name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <div className="h-full flex gap-2">
+                                                <div className="h-8 flex">
+                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    </div>
+                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    </div>
+                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    </div>
+                                                </div>
+                                                <p id="member" className="font-mono text-[10px] text-gray-600">
+                                                    member
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-3 items-center text-[#2563EB]">
+                                        join
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex cursor-pointer flex-col">
+                                <div className="flex items-center justify-between">
+                                    <div className="h-full flex text-lg items-center">
+                                        <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                                        </div>
+                                        <div>
+                                            <h3 id="community name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <div className="h-full flex gap-2">
+                                                <div className="h-8 flex">
+                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    </div>
+                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    </div>
+                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    </div>
+                                                </div>
+                                                <p id="member" className="font-mono text-[10px] text-gray-600">
+                                                    member
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-3 items-center text-[#2563EB]">
+                                        join
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex cursor-pointer flex-col">
+                                <div className="flex items-center justify-between">
+                                    <div className="h-full flex text-lg items-center">
+                                        <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                                        </div>
+                                        <div>
+                                            <h3 id="community name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <div className="h-full flex gap-2">
+                                                <div className="h-8 flex">
+                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    </div>
+                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    </div>
+                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    </div>
+                                                </div>
+                                                <p id="member" className="font-mono text-[10px] text-gray-600">
+                                                    member
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-3 items-center text-[#2563EB]">
+                                        join
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
                     </div>
                 </div>
                 ) : (
