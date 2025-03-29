@@ -42,7 +42,7 @@ const Navbar = () => {
 
 
                 {/* Desktop Menu */}
-                <div className="hidden md:flex items-center justify-between text-black lg:text-xl text-2xs ">
+                <div className="hidden lg:flex items-center justify-between text-black lg:text-xl text-2xs ">
                     {session?.user?.name ? (
                         <Link href="/" className="group relative p-1 lg:px-2  transition cursor-pointer">
                             <span className="z-10 hover:text-blue-600">Newsfeed</span>
@@ -93,7 +93,7 @@ const Navbar = () => {
 
                 {/* Mobile Menu Dropdown */}
                 {menuOpen && (
-                    <div className="absolute top-16 left-0 w-full bg-white flex text-center flex-col items-center shadow-lg md:hidden transition-all duration-300 z-10">
+                    <div className="absolute top-16 left-0 w-full bg-white flex text-center flex-col items-center shadow-lg lg:hidden transition-all duration-300 z-10">
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Home</Link>
                         {session?.user?.name ? (
                             <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Newsfeed</Link>
@@ -106,8 +106,14 @@ const Navbar = () => {
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Scholarships</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">My Network</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Collection</Link>
+                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Setting</Link>
                     </div>
                 )}
+
+                {/* Mobile Menu Button */}
+                <button className="lg:hidden rounded-lg flex items-center justify-center px-1 gap-2 text-black text-2xl transition z-5 hover:cursor-pointer hover:bg-gray-200" onClick={() => setMenuOpen(!menuOpen)}>
+                    ☰
+                </button>
 
                 {/* Search Bar */}
                 <button className="flex border border-black rounded-4xl h-[30px] max-w-[250px] md:w-40 w-full lg:w-full items-center justify-left px-2 gap-2 mx-2">
@@ -117,11 +123,6 @@ const Navbar = () => {
                         placeholder="Search..."
                         className="flex-1 outline-none text-black"
                     />
-                </button>
-
-                {/* Mobile Menu Button */}
-                <button className="md:hidden rounded-lg flex items-center justify-center px-1 gap-2 text-black text-2xl transition z-5 hover:cursor-pointer hover:bg-gray-200" onClick={() => setMenuOpen(!menuOpen)}>
-                    ☰
                 </button>
 
                 {/* Auth Buttons */}
