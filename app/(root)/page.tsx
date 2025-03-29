@@ -68,7 +68,10 @@ export default function LandingPage() {
     const [latestJobs,setLatestJobs] = useState<any[]>([]);
     const [mostApplyJobs,setMostApplyJobs] = useState<any[]>([]);
     const [scholarshipByDate,setScholarshipByDate] = useState<any[]>([]);
+
+=======
     const [postData, setPostData] = useState<any[]>([]);
+
 
 
     useEffect(() => {
@@ -155,6 +158,8 @@ export default function LandingPage() {
             }
         };
 
+
+=======
         const fetchAllPosts = async () => {
             try {
                 const res = await fetch('/api/getAllPosts');
@@ -175,7 +180,10 @@ export default function LandingPage() {
         fetchLatestJobs();
         fetchMostApplyJobs();
         fetchScholarshipByDate();
+
+=======
         fetchAllPosts();
+
     }, []);
 
     const [isUpvoted, setIsUpvoted] = useState(false);
@@ -333,8 +341,8 @@ export default function LandingPage() {
                                 <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">
                                     People to follow
                                 </div>
-                                <div className="h-full flex text-[10px] text-[#1E3A8A]">
-                                    view more
+                                <div className="h-full flex text-lg  text-[#1E3A8A]">
+                                    View More
                                 </div>
                             </div>
 
@@ -351,7 +359,7 @@ export default function LandingPage() {
                                                 icon
                                             </div>
                                         </div>
-                                        <p id="major and year" className="font-mono md:text-[9px] lg:text-md text-xs text-gray-600">
+                                        <p id="major and year" className="font-mono text-sm text-gray-600">
                                             Data Science • Year 3
                                         </p>
                                     </div>
@@ -371,7 +379,7 @@ export default function LandingPage() {
                                         <div className="flex gap-4">
                                             <h3 id="name" className="text-md font-normal text-gray-800">Name</h3>
                                         </div>
-                                        <p id="major and year" className="font-mono text-[10px] text-gray-600 md:text-[9px] lg:text-md text-xs">
+                                        <p id="major and year" className="font-mono text-gray-600 text-sm">
                                             Data Science • Year 3
                                         </p>
                                     </div>
@@ -391,7 +399,7 @@ export default function LandingPage() {
                                         <div className="flex gap-4">
                                             <h3 id="name" className="text-md font-normal text-gray-800">Name</h3>
                                         </div>
-                                        <p id="major and year" className="font-mono text-[10px] text-gray-600 md:text-[9px] lg:text-md text-xs">
+                                        <p id="major and year" className="font-mono text-gray-600 text-sm">
                                             Data Science • Year 3
                                         </p>
                                     </div>
@@ -408,8 +416,8 @@ export default function LandingPage() {
                                 <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">
                                     Popular Communities
                                 </div>
-                                <div className="h-full flex text-[10px] text-[#1E3A8A]">
-                                    view more
+                                <div className="h-full flex text-lg text-[#1E3A8A] text-nowrap">
+                                    View All
                                 </div>
                             </div>
 
@@ -429,7 +437,7 @@ export default function LandingPage() {
                                                     <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
                                                 </div>
-                                                <p id="member" className="font-mono text-[10px] text-gray-600">
+                                                <p id="member" className="font-mono text-sm text-gray-600">
                                                     member
                                                 </p>
                                             </div>
@@ -457,7 +465,7 @@ export default function LandingPage() {
                                                     <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
                                                 </div>
-                                                <p id="member" className="font-mono text-[10px] text-gray-600">
+                                                <p id="member" className="font-mono text-sm text-gray-600">
                                                     member
                                                 </p>
                                             </div>
@@ -485,7 +493,7 @@ export default function LandingPage() {
                                                     <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
                                                 </div>
-                                                <p id="member" className="font-mono text-[10px] text-gray-600">
+                                                <p id="member" className="font-mono text-sm  text-gray-600">
                                                     member
                                                 </p>
                                             </div>
@@ -496,9 +504,121 @@ export default function LandingPage() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
+                        <div className="flex border-1 border-[#DDE3EF] w-full min-h-60 rounded-xl px-2 py-2 flex-col gap-2 mt-5">
+                            <div className="h-1/2 justify-between flex w-full items-center">
+                                <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">
+                                    Latest Opportunities
+                                </div>
+                                <div className="h-full flex text-lg  text-[#1E3A8A]">
+                                    View All
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                                <div className="flex-col">
+                                    <div className="w-full flex lg:text-[18px] items-center">
+                                        <div id="job-icon" className="min-w-8 min-h-8 max-w-8 max-h-8 bg-gray-100 mr-3 overflow-hidden border-1">
+                                        </div>
+                                        <h3 id="job-name" className="text-md font-normal text-gray-800">Name</h3>
+                                    </div>
+                                    <div className="h-full flex text-sm items-center text-gray-600 gap-1">
+                                        <p id="company" className="font-mono">
+                                            Google
+                                        </p>
+                                        •
+                                        <p id="type-of-job" className="font-mono">
+                                            Remote
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                                <div className="flex-col">
+                                    <div className="w-full flex lg:text-[18px] items-center">
+                                        <div id="job-icon" className="min-w-8 min-h-8 max-w-8 max-h-8 bg-gray-100 mr-3 overflow-hidden border-1">
+                                        </div>
+                                        <h3 id="job-name" className="text-md font-normal text-gray-800">Name</h3>
+                                    </div>
+                                    <div className="h-full flex text-sm items-center text-gray-600 gap-1">
+                                        <p id="company" className="font-mono">
+                                            Google
+                                        </p>
+                                        •
+                                        <p id="type-of-job" className="font-mono">
+                                            Remote
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                                <div className="flex-col">
+                                    <div className="w-full flex lg:text-[18px] items-center">
+                                        <div id="scholarship-icon" className="min-w-8 min-h-8 max-w-8 max-h-8 bg-gray-100 mr-3 overflow-hidden border-1">
+                                        </div>
+                                        <h3 id="Scholarship name" className="text-md font-normal text-gray-800">Name</h3>
+                                    </div>
+                                    <div id="coverage" className="h-full flex text-sm items-center text-gray-600 gap-1">
+                                        Full tuition coverage
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                                <div className="flex-col">
+                                    <div className="w-full flex lg:text-[18px] items-center">
+                                        <div id="scholarship-icon" className="min-w-8 min-h-8 max-w-8 max-h-8 bg-gray-100 mr-3 overflow-hidden border-1">
+                                        </div>
+                                        <h3 id="Scholarship name" className="text-md font-normal text-gray-800">Name</h3>
+                                    </div>
+                                    <div id="coverage" className="h-full flex text-sm items-center text-gray-600 gap-1">
+                                        Full tuition coverage
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
+
+                        {/*<div className="flex border-1 border-[#DDE3EF] w-full min-h-60 rounded-xl px-2 py-2 flex-col gap-2 mt-5">*/}
+                        {/*    <div className="h-1/2 justify-between flex w-full items-center">*/}
+                        {/*        <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">*/}
+                        {/*            Trending News*/}
+                        {/*        </div>*/}
+                        {/*        <div className="h-full flex text-lg  text-[#1E3A8A]">*/}
+                        {/*            View All*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+
+                        {/*    <div className="h-25 justify-between flex items-center cursor-pointer">*/}
+                        {/*        <div className="flex-col">*/}
+                        {/*            <div className="w-full flex lg:text-[18px] items-center">*/}
+                        {/*                <div id="school-logo" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 mr-3 overflow-hidden border-1 rounded-4xl">*/}
+                        {/*                </div>*/}
+                        {/*                <h3 id="university" className="text-md font-normal text-gray-800">Royal University</h3>*/}
+                        {/*            </div>*/}
+
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+
+                        {/*    <div className="h-25 justify-between flex items-center cursor-pointer">*/}
+                        {/*        <div className="flex">*/}
+                        {/*            <div className="h-full flex">*/}
+                        {/*                <div id="school-logo" className="w-full min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 mr-3 overflow-hidden border-1 rounded-4xl">*/}
+                        {/*                </div>*/}
+                        {/*            </div>*/}
+                        {/*            <h3 id="university" className="w-full text-md font-normal text-gray-800">Royal University</h3>*/}
+                        {/*            <div className="h-full flex text-sm items-center text-gray-600 gap-1">*/}
+                        {/*                <div className="flex gap-3 items-center text-[#2563EB]">*/}
+                        {/*                </div>*/}
+                        {/*            </div>*/}
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+
+                        {/*</div>*/}
+
                     </div>
                 </div>
                 ) : (
