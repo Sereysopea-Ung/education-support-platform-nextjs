@@ -25,7 +25,7 @@ function urlFor(source:any) {
 
 
 export default function LandingPage() {
-    const { data: session, status } = useSession(); // Also getting the status of the session
+    const { data: session, status } = useSession();
     const [Mission, setMission] = useState(true);
     const [Team, setTeam] = useState(false);
     const [Value, setValue] = useState(false);
@@ -223,7 +223,7 @@ export default function LandingPage() {
                                 <div className="w-full h-full flex-col gap-5">
                                     <div className="flex">
                                         <div className="flex h-12 w-12 ">
-                                            <div id="profile picture" className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
+                                            <div id="profile_picture" className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
 
                                             </div>
                                         </div>
@@ -316,7 +316,7 @@ export default function LandingPage() {
 
                             <div className="h-15 justify-between flex items-center cursor-pointer">
                                 <div className="flex items-center">
-                                    <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                                    <div id="profile" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
 
                                     </div>
 
