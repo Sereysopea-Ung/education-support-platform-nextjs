@@ -42,42 +42,53 @@ const Navbar = () => {
 
 
                 {/* Desktop Menu */}
-                <div className="hidden md:flex items-center justify-between text-black lg:text-xl text-2xs">
+                <div className="hidden md:flex items-center justify-between text-black lg:text-xl text-2xs ">
                     {session?.user?.name ? (
                         <Link href="/" className="group relative p-1 lg:px-2  transition cursor-pointer">
-                            <span className="z-10">Newsfeed</span>
-                            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
+                            <span className="z-10 hover:text-blue-600">Newsfeed</span>
+                            <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300 "></span>
                         </Link>
                         ) : (
                         <Link href="/" className="group relative p-1 lg:px-2  transition cursor-pointer">
-                            <span className="z-10">Home</span>
+                            <span className="z-10 hover:text-blue-600">Home</span>
                             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                         </Link>
                     )}
                     <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
-                        <span className="z-10">Q&A</span>
+                        <span className="z-10 hover:text-blue-600">Q&A</span>
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                     </Link>
                     <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
-                        <span className="z-10">Lesson</span>
+                        <span className="z-10 hover:text-blue-600">Lesson</span>
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                     </Link>
                     <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
-                        <span className="z-10">Community</span>
+                        <span className="z-10 hover:text-blue-600">Community</span>
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                     </Link>
-                    <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
-                        <span className="z-10">News</span>
-                        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
-                    </Link>
-                    <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
-                        <span className="z-10">Jobs</span>
-                        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
-                    </Link>
-                    <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
-                        <span className="z-10">Scholarships</span>
-                        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
-                    </Link>
+                    {session?.user?.name ? (
+                        <div>
+                            <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                                <span className="z-10 hover:text-blue-600">Following</span>
+                                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
+                            </Link>
+                        </div>
+                        ):(
+                        <div>
+                            <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                                <span className="z-10 hover:text-blue-600">News</span>
+                                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
+                            </Link>
+                            <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                                <span className="z-10 hover:text-blue-600">Jobs</span>
+                                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
+                            </Link>
+                            <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                                <span className="z-10 hover:text-blue-600">Scholarships</span>
+                                <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
                 {/* Mobile Menu Dropdown */}
@@ -93,6 +104,8 @@ const Navbar = () => {
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">News</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Jobs</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Scholarships</Link>
+                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">My Network</Link>
+                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Collection</Link>
                     </div>
                 )}
 

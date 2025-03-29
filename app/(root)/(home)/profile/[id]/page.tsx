@@ -1,129 +1,60 @@
+'use client';
+
 import UserPostQ from "@/components/ProfilePostQ";
 import UserPostL from "@/components/ProfilePostLesson";
+import Link from "next/link";
+import Image from "next/image";
+import {useState} from "react";
 
 export default function Profile() {
+    const [isOpen, setIsOpen] = useState(false);  // State to track if filter is open or not
+    const [selectedFilter, setSelectedFilter] = useState(""); // State to track selected filter option
+
+    const handleToggle = () => {
+        setIsOpen(!isOpen);  // Toggle the filter dropdown
+    };
+
+    const handleSelectFilter = (filter: string) => {
+        setSelectedFilter(filter);  // Set the selected filter option
+        setIsOpen(false);  // Close the dropdown after selection
+    };
+
     return (
-        <div >
-            <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 mt-16">
-
-                {/* Mobile Header (hidden on desktop) */}
-                <div className="lg:hidden bg-white p-4 shadow-sm flex items-center justify-between sticky top-0 z-20">
-                    <div className="flex items-center">
-                        <div className="w-10 h-10 bg-gray-100 rounded-full mr-3 overflow-hidden">
-                            <img src="/Default_pfp.jpg" alt="Profile" className="w-full h-full object-cover"/>
-                        </div>
-                        <h3 className="text-lg font-normal text-gray-800">Meow Meow</h3>
-                        <span className="bg-amber-300 px-1.5 rounded-full text-white ml-4">★</span>
-                    </div>
-
-                    {/* Right Section: Menu Button and Edit Profile Button */}
-                    <div className="flex items-center space-x-2">
-                        <button className="relative w-6 h-6 p-1 bg-white-200 rounded-md hover:bg-gray-300">
-                            {/* Simple hamburger icon using spans */}
-                            <span className="block w-full h-0.5 bg-black mb-1"></span>
-                            <span className="block w-full h-0.5 bg-black mb-1"></span>
-                            <span className="block w-full h-0.5 bg-black"></span>
-                        </button>
-
-                        <button className="bg-blue-500 text-white px-3 py-1 rounded-lg text-sm">
-                            Edit Profile
-                        </button>
-                    </div>
-                </div>
-
-                {/* left Sidebar */}
-                <div className="hidden lg:block md:w-64 bg-white-100 border-r-gray-200  p-5 sticky top-0 h-screen overflow-y-auto">
-                    <div className="flex items-center mb-8">
-                        <div className="w-10 h-10 bg-gray-100 rounded-full mr-3 overflow-hidden">
-                            <img src="/Default_pfp.jpg" alt="Profile" className="w-full h-full object-cover"/>
-                        </div>
-
-                        <div>
-                            <h3 className="text-lg font-normal text-gray-800">Meow Meow</h3>
-                            <p className="font-mono text-sm text-gray-600">
-                                Computer Science <br /> • Year 3
-                            </p>
-                        </div>
-                    </div>
-
-                    {/*figma svg path*/}
-                    <ul className="space-y-4">
-                        {/*sidebar*/}
-                        <div className="flex items-center space-x-2">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12.9823 2.76424C12.631 2.49099 12.4553 2.35436 12.2613 2.30184C12.0902 2.2555 11.9098 2.2555 11.7387 2.30184C11.5447 2.35436 11.369 2.49099 11.0177 2.76424L4.23539 8.03937C3.78202 8.39199 3.55534 8.5683 3.39203 8.7891C3.24737 8.98469 3.1396 9.20503 3.07403 9.4393C3 9.70376 3 9.99094 3 10.5653V17.8002C3 18.9203 3 19.4804 3.21799 19.9082C3.40973 20.2845 3.71569 20.5905 4.09202 20.7822C4.51984 21.0002 5.0799 21.0002 6.2 21.0002H8.2C8.48003 21.0002 8.62004 21.0002 8.727 20.9457C8.82108 20.8978 8.89757 20.8213 8.9455 20.7272C9 20.6203 9 20.4803 9 20.2002V13.6002C9 13.0402 9 12.7601 9.10899 12.5462C9.20487 12.3581 9.35785 12.2051 9.54601 12.1092C9.75992 12.0002 10.0399 12.0002 10.6 12.0002H13.4C13.9601 12.0002 14.2401 12.0002 14.454 12.1092C14.6422 12.2051 14.7951 12.3581 14.891 12.5462C15 12.7601 15 13.0402 15 13.6002V20.2002C15 20.4803 15 20.6203 15.0545 20.7272C15.1024 20.8213 15.1789 20.8978 15.273 20.9457C15.38 21.0002 15.52 21.0002 15.8 21.0002H17.8C18.9201 21.0002 19.4802 21.0002 19.908 20.7822C20.2843 20.5905 20.5903 20.2845 20.782 19.9082C21 19.4804 21 18.9203 21 17.8002V10.5653C21 9.99094 21 9.70376 20.926 9.4393C20.8604 9.20503 20.7526 8.98469 20.608 8.7891C20.4447 8.5683 20.218 8.39199 19.7646 8.03937L12.9823 2.76424Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span className="ml-1"> Home</span>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 15.8369C19.4559 16.5683 20.7041 17.742 21.6152 19.2096C21.7956 19.5003 21.8858 19.6456 21.917 19.8468C21.9804 20.2558 21.7008 20.7585 21.3199 20.9204C21.1325 21 20.9216 21 20.5 21M16 11.5322C17.4817 10.7959 18.5 9.26686 18.5 7.5C18.5 5.73314 17.4817 4.20411 16 3.46776M14 7.5C14 9.98528 11.9852 12 9.49996 12C7.01468 12 4.99996 9.98528 4.99996 7.5C4.99996 5.01472 7.01468 3 9.49996 3C11.9852 3 14 5.01472 14 7.5ZM2.55919 18.9383C4.1535 16.5446 6.66933 15 9.49996 15C12.3306 15 14.8464 16.5446 16.4407 18.9383C16.79 19.4628 16.9646 19.725 16.9445 20.0599C16.9289 20.3207 16.7579 20.64 16.5495 20.7976C16.2819 21 15.9138 21 15.1776 21H3.82232C3.08613 21 2.71804 21 2.4504 20.7976C2.24201 20.64 2.07105 20.3207 2.05539 20.0599C2.03529 19.725 2.20992 19.4628 2.55919 18.9383Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-
-                            <span className="ml-1"> My Network</span>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M11.2827 3.45307C11.5131 2.98613 11.6284 2.75266 11.7848 2.67807C11.9209 2.61317 12.0791 2.61317 12.2152 2.67807C12.3717 2.75266 12.4869 2.98613 12.7174 3.45307L14.9041 7.88304C14.9721 8.02089 15.0061 8.08982 15.0558 8.14333C15.0999 8.19071 15.1527 8.22911 15.2113 8.25638C15.2776 8.28718 15.3536 8.2983 15.5057 8.32053L20.397 9.03546C20.9121 9.11075 21.1696 9.14839 21.2888 9.27419C21.3925 9.38365 21.4412 9.53405 21.4215 9.68353C21.3988 9.85533 21.2124 10.0369 20.8395 10.4001L17.3014 13.8462C17.1912 13.9536 17.136 14.0073 17.1004 14.0712C17.0689 14.1278 17.0487 14.19 17.0409 14.2543C17.0321 14.3269 17.0451 14.4027 17.0711 14.5545L17.906 19.4219C17.994 19.9352 18.038 20.1919 17.9553 20.3443C17.8833 20.4768 17.7554 20.5697 17.6071 20.5972C17.4366 20.6288 17.2061 20.5076 16.7451 20.2652L12.3724 17.9656C12.2361 17.8939 12.168 17.8581 12.0962 17.844C12.0327 17.8316 11.9673 17.8316 11.9038 17.844C11.832 17.8581 11.7639 17.8939 11.6277 17.9656L7.25492 20.2652C6.79392 20.5076 6.56341 20.6288 6.39297 20.5972C6.24468 20.5697 6.11672 20.4768 6.04474 20.3443C5.962 20.1919 6.00603 19.9352 6.09407 19.4219L6.92889 14.5545C6.95491 14.4027 6.96793 14.3269 6.95912 14.2543C6.95132 14.19 6.93111 14.1278 6.89961 14.0712C6.86402 14.0073 6.80888 13.9536 6.69859 13.8462L3.16056 10.4001C2.78766 10.0369 2.60121 9.85533 2.57853 9.68353C2.55879 9.53405 2.60755 9.38365 2.71125 9.27419C2.83044 9.14839 3.08797 9.11075 3.60304 9.03546L8.49431 8.32053C8.64642 8.2983 8.72248 8.28718 8.78872 8.25638C8.84736 8.22911 8.90016 8.19071 8.94419 8.14333C8.99391 8.08982 9.02793 8.02089 9.09597 7.88304L11.2827 3.45307Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span className="ml-1"> Collection</span>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M16 7C16 6.07003 16 5.60504 15.8978 5.22354C15.6204 4.18827 14.8117 3.37962 13.7765 3.10222C13.395 3 12.93 3 12 3C11.07 3 10.605 3 10.2235 3.10222C9.18827 3.37962 8.37962 4.18827 8.10222 5.22354C8 5.60504 8 6.07003 8 7M5.2 21H18.8C19.9201 21 20.4802 21 20.908 20.782C21.2843 20.5903 21.5903 20.2843 21.782 19.908C22 19.4802 22 18.9201 22 17.8V10.2C22 9.07989 22 8.51984 21.782 8.09202C21.5903 7.71569 21.2843 7.40973 20.908 7.21799C20.4802 7 19.9201 7 18.8 7H5.2C4.07989 7 3.51984 7 3.09202 7.21799C2.71569 7.40973 2.40973 7.71569 2.21799 8.09202C2 8.51984 2 9.07989 2 10.2V17.8C2 18.9201 2 19.4802 2.21799 19.908C2.40973 20.2843 2.71569 20.5903 3.09202 20.782C3.51984 21 4.0799 21 5.2 21Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span className="ml-1"> Job</span>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 13.9999L5.57465 20.2985C5.61893 20.4756 5.64107 20.5642 5.66727 20.6415C5.92317 21.397 6.60352 21.9282 7.39852 21.9933C7.4799 21.9999 7.5712 21.9999 7.75379 21.9999C7.98244 21.9999 8.09677 21.9999 8.19308 21.9906C9.145 21.8982 9.89834 21.1449 9.99066 20.193C10 20.0967 10 19.9823 10 19.7537V5.49991M18.5 13.4999C20.433 13.4999 22 11.9329 22 9.99991C22 8.06691 20.433 6.49991 18.5 6.49991M10.25 5.49991H6.5C4.01472 5.49991 2 7.51463 2 9.99991C2 12.4852 4.01472 14.4999 6.5 14.4999H10.25C12.0164 14.4999 14.1772 15.4468 15.8443 16.3556C16.8168 16.8857 17.3031 17.1508 17.6216 17.1118C17.9169 17.0756 18.1402 16.943 18.3133 16.701C18.5 16.4401 18.5 15.9179 18.5 14.8736V5.1262C18.5 4.08191 18.5 3.55976 18.3133 3.2988C18.1402 3.05681 17.9169 2.92421 17.6216 2.88804C17.3031 2.84903 16.8168 3.11411 15.8443 3.64427C14.1772 4.55302 12.0164 5.49991 10.25 5.49991Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span className="ml-1"> News</span>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M4 7.99958V14.0107C4 14.3697 4 14.5492 4.05465 14.7076C4.10299 14.8477 4.18187 14.9754 4.28558 15.0813C4.40287 15.201 4.5634 15.2813 4.88446 15.4418L10.2845 18.1418C10.5468 18.273 10.678 18.3386 10.8156 18.3644C10.9375 18.3873 11.0625 18.3873 11.1844 18.3644C11.322 18.3386 11.4532 18.273 11.7155 18.1418L17.1155 15.4418C17.4366 15.2813 17.5971 15.201 17.7144 15.0813C17.8181 14.9754 17.897 14.8477 17.9453 14.7076C18 14.5492 18 14.3697 18 14.0107V7.99958M1 6.49958L10.6422 1.67846C10.7734 1.61287 10.839 1.58008 10.9078 1.56717C10.9687 1.55574 11.0313 1.55574 11.0922 1.56717C11.161 1.58008 11.2266 1.61287 11.3578 1.67846L21 6.49958L11.3578 11.3207C11.2266 11.3863 11.161 11.4191 11.0922 11.432C11.0313 11.4434 10.9687 11.4434 10.9078 11.432C10.839 11.4191 10.7734 11.3863 10.6422 11.3207L1 6.49958Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span className="ml-1"> Scholarship</span>
-                        </div>
-
-                        <div className="flex items-center space-x-2">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M22 21V19C22 17.1362 20.7252 15.5701 19 15.126M15.5 3.29076C16.9659 3.88415 18 5.32131 18 7C18 8.67869 16.9659 10.1159 15.5 10.7092M17 21C17 19.1362 17 18.2044 16.6955 17.4693C16.2895 16.4892 15.5108 15.7105 14.5307 15.3045C13.7956 15 12.8638 15 11 15H8C6.13623 15 5.20435 15 4.46927 15.3045C3.48915 15.7105 2.71046 16.4892 2.30448 17.4693C2 18.2044 2 19.1362 2 21M13.5 7C13.5 9.20914 11.7091 11 9.5 11C7.29086 11 5.5 9.20914 5.5 7C5.5 4.79086 7.29086 3 9.5 3C11.7091 3 13.5 4.79086 13.5 7Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <span className="ml-1"> Community</span>
-                        </div>
-                    </ul>
-
-                    {/*Quick stats*/}
-                    <div className="mt-15">
-                        <h4 className="text-sm font-extrabold bg-gray-100 text-gray-700">Quick Stats</h4>
-                        <div className="flex justify-items-stretch mt-1 text-gray-600 text-sm border-b border-gray-100">
-                            <menu className="w-full bg-gray-100">
-                                <p className="flex justify-between text-sm text-gray-600 mt-4">
-                                    <span>Posts</span> <span className="text-black">89</span>
-                                </p>
-                                <p className="flex justify-between text-sm text-gray-600 mt-4">
-                                    <span>Followers</span> <span className="text-black">156</span>
-                                </p>
-                                <p className="flex justify-between text-sm text-gray-600 mt-4">
-                                    <span>Following</span> <span className="text-black">23</span>
-                                </p>
-                            </menu>
-                        </div>
-                    </div>
-                </div>
-
+        <div className="grid grid-cols-12 w-full min-h-screen justify-center">
+            <div className="lg:col-start-3 lg:col-span-8 col-span-12 mt-16 w-full">
                 {/* Main Content */}
-                <div className="flex-1 p-4 md:p-6 pb-20 md:pb-6">
+
+                <div className="flex-1 p-4 md:p-6 pb-20 md:pb-6 w-full">
+                    <div className="lg:hidden block bg-white shadow rounded-lg p-6 mb-6 w-full">
+                        <div className="flex-1 flex md:flex-row gap-8 justify-between items-center">
+                            <div className="flex-shrink-0 flex gap-2">
+                                <img
+                                    src="/Default_pfp.jpg"
+                                    alt="Profile"
+                                    className="w-15 h-15 rounded-full border-4 border-white"
+                                />
+                                <div>
+                                    <h1 className="text-lg font-normal ">
+                                        Meow Meow
+                                        <span className="bg-amber-300 px-1 rounded-full text-white ml-4">
+                                    ★
+                                    </span>
+                                    </h1>
+
+                                    <div className="flex space-x-4 text-xs">
+                                        <span><span className="text-gray-900 font-medium">891</span> Following</span>
+                                        <span><span className="text-gray-900 font-medium">156</span> Posts</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button className="flex bg-blue-500 text-white px-4 py-3 rounded-xl text-center text-md">
+                                Edit Profile
+                            </button>
+                        </div>
+                    </div>
 
                     {/* Profile Header - Hidden on mobile, shown on desktop */}
-                    <div className="hidden lg:block bg-white shadow rounded-lg p-6 mb-6">
+                    <div className="hidden lg:block bg-white shadow rounded-lg p-6 mb-6 lg:w-full">
                         <div className="flex flex-col md:flex-row">
                             <div className="flex-shrink-0">
                                 <img
@@ -149,18 +80,15 @@ export default function Profile() {
                                     <span><span className="text-gray-900 font-medium">156</span> Posts</span>
                                 </div>
 
-                                <button className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-xl">
+                                <button className=" bg-blue-500 text-white px-4 py-2 rounded-xl">
                                     Edit Profile
                                 </button>
                             </div>
-
                         </div>
                     </div>
-
-                    {/* Tabs */}
-                    <div className="flex overflow-x-auto pb-2 mb-6 border-b border-gray-300 ">
-                        <div className="md:ml-8 flex md:gap-6 gap-2">
-                            {['All Posts', 'Q&A', 'Lesson', 'Group', 'Collections'].map((tab, index) => (
+                    <div className="flex pb-2 mb-6 border-b border-gray-300 w-full">
+                        <div className="md:ml-8 flex md:gap-6 gap-2 w-full">
+                            {['All Posts', 'Q&A', 'Lesson', 'Group'].map((tab, index) => (
                                 <button
                                     key={index}
                                     className="whitespace-nowrap text-gray-700 hover:text-blue-500 px-1 pb-1 lg:text-xl md:text-lg sm:text-md text-sm"
@@ -169,16 +97,37 @@ export default function Profile() {
                                 </button>
                             ))}
                         </div>
-                        <button className="ml-auto whitespace-nowrap text-gray-700 hover:text-blue-500 flex items-center bg-pink-100 rounded-xl px-3 py-1 lg:text-xl md:text-lg sm:text-md text-sm">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 ">
-                                <path d="M3.38589 5.66687C2.62955 4.82155 2.25138 4.39889 2.23712 4.03968C2.22473 3.72764 2.35882 3.42772 2.59963 3.22889C2.87684 3 3.44399 3 4.57828 3H19.4212C20.5555 3 21.1227 3 21.3999 3.22889C21.6407 3.42772 21.7748 3.72764 21.7624 4.03968C21.7481 4.39889 21.3699 4.82155 20.6136 5.66687L14.9074 12.0444C14.7566 12.2129 14.6812 12.2972 14.6275 12.3931C14.5798 12.4781 14.5448 12.5697 14.5236 12.6648C14.4997 12.7721 14.4997 12.8852 14.4997 13.1113V18.4584C14.4997 18.6539 14.4997 18.7517 14.4682 18.8363C14.4403 18.911 14.395 18.9779 14.336 19.0315C14.2692 19.0922 14.1784 19.1285 13.9969 19.2012L10.5969 20.5612C10.2293 20.7082 10.0455 20.7817 9.89802 20.751C9.76901 20.7242 9.6558 20.6476 9.583 20.5377C9.49975 20.4122 9.49975 20.2142 9.49975 19.8184V13.1113C9.49975 12.8852 9.49975 12.7721 9.47587 12.6648C9.45469 12.5697 9.41971 12.4781 9.37204 12.3931C9.31828 12.2972 9.2429 12.2129 9.09213 12.0444L3.38589 5.66687Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            Filter <span className="ml-1">▲</span>
-                        </button>
+                        <div className="relative z-20">
+                            <button
+                                className="ml-auto whitespace-nowrap text-gray-700 hover:text-blue-500 flex items-center bg-pink-100 rounded-xl px-3 py-1 lg:text-xl md:text-lg sm:text-md text-sm"
+                                onClick={handleToggle}
+                            >
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4">
+                                    <path
+                                        d="M3.38589 5.66687C2.62955 4.82155 2.25138 4.39889 2.23712 4.03968C2.22473 3.72764 2.35882 3.42772 2.59963 3.22889C2.87684 3 3.44399 3 4.57828 3H19.4212C20.5555 3 21.1227 3 21.3999 3.22889C21.6407 3.42772 21.7748 3.72764 21.7624 4.03968C21.7481 4.39889 21.3699 4.82155 20.6136 5.66687L14.9074 12.0444C14.7566 12.2129 14.6812 12.2972 14.6275 12.3931C14.5798 12.4781 14.5448 12.5697 14.5236 12.6648C14.4997 12.7721 14.4997 12.8852 14.4997 13.1113V18.4584C14.4997 18.6539 14.4997 18.7517 14.4682 18.8363C14.4403 18.911 14.395 18.9779 14.336 19.0315C14.2692 19.0922 14.1784 19.1285 13.9969 19.2012L10.5969 20.5612C10.2293 20.7082 10.0455 20.7817 9.89802 20.751C9.76901 20.7242 9.6558 20.6476 9.583 20.5377C9.49975 20.4122 9.49975 20.2142 9.49975 19.8184V13.1113C9.49975 12.8852 9.49975 12.7721 9.47587 12.6648C9.45469 12.5697 9.41971 12.4781 9.37204 12.3931C9.31828 12.2972 9.2429 12.2129 9.09213 12.0444L3.38589 5.66687Z"
+                                        stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                    />
+                                </svg>
+                                Filter <span className="ml-1">{isOpen ? '▲' : '▼'}</span>
+                            </button>
+                            {isOpen && (
+                                <div className="absolute top-8 right-0 bg-white shadow-lg rounded-xl mt-2 text-sm w-full z-20">
+                                    <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm rounded-t-xl" onClick={() => handleSelectFilter("Popular")}>
+                                        Popular
+                                    </div>
+                                    <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm" onClick={() => handleSelectFilter("Recent")}>
+                                        Recent
+                                    </div>
+                                    <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm rounded-b-xl" onClick={() => handleSelectFilter("Oldest")}>
+                                        Oldest
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
 
                     {/* Posts Section */}
-                    <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 mb-30">
+                    <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 mb-30 z-10">
 
                         {/*Call Component*/}
                         <UserPostQ
@@ -248,9 +197,10 @@ export default function Profile() {
                         />
                     </div>
                 </div>
+            </div>
 
-                {/* Right Sidebar - Mobile bottom bar, desktop sidebar */}
-                <div className="fixed bottom-0 left-0 right-0 lg:static lg:w-60 bg-white shadow-lg lg:shadow lg:rounded-lg lg:ml-4 lg:h-fit z-10" >
+                {/* Right Sidebar*/}
+                <div className="lg:top-16 lg:right-0 bottom-0 fixed lg:w-2/12 w-full shadow-lg flex-col rounded-lg h-fit z-10 bg-white" >
                     <div className="p-4">
                         <h3 className="text-lg font-semibold hidden lg:block">About</h3>
                         <div className="flex lg:block justify-around lg:space-y-2">
@@ -306,138 +256,32 @@ export default function Profile() {
                         </div>
 
                         <h3 className="text-lg font-semibold mt-6 hidden lg:block">Contact</h3>
-                        <div className="flex justify-center lg:justify-start space-x-4 md:space-x-6 mt-2">
-                            <a href="#">
-                                {/*phone*/}
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="lg:w-14 md:w-12 sm:w-10 w-8">
-                                    <path d="M13.9671 14.7553C15.1271 17.1714 16.7084 19.4358 18.7111 21.4384C20.7137 23.441 22.9781 25.0224 25.3941 26.1823C25.602 26.2821 25.7059 26.332 25.8373 26.3703C26.3046 26.5065 26.8784 26.4087 27.2741 26.1254C27.3854 26.0456 27.4807 25.9504 27.6712 25.7598C28.2539 25.1772 28.5452 24.8858 28.8382 24.6954C29.943 23.977 31.3673 23.977 32.4721 24.6954C32.7651 24.8858 33.0564 25.1772 33.6391 25.7598L33.9639 26.0846C34.8496 26.9704 35.2925 27.4132 35.5331 27.8889C36.0115 28.8348 36.0115 29.9519 35.5331 30.8978C35.2925 31.3735 34.8496 31.8164 33.9639 32.7021L33.7012 32.9648C32.8185 33.8475 32.3771 34.2889 31.7771 34.6259C31.1112 35 30.0771 35.2689 29.3134 35.2667C28.6251 35.2646 28.1547 35.1311 27.214 34.8641C22.1583 33.4291 17.3877 30.7217 13.4078 26.7417C9.4278 22.7617 6.72034 17.9911 5.28539 12.9355C5.01838 11.9947 4.88487 11.5244 4.88283 10.8361C4.88055 10.0724 5.14949 9.03826 5.52352 8.37242C5.8606 7.77237 6.30196 7.33102 7.18466 6.44831L7.44739 6.18559C8.33312 5.29985 8.77599 4.85698 9.25163 4.61641C10.1976 4.13796 11.3147 4.13796 12.2606 4.61641C12.7362 4.85698 13.1791 5.29985 14.0648 6.18559L14.3896 6.51037C14.9723 7.09305 15.2636 7.38438 15.4541 7.67735C16.1724 8.78216 16.1724 10.2065 15.4541 11.3113C15.2636 11.6042 14.9723 11.8956 14.3896 12.4783C14.1991 12.6688 14.1038 12.764 14.0241 12.8754C13.7408 13.2711 13.6429 13.8449 13.7791 14.3121C13.8175 14.4436 13.8673 14.5475 13.9671 14.7553Z" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                            </a>
-                            <a href="#">
-                                {/*twitter*/}
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="lg:w-14 md:w-12 sm:w-10 w-8">
-                                    <path d="M30.5441 3.17322H36.1666L23.8832 17.2124L38.3337 36.3165H27.0191L18.157 24.7299L8.0169 36.3165H2.39105L15.5294 21.3L1.66699 3.17322H13.2688L21.2793 13.7638L30.5441 3.17322ZM28.5708 32.9512H31.6863L11.576 6.36177H8.23276L28.5708 32.9512Z" fill="black"/>
-                                </svg>
-                            </a>
-                            <a href="#">
-                                {/*google*/}
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="lg:w-14 md:w-12 sm:w-10 w-8 ml">
-                                    <g clip-path="url(#clip0_542_3765)">
-                                        <path d="M20 16.3635V24.109H30.7636C30.291 26.5999 28.8726 28.7091 26.7454 30.1272L33.2362 35.1636C37.0181 31.6728 39.1999 26.5455 39.1999 20.4546C39.1999 19.0365 39.0727 17.6727 38.8362 16.3637L20 16.3635Z" fill="#4285F4"/>
-                                        <path d="M8.79135 23.8066L7.32741 24.9273L2.14551 28.9636C5.43641 35.4908 12.1814 39.9999 19.9995 39.9999C25.3993 39.9999 29.9266 38.2181 33.2357 35.1636L26.7449 30.1272C24.963 31.3272 22.6903 32.0546 19.9995 32.0546C14.7995 32.0546 10.3815 28.5455 8.79953 23.8182L8.79135 23.8066Z" fill="#34A853"/>
-                                        <path d="M2.1453 11.0364C0.781737 13.7272 0 16.7636 0 19.9999C0 23.2362 0.781737 26.2726 2.1453 28.9634C2.1453 28.9815 8.79996 23.7998 8.79996 23.7998C8.39996 22.5998 8.16353 21.3271 8.16353 19.9997C8.16353 18.6722 8.39996 17.3996 8.79996 16.1996L2.1453 11.0364Z" fill="#FBBC05"/>
-                                        <path d="M19.9999 7.96363C22.9454 7.96363 25.5635 8.98179 27.6544 10.9454L33.3816 5.21825C29.9089 1.98194 25.4 0 19.9999 0C12.1818 0 5.43641 4.4909 2.14551 11.0364L8.79996 16.2C10.3817 11.4727 14.7999 7.96363 19.9999 7.96363Z" fill="#EA4335"/>
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_542_3765">
-                                            <rect width="40" height="40" fill="white"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </a>
-                            <a href="#">
-                                {/*facebook*/}
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="lg:w-14 md:w-12 sm:w-10 w-8">
-                                    <g clip-path="url(#clip0_542_3766)">
-                                        <path d="M40 20C40 8.9544 31.0456 0 20 0C8.9544 0 0 8.9544 0 20C0 29.3792 6.4576 37.2496 15.1688 39.4112V26.112H11.0448V20H15.1688V17.3664C15.1688 10.5592 18.2496 7.404 24.9328 7.404C26.2 7.404 28.3864 7.6528 29.2808 7.9008V13.4408C28.8088 13.3912 27.9888 13.3664 26.9704 13.3664C23.6912 13.3664 22.424 14.6088 22.424 17.8384V20H28.9568L27.8344 26.112H22.424V39.8536C32.3272 38.6576 40.0008 30.2256 40.0008 20H40Z" fill="#0866FF"/>
-                                        <path d="M27.8335 26.1121L28.9559 20.0001H22.4231V17.8385C22.4231 14.6089 23.6903 13.3665 26.9695 13.3665C27.9879 13.3665 28.8079 13.3913 29.2799 13.4409V7.90085C28.3855 7.65205 26.1991 7.40405 24.9319 7.40405C18.2487 7.40405 15.1679 10.5593 15.1679 17.3665V20.0001H11.0439V26.1121H15.1679V39.4113C16.7151 39.7953 18.3335 40.0001 19.9991 40.0001C20.8191 40.0001 21.6279 39.9497 22.4223 39.8537V26.1121H27.8327H27.8335Z" fill="white"/>
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_542_3766">
-                                            <rect width="40" height="40" fill="white"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </a>
-                            <a href="#" >
-                                {/*messenger*/}
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="lg:w-14 md:w-12 sm:w-10 w-8">
-                                    <path d="M20 0C8.735 0 0 8.25477 0 19.3995C0 25.2293 2.39 30.2692 6.28 33.7491C6.605 34.0391 6.805 34.4491 6.815 34.889L6.925 38.4489C6.93301 38.7109 7.00524 38.9668 7.13533 39.1943C7.26543 39.4218 7.44941 39.6138 7.67111 39.7536C7.89281 39.8933 8.14544 39.9764 8.40679 39.9957C8.66815 40.0149 8.93023 39.9697 9.17 39.8639L13.14 38.114C13.475 37.964 13.855 37.939 14.21 38.034C16.035 38.5339 17.975 38.8039 20 38.8039C31.265 38.8039 40 30.5492 40 19.4045C40 8.25977 31.265 0 20 0Z" fill="url(#paint0_radial_542_3767)"/>
-                                    <path d="M7.9899 25.0743L13.8649 15.7546C14.0859 15.4037 14.3773 15.1024 14.7206 14.8698C15.0639 14.6372 15.4517 14.4783 15.8595 14.4031C16.2673 14.328 16.6863 14.3382 17.09 14.4331C17.4937 14.528 17.8733 14.7056 18.2049 14.9546L22.8799 18.4595C23.0886 18.6157 23.3425 18.6998 23.6032 18.6989C23.8639 18.698 24.1173 18.6122 24.3249 18.4545L30.6349 13.6646C31.4749 13.0246 32.5749 14.0346 32.0149 14.9296L26.1349 24.2443C25.9139 24.5952 25.6225 24.8965 25.2792 25.1291C24.9359 25.3617 24.5481 25.5206 24.1403 25.5958C23.7325 25.6709 23.3135 25.6607 22.9098 25.5658C22.5061 25.4709 22.1265 25.2933 21.7949 25.0443L17.1199 21.5394C16.9112 21.3832 16.6573 21.2991 16.3966 21.3C16.1358 21.3009 15.8825 21.3867 15.6749 21.5444L9.3649 26.3343C8.5249 26.9743 7.4249 25.9693 7.9899 25.0743Z" fill="white"/>
-                                    <defs>
-                                        <radialGradient id="paint0_radial_542_3767" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(6.7 39.9989) scale(44 43.9988)">
-                                            <stop stop-color="#0099FF"/>
-                                            <stop offset="0.6" stop-color="#A033FF"/>
-                                            <stop offset="0.9" stop-color="#FF5280"/>
-                                            <stop offset="1" stop-color="#FF7061"/>
-                                        </radialGradient>
-                                    </defs>
-                                </svg>
-                            </a>
-                            <a href="#" >
-                                {/*telegram*/}
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="lg:w-14 md:w-12 sm:w-10 w-8">
-                                    <g clip-path="url(#clip0_542_3768)">
-                                        <path d="M20 40C31.0457 40 40 31.0457 40 20C40 8.95431 31.0457 0 20 0C8.95431 0 0 8.95431 0 20C0 31.0457 8.95431 40 20 40Z" fill="url(#paint0_linear_542_3768)"/>
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.05271 19.7889C14.8831 17.2487 18.771 15.574 20.7163 14.7649C26.2705 12.4547 27.4246 12.0534 28.1768 12.0402C28.3423 12.0373 28.7122 12.0783 28.9518 12.2727C29.1542 12.4369 29.2098 12.6587 29.2365 12.8143C29.2631 12.97 29.2963 13.3246 29.2699 13.6017C28.9689 16.7641 27.6666 24.4386 27.004 27.9806C26.7237 29.4794 26.1716 29.9819 25.6372 30.0311C24.4758 30.138 23.5938 29.2635 22.4689 28.5261C20.7086 27.3723 19.7142 26.654 18.0056 25.528C16.0309 24.2268 17.311 23.5116 18.4364 22.3428C18.7309 22.0369 23.8482 17.3823 23.9472 16.96C23.9596 16.9072 23.9711 16.7104 23.8542 16.6064C23.7372 16.5025 23.5646 16.5381 23.4401 16.5663C23.2635 16.6064 20.4515 18.465 15.004 22.1423C14.2058 22.6904 13.4828 22.9574 12.835 22.9434C12.1209 22.928 10.7473 22.5397 9.72611 22.2077C8.47361 21.8006 7.47815 21.5853 7.56483 20.8939C7.60998 20.5337 8.10594 20.1654 9.05271 19.7889Z" fill="white"/>
-                                    </g>
-                                    <defs>
-                                        <linearGradient id="paint0_linear_542_3768" x1="20" y1="0" x2="20" y2="39.7033" gradientUnits="userSpaceOnUse">
-                                            <stop stop-color="#2AABEE"/>
-                                            <stop offset="1" stop-color="#229ED9"/>
-                                        </linearGradient>
-                                        <clipPath id="clip0_542_3768">
-                                            <rect width="40" height="40" fill="white"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </a>
-                        </div>
-
-                        <div className="hidden lg:flex justify-center lg:justify-start gap-4 lg:gap-10 mt-2 ml-2">
-                            <a href="#">
-                                {/*facebook*/}
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g clip-path="url(#clip0_542_3766)">
-                                        <path d="M40 20C40 8.9544 31.0456 0 20 0C8.9544 0 0 8.9544 0 20C0 29.3792 6.4576 37.2496 15.1688 39.4112V26.112H11.0448V20H15.1688V17.3664C15.1688 10.5592 18.2496 7.404 24.9328 7.404C26.2 7.404 28.3864 7.6528 29.2808 7.9008V13.4408C28.8088 13.3912 27.9888 13.3664 26.9704 13.3664C23.6912 13.3664 22.424 14.6088 22.424 17.8384V20H28.9568L27.8344 26.112H22.424V39.8536C32.3272 38.6576 40.0008 30.2256 40.0008 20H40Z" fill="#0866FF"/>
-                                        <path d="M27.8335 26.1121L28.9559 20.0001H22.4231V17.8385C22.4231 14.6089 23.6903 13.3665 26.9695 13.3665C27.9879 13.3665 28.8079 13.3913 29.2799 13.4409V7.90085C28.3855 7.65205 26.1991 7.40405 24.9319 7.40405C18.2487 7.40405 15.1679 10.5593 15.1679 17.3665V20.0001H11.0439V26.1121H15.1679V39.4113C16.7151 39.7953 18.3335 40.0001 19.9991 40.0001C20.8191 40.0001 21.6279 39.9497 22.4223 39.8537V26.1121H27.8327H27.8335Z" fill="white"/>
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_542_3766">
-                                            <rect width="40" height="40" fill="white"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </a>
-
-                            <a href="#">
-                                {/*messenger*/}
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M20 0C8.735 0 0 8.25477 0 19.3995C0 25.2293 2.39 30.2692 6.28 33.7491C6.605 34.0391 6.805 34.4491 6.815 34.889L6.925 38.4489C6.93301 38.7109 7.00524 38.9668 7.13533 39.1943C7.26543 39.4218 7.44941 39.6138 7.67111 39.7536C7.89281 39.8933 8.14544 39.9764 8.40679 39.9957C8.66815 40.0149 8.93023 39.9697 9.17 39.8639L13.14 38.114C13.475 37.964 13.855 37.939 14.21 38.034C16.035 38.5339 17.975 38.8039 20 38.8039C31.265 38.8039 40 30.5492 40 19.4045C40 8.25977 31.265 0 20 0Z" fill="url(#paint0_radial_542_3767)"/>
-                                    <path d="M7.9899 25.0743L13.8649 15.7546C14.0859 15.4037 14.3773 15.1024 14.7206 14.8698C15.0639 14.6372 15.4517 14.4783 15.8595 14.4031C16.2673 14.328 16.6863 14.3382 17.09 14.4331C17.4937 14.528 17.8733 14.7056 18.2049 14.9546L22.8799 18.4595C23.0886 18.6157 23.3425 18.6998 23.6032 18.6989C23.8639 18.698 24.1173 18.6122 24.3249 18.4545L30.6349 13.6646C31.4749 13.0246 32.5749 14.0346 32.0149 14.9296L26.1349 24.2443C25.9139 24.5952 25.6225 24.8965 25.2792 25.1291C24.9359 25.3617 24.5481 25.5206 24.1403 25.5958C23.7325 25.6709 23.3135 25.6607 22.9098 25.5658C22.5061 25.4709 22.1265 25.2933 21.7949 25.0443L17.1199 21.5394C16.9112 21.3832 16.6573 21.2991 16.3966 21.3C16.1358 21.3009 15.8825 21.3867 15.6749 21.5444L9.3649 26.3343C8.5249 26.9743 7.4249 25.9693 7.9899 25.0743Z" fill="white"/>
-                                    <defs>
-                                        <radialGradient id="paint0_radial_542_3767" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(6.7 39.9989) scale(44 43.9988)">
-                                            <stop stop-color="#0099FF"/>
-                                            <stop offset="0.6" stop-color="#A033FF"/>
-                                            <stop offset="0.9" stop-color="#FF5280"/>
-                                            <stop offset="1" stop-color="#FF7061"/>
-                                        </radialGradient>
-                                    </defs>
-                                </svg>
-                            </a>
-
-                            <a href="#">
-                                {/*telegram*/}
-                                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g clip-path="url(#clip0_542_3768)">
-                                        <path d="M20 40C31.0457 40 40 31.0457 40 20C40 8.95431 31.0457 0 20 0C8.95431 0 0 8.95431 0 20C0 31.0457 8.95431 40 20 40Z" fill="url(#paint0_linear_542_3768)"/>
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M9.05271 19.7889C14.8831 17.2487 18.771 15.574 20.7163 14.7649C26.2705 12.4547 27.4246 12.0534 28.1768 12.0402C28.3423 12.0373 28.7122 12.0783 28.9518 12.2727C29.1542 12.4369 29.2098 12.6587 29.2365 12.8143C29.2631 12.97 29.2963 13.3246 29.2699 13.6017C28.9689 16.7641 27.6666 24.4386 27.004 27.9806C26.7237 29.4794 26.1716 29.9819 25.6372 30.0311C24.4758 30.138 23.5938 29.2635 22.4689 28.5261C20.7086 27.3723 19.7142 26.654 18.0056 25.528C16.0309 24.2268 17.311 23.5116 18.4364 22.3428C18.7309 22.0369 23.8482 17.3823 23.9472 16.96C23.9596 16.9072 23.9711 16.7104 23.8542 16.6064C23.7372 16.5025 23.5646 16.5381 23.4401 16.5663C23.2635 16.6064 20.4515 18.465 15.004 22.1423C14.2058 22.6904 13.4828 22.9574 12.835 22.9434C12.1209 22.928 10.7473 22.5397 9.72611 22.2077C8.47361 21.8006 7.47815 21.5853 7.56483 20.8939C7.60998 20.5337 8.10594 20.1654 9.05271 19.7889Z" fill="white"/>
-                                    </g>
-                                    <defs>
-                                        <linearGradient id="paint0_linear_542_3768" x1="20" y1="0" x2="20" y2="39.7033" gradientUnits="userSpaceOnUse">
-                                            <stop stop-color="#2AABEE"/>
-                                            <stop offset="1" stop-color="#229ED9"/>
-                                        </linearGradient>
-                                        <clipPath id="clip0_542_3768">
-                                            <rect width="40" height="40" fill="white"/>
-                                        </clipPath>
-                                    </defs>
-                                </svg>
-                            </a>
+                        <div className="flex items-center justify-center lg:justify-start mt-2 row-span-1 lg:flex-col gap-6">
+                            <div className="flex lg:w-full justify-center gap-6">
+                                <Link href="/public">
+                                    <Image src="/phone.svg" alt="Phone number" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
+                                </Link>
+                                <Link href="/public">
+                                    <Image src="/X.svg" alt="X" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
+                                </Link>
+                                <Link href="/public">
+                                    <Image src="/google.svg" alt="Google" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
+                                </Link>
+                            </div>
+                            <div className="flex lg:w-full justify-center gap-6">
+                                <Link href="/public">
+                                    <Image src="/facebook.svg" alt="Facebook" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
+                                </Link>
+                                <Link href="/public">
+                                    <Image src="/messager.svg" alt="Messager" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
+                                </Link>
+                                <Link href="/public">
+                                    <Image src="/tele.svg" alt="Telegram" width={50} height={50} className={"lg:w-12 md:w-10 sm:w-8 w-6 max-w-10"}/>
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     )
 }

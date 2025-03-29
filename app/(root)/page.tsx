@@ -74,7 +74,6 @@ export default function LandingPage() {
     return (
         <div>
             {session?.user ? (
-                <div> Have User </div>
             ) : (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 bg-white pl-8 pr-8 duration-300">
