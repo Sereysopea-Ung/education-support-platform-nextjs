@@ -64,6 +64,10 @@ export default function LandingPage() {
     const [posts, setPosts] = useState<any[]>([]);
     const [error, setError] = useState<string | null>(null);
     const [postsByComment, setPostsByComment] = useState<any[]>([]);
+    const [lessons,setLessons] = useState<any[]>([]);
+    const [latestJobs,setLatestJobs] = useState<any[]>([]);
+    const [mostApplyJobs,setMostApplyJobs] = useState<any[]>([]);
+    const [scholarshipByDate,setScholarshipByDate] = useState<any[]>([]);
 
 
     useEffect(() => {
@@ -95,7 +99,67 @@ export default function LandingPage() {
             }
         };
 
+        const fetchLessons = async () => {
+            try {
+                const res = await fetch('/api/getMostUpvoteLessons');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch lesson data');
+                }
+                const data = await res.json();
+                setLessons(data);
+            } catch (err) {
+                setError('Error fetching lesson data');
+                console.error(err);
+            }
+        };
+        const fetchLatestJobs = async () => {
+            try {
+                const res = await fetch('/api/getLatestJobs');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch latest jobs');
+                }
+                const data = await res.json();
+                setLatestJobs(data);
+            } catch (err) {
+                setError('Error fetching latest jobs');
+                console.error(err);
+            }
+        };
+
+        const fetchMostApplyJobs = async () => {
+            try {
+                const res = await fetch('/api/getMostApplyJobs');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch most apply jobs');
+                }
+                const data = await res.json();
+                setMostApplyJobs(data);
+            } catch (err) {
+                setError('Error fetching most apply jobs');
+                console.error(err);
+            }
+        };
+
+        const fetchScholarshipByDate = async () => {
+            try {
+                const res = await fetch('/api/getScholarshipByDate');
+                if (!res.ok) {
+                    throw new Error('Failed to scholarship by date');
+                }
+                const data = await res.json();
+                setScholarshipByDate(data);
+            } catch (err) {
+                setError('Error fetching scholarship by date');
+                console.error(err);
+            }
+        };
+
         fetchPosts();
+        fetchPostsByComment();
+        fetchLessons();
+        fetchLatestJobs();
+        fetchMostApplyJobs();
+        fetchScholarshipByDate();
     }, []);
 
 
@@ -224,7 +288,17 @@ export default function LandingPage() {
                                             Hot Discussions
                                         </div>
                                     </div>
-
+                                    <ul id="top-discuss" className="flex flex-col gap-1">
+                                        {postsByComment.map((post: any) => (
+                                            <li key={post._id} className="flex gap-1">
+                                                <div className="w-[40px] h-[50px]"><img className="rounded-full" src={urlFor(post.author.profile_pic).width(40).height(40).fit('crop').url()} alt="fetch_image"/></div>
+                                                <div className="flex flex-col gap-1">
+                                                    <div className="font-bold">{post.title}</div>
+                                                    <div><span className="text-blue-600">{post.commentCount}</span>&nbsp;comments</div>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
 
                                 </div>
 
@@ -235,7 +309,14 @@ export default function LandingPage() {
                                             Popular Lessons
                                         </div>
                                     </div>
-
+                                    <ul id="popular-lesson" className="flex flex-col gap-1 w-full pr-4">
+                                        {lessons.map((post: any) => (
+                                            <li key={post._id} className="bg-gray-100 rounded-[10px] px-[5px] py-[5px]">
+                                                <div className="font-bold">{post.title}</div>
+                                                <p><span className="text-blue-600">{post.upvote}</span>&nbsp;students</p>
+                                            </li>
+                                        ))}
+                                    </ul>
 
                                 </div>
 
@@ -246,7 +327,14 @@ export default function LandingPage() {
                                             Latest Jobs
                                         </div>
                                     </div>
-
+                                    <ul id="latest-job" className="flex flex-col gap-1 w-full pr-4">
+                                        {latestJobs.map((job: any) => (
+                                            <li key={job._id} className="bg-gray-100 rounded-[10px] px-[5px] py-[5px]">
+                                                <div className="font-bold">{job.jobTitle}</div>
+                                                <p><span className="text-gray-600">{job.companyName}</span></p>
+                                            </li>
+                                        ))}
+                                    </ul>
 
                                 </div>
 
@@ -263,13 +351,39 @@ export default function LandingPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full row-span-1">
                                 <div className="pt-4 pl-4 pr-4 flex flex-col items-start min-h-[300px] text-left w-full">
                                     <h1 className="text-black lg:text-2xl md:text-xl  sm:text-3xs text-2xs">Job Openings</h1>
-                                    <div className="flex items-start rounded-xl border shadow-md border-gray-100 h-full w-full mb-4"></div>
-                                    <div className="flex items-start rounded-xl border shadow-md border-gray-100 h-full w-full mb-4"></div>
+                                    <ul className="h-full w-full">
+                                        {mostApplyJobs.map((job:any)=>(
+                                            <li key={job._id} className="flex flex-col justify-between items-start rounded-xl border shadow-md border-gray-100 h-1/2 w-full mb-4 p-5">
+                                                <div className="flex w-full justify-between">
+                                                    <div className="flex flex-col">
+                                                        <div className="font-bold">{job.jobTitle}</div>
+                                                        <div className="text-gray-600">{job.companyName}</div>
+                                                    </div>
+                                                    <div className="bg-green-500 text-white rounded-[10px] w-[80px] text-center h-1/2">featured</div>
+                                                </div>
+                                                <div className="text-blue-600">Apply Now</div>
+                                            </li>
+                                        ))}
+                                    </ul>
+
+
                                 </div>
                                 <div className="pt-4 pl-4 pr-4 flex flex-col items-start min-h-[300px] text-left w-full">
                                     <h1 className="text-black lg:text-2xl md:text-xl sm:text-3xs text-2xs">Scholarships</h1>
-                                    <div className="flex items-start rounded-xl border shadow-md border-gray-100 h-full w-full mb-4"></div>
-                                    <div className="flex items-start rounded-xl border shadow-md border-gray-100 h-full w-full mb-4"></div>
+                                    <ul className="h-full w-full">
+                                        {scholarshipByDate.map((scholarship:any)=>(
+                                            <li key={scholarship._id} className="flex flex-col justify-between items-start rounded-xl border shadow-md border-gray-100 h-1/2 w-full mb-4 p-5">
+                                                <div className="flex w-full justify-between">
+                                                    <div className="flex flex-col">
+                                                        <div className="font-bold">{scholarship.scholarshipTitle}</div>
+                                                        <div className="text-gray-600">{scholarship.forApplicant}</div>
+                                                    </div>
+                                                    <div className="bg-green-500 text-white rounded-[10px] w-[80px] text-center h-1/2">$ {scholarship.amountOfMoney}</div>
+                                                </div>
+                                                <div className="text-blue-600">Learn More</div>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                             </div>
                         </div>
