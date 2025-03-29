@@ -9,8 +9,10 @@ import imageUrlBuilder from '@sanity/image-url';
 import UserPostQ from "@/components/ProfilePostQ";
 import UserPostL from "@/components/ProfilePostLesson";
 import {createClient} from "@sanity/client";
+
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
+=======
 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -100,6 +102,7 @@ export default function LandingPage() {
         fetchPosts();
     }, []);
 
+
     const [isUpvoted, setIsUpvoted] = useState(false);
     const [isDownvoted, setIsDownvoted] = useState(false);
 
@@ -121,6 +124,7 @@ export default function LandingPage() {
             setIsDownvoted(false); // Remove downvote
         }
     };
+=======
 
     if (status === 'loading') {
         return <div className="mt-20">Loading...</div>; // Show loading while the session is being fetched
