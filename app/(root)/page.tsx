@@ -68,6 +68,7 @@ export default function LandingPage() {
     const [latestJobs,setLatestJobs] = useState<any[]>([]);
     const [mostApplyJobs,setMostApplyJobs] = useState<any[]>([]);
     const [scholarshipByDate,setScholarshipByDate] = useState<any[]>([]);
+    const [postData, setPostData] = useState<any[]>([]);
 
 
     useEffect(() => {
@@ -154,12 +155,27 @@ export default function LandingPage() {
             }
         };
 
+        const fetchAllPosts = async () => {
+            try {
+                const res = await fetch('/api/getAllPosts');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch all posts');
+                }
+                const data = await res.json();
+                setPostData(data);
+            } catch (err) {
+                setError('Error fetching all posts');
+                console.error(err);
+            }
+        };
+
         fetchPosts();
         fetchPostsByComment();
         fetchLessons();
         fetchLatestJobs();
         fetchMostApplyJobs();
         fetchScholarshipByDate();
+        fetchAllPosts();
     }, []);
 
     const [isUpvoted, setIsUpvoted] = useState(false);
@@ -218,86 +234,94 @@ export default function LandingPage() {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="flex border-1 border-[#DDE3EF] w-full h-auto min-h-75 rounded-xl px-2 py-2">
-                                <div className="w-full h-full flex-col gap-5">
-                                    <div className="flex">
-                                        <div className="flex h-12 w-12 ">
-                                            <div id="profile_picture" className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
-
-                                            </div>
-                                        </div>
-                                        <div className="flex w-full h-12">
-                                            <div className="flex-1 h-12 w-5/6">
-                                                <div className="h-1/2 gap-3 flex">
-                                                    <div id="username" className="h-full flex">
-                                                        Dr. Sarah Wilson
-                                                    </div>
-                                                    <div id="role" className="bg-[#DBEAFE] text-[#2563EB] border-1 h-full flex rounded-lg px-2">
-                                                        Student
-                                                    </div>
-                                                    <div id="verify?" className=" h-full flex">
-                                                        verify picture
-                                                    </div>
-                                                </div>
-                                                <div id="year and major" className="h-1/2 justify-between flex gap-3 text-[#6B7280] text-center text-md  ">
-                                                    2nd • ITE
+                            {/*UNGSEREYSOPEA Correct*/}
+                            {postData.map((datum:any)=>(
+                                <li key={datum._id} className="sengly flex border-1 border-[#DDE3EF] w-full h-auto min-h-75 rounded-xl px-2 py-2">
+                                    <div className="w-full h-full flex-col gap-5">
+                                        <div className="flex">
+                                            <div className="flex h-12 w-12 ">
+                                                <div id="profile_picture" className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
+                                                    <img src={urlFor(datum?.author.profile_pic).width(50).height(50).fit('crop').url()} className="rounded-full"/>
                                                 </div>
                                             </div>
-                                            <div id="type" className="h-full flex rounded-lg px-2 w-1/6 justify-end">
-                                                <div className="bg-[#C7FFDE] text-[#27AE60] border-1 h-1/2 flex rounded-lg px-2 text-center">
-                                                    Q&A
+                                            <div className="flex w-full h-12">
+                                                <div className="flex-1 h-12 w-5/6">
+                                                    <div className="h-1/2 gap-3 flex">
+                                                        <div id="username" className="h-full flex">
+                                                            {datum?.author.username}
+                                                        </div>
+                                                        <div id="role" className="bg-[#DBEAFE] text-[#2563EB] border-1 h-full flex rounded-lg px-2">
+                                                            {datum?.author.role}
+                                                        </div>
+                                                        <div id="verify?" className=" h-full flex">
+                                                            verify picture
+                                                        </div>
+                                                    </div>
+                                                    <div id="year and major" className="h-1/2 justify-between flex gap-3 text-[#6B7280] text-center text-md  ">
+                                                        {datum?.author?.year ? (
+                                                            <p>Year: {datum.author.year} • {datum.author.department}</p>
+                                                        ) : (
+                                                            <p>{datum?.author?.experience} year • {datum?.author?.department}</p>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div id="type" className="h-full flex rounded-lg px-2 w-1/6 justify-end">
+                                                    <div className="bg-[#C7FFDE] text-[#27AE60] border-1 h-1/2 flex rounded-lg px-2 text-center">
+                                                        {datum?.typePost}
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    <div id="post" className="h-1/2 w-full pl-10 pr-15 mt-3">
-                                        <div id="post" className=" border-[#6B7280]  border-1 h-8/10 w-3/4">
-                                            Post
+                                        <div id="post" className="h-1/2 w-full pl-10 pr-15 mt-3">
+                                            <div id="post" className=" h-8/10 w-3/4">
+                                                <img src={urlFor(datum?.postImage).width(100).height(100).url()} />
+                                            </div>
+                                            <div id="date" className="text-[#6B7280] h-2/10 w-3/4 text-sm ">
+                                                {datum?._createdAt}
+                                            </div>
                                         </div>
-                                        <div id="date" className="text-[#6B7280] h-2/10 w-3/4 text-sm ">
-                                            11.FEB.2025 • 11:11PM
-                                        </div>
-                                    </div>
 
-                                    <div className="w-full pl-10 pr-15 mt-[-5]">
-                                        <div id="pitch" className="w-full">
-                                            Important announcement regarding the exam
-                                            <span className="text-gray-600 text-nowrap">  ...see more</span>
+                                        <div className="w-full pl-10 pr-15 mt-[-5]">
+                                            <div id="pitch" className="w-full">
+                                                Important announcement regarding the exam
+                                                <span className="text-gray-600 text-nowrap">  ...see more</span>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div className="w-full pl-10 pr-15 mt-3 flex gap-5">
-                                        <div className="flex gap-3">
+                                        <div className="w-full pl-10 pr-15 mt-3 flex gap-5">
+                                            <div className="flex gap-3">
+                                                <div
+                                                    id="upvote"
+                                                    onClick={handleUpvoteClick}
+                                                    className={`flex gap-3 items-center cursor-pointer ${isUpvoted ? 'text-blue-500' : 'text-gray-500'}`}
+                                                >
+                                                    <FontAwesomeIcon icon={faCircleUp} />
+                                                    <span>{datum?.upvote}</span>
+                                                </div>
+                                            </div>
                                             <div
-                                                id="upvote"
-                                                onClick={handleUpvoteClick}
-                                                className={`flex gap-3 items-center cursor-pointer ${isUpvoted ? 'text-blue-500' : 'text-gray-500'}`}
+                                                id="downvote"
+                                                onClick={handleDownvoteClick}
+                                                className={`flex gap-3 items-center cursor-pointer ${isDownvoted ? 'text-red-500' : 'text-gray-500'}`}
                                             >
-                                                <FontAwesomeIcon icon={faCircleUp} />
-                                                <span>24</span>
+                                                <FontAwesomeIcon icon={faCircleDown} />
+                                            </div>
+                                            <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
+                                                <FontAwesomeIcon icon={faComment} />
+                                                {datum?.commentCount}
+                                            </div>
+                                            <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
+                                                •••
                                             </div>
                                         </div>
-                                        <div
-                                            id="downvote"
-                                            onClick={handleDownvoteClick}
-                                            className={`flex gap-3 items-center cursor-pointer ${isDownvoted ? 'text-red-500' : 'text-gray-500'}`}
-                                        >
-                                            <FontAwesomeIcon icon={faCircleDown} />
-                                        </div>
-                                        <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
-                                            <FontAwesomeIcon icon={faComment} />
-                                            12
-                                        </div>
-                                        <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
-                                            •••
-                                        </div>
+
                                     </div>
 
-                                </div>
+                                </li>
+                            ))}
 
-                            </div>
+
 
                         </div>
                     </div>
