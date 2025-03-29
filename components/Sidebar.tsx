@@ -26,7 +26,7 @@ const Sidebar = () => {
 
                     <div>
                         <h3 className="text-md font-normal text-gray-800">Meow Meow</h3>
-                        <p className="font-mono text-[10px] text-gray-600">
+                        <p className="font-mono text-xs text-gray-600">
                             Computer Science <br /> • Year 3
                         </p>
                     </div>

@@ -9,18 +9,21 @@ const client = createClient({
 
 const getMostCommentPosts = async () => {
     try {
-        const query = `*[_type == "post"] {
-            _id,
-            title,
-            "commentCount": count(*[_type == "comment" && references(^._id)])
+        const query = `*[_type == "post" && typePost == "Q&A"] {
+        _id,
+        title,
+        "commentCount": count(*[_type == "comment" && references(^._id)]),
+        author->{profile_pic}
         }`;
+
 
         let posts = await client.fetch(query);
 
         // Sort manually in JavaScript
         posts.sort((a:any, b:any) => b.commentCount - a.commentCount);
+        const result = [posts[0],posts[1]];
 
-        return posts;
+        return result;
     } catch (error) {
         console.error("Error fetching most commented posts:", error);
         return [];
