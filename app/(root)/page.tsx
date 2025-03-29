@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
 import Arrow from "@/components/Arrow";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import UserPostQ from "@/components/ProfilePostQ";
 import UserPostL from "@/components/ProfilePostLesson";
 
@@ -45,7 +45,27 @@ export default function LandingPage() {
         { icon: "⚖️", title: "Integrity", description: "Maintaining honest and ethical practices in all we do" },
     ];
 
+    //SOPEA CODE DON'T TOUCH
+    const [posts, setPosts] = useState<any[]>([]);
+    const [error, setError] = useState<string | null>(null);
 
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const res = await fetch('/api/getMostUpvotePosts');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch posts');
+                }
+                const data = await res.json();
+                setPosts(data);
+            } catch (err) {
+                setError('Error fetching posts');
+                console.error(err);
+            }
+        };
+
+        fetchPosts();
+    }, []);
 
     if (status === 'loading') {
         return <div className="mt-20">Loading...</div>; // Show loading while the session is being fetched
@@ -54,14 +74,6 @@ export default function LandingPage() {
     return (
         <div>
             {session?.user ? (
-                <div className="grid grid-cols-12">
-                    <div className="col-span-7 col-start-3 bg-[#F9FAFB] w-full h-dvh">
-
-                    </div>
-                    <div className="col-span-3 col-start-10 bg-white w-full h-dvh">
-
-                    </div>
-                </div>
             ) : (
                 <>
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-4 bg-white pl-8 pr-8 duration-300">
@@ -157,7 +169,10 @@ export default function LandingPage() {
                                         </div>
                                     </div>
                                     <div>
-
+                                        <ul id="top-q-and-a" className="flex flex-col">
+                                            <li>1</li>
+                                            <li>2</li>
+                                        </ul>
                                     </div>
 
                                 </div>
