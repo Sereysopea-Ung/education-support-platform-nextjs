@@ -18,7 +18,7 @@ const getAllPosts = async () => {
             postImage,
             pitch,
             "commentCount": count(*[_type == "comment" && references(^._id)]),
-            author->{profile_pic, role, year, major, experience, username}
+            author->{profile_pic, role, year, major, experience, username, department}
         }`;
 
         let posts = await client.fetch(query);

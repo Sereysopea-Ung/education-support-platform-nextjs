@@ -200,6 +200,12 @@ export default function LandingPage() {
         }
     };
 
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    const toggleText = () => {
+        setIsExpanded(!isExpanded);
+    };
+
 
     if (status === 'loading') {
         return <div className="mt-20">Loading...</div>; // Show loading while the session is being fetched
@@ -209,14 +215,14 @@ export default function LandingPage() {
     return (
         <div>
             {session?.user ? (
-                <div className="grid grid-cols-12 mt-16">
+                <div className="grid grid-cols-12">
                     {/*middle section*/}
-                    <div className="lg:col-span-7 lg:col-start-3 col-span-12 md:col-span-8 bg-[#F9FAFB] w-full h-dvh lg:px-10 md:px-5">
+                    <div className="lg:col-span-7 lg:col-start-3 col-span-12 md:col-span-8 bg-[#F9FAFB] w-full lg:px-10 md:px-5 lg:mt-20">
                         <div className="flex flex-col w-full h-full lg:mt-5 gap-5">
 
                             {/*UNGSEREYSOPEA Correct*/}
                             {postData.map((datum:any)=>(
-                                <li key={datum._id} className="sengly flex border-1 border-[#DDE3EF] w-full h-auto min-h-75 rounded-xl px-2 py-2">
+                                <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto min-h-75 rounded-xl px-2 py-2">
                                     <div className="w-full h-full flex-col gap-5">
                                         <div className="flex">
                                             <div className="flex h-12 w-12 ">
@@ -227,7 +233,7 @@ export default function LandingPage() {
                                             <div className="flex w-full h-12">
                                                 <div className="flex-1 h-12 w-5/6">
                                                     <div className="h-1/2 gap-3 flex">
-                                                        <div id="username" className="h-full flex">
+                                                        <div id="username" className="h-full flex text-lg">
                                                             {datum?.author.username}
                                                         </div>
                                                         <div id="role" className="bg-[#DBEAFE] text-[#2563EB] border-1 h-full flex rounded-lg px-2">
@@ -239,7 +245,7 @@ export default function LandingPage() {
                                                     </div>
                                                     <div id="year and major" className="h-1/2 justify-between flex gap-3 text-[#6B7280] text-center text-md  ">
                                                         {datum?.author?.year ? (
-                                                            <p>Year {datum.author.year} • {datum.author.department}</p>
+                                                            <p>Year {datum.author.year} • {datum.author.major}</p>
                                                         ) : (
                                                             <p>{datum?.author?.experience} year • {datum?.author?.department}</p>
                                                         )}
@@ -254,45 +260,53 @@ export default function LandingPage() {
                                         </div>
 
                                         <div id="post" className="h-1/2 w-full pl-10 pr-15 mt-3">
-                                            <div id="post" className=" h-8/10 w-3/4">
-                                                <img src={urlFor(datum?.postImage).width(100).height(100).url()} />
+                                            <div id="post">
+                                                <img src={urlFor(datum?.postImage).width(400).height(400).url()} />
                                             </div>
-                                            <div id="date" className="text-[#6B7280] h-2/10 w-3/4 text-sm ">
+                                            <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
                                                 {datum?._createdAt}
                                             </div>
-                                        </div>
-
-                                        <div className="w-full pl-10 pr-15 mt-[-5]">
                                             <div id="pitch" className="w-full">
-                                                Important announcement regarding the exam
-                                                <span className="text-gray-600 text-nowrap">  ...see more</span>
-                                            </div>
-                                        </div>
-
-                                        <div className="w-full pl-10 pr-15 mt-3 flex gap-5">
-                                            <div className="flex gap-3">
                                                 <div
-                                                    id="upvote"
-                                                    onClick={handleUpvoteClick}
-                                                    className={`flex gap-3 items-center cursor-pointer ${isUpvoted ? 'text-blue-500' : 'text-gray-500'}`}
+                                                    className={`truncate ${isExpanded ? "whitespace-normal" : ""}`}
+                                                    style={{ width: "100%" }}
                                                 >
-                                                    <FontAwesomeIcon icon={faCircleUp} />
-                                                    <span>{datum?.upvote}</span>
+                                                    {datum?.pitch}
                                                 </div>
+
+                                                {/* Button to toggle text visibility */}
+                                                <button
+                                                    onClick={toggleText}
+                                                    className="text-blue-500 mt-2 text-sm"
+                                                >
+                                                    {isExpanded ? "Show less" : "See more"}
+                                                </button>
                                             </div>
-                                            <div
-                                                id="downvote"
-                                                onClick={handleDownvoteClick}
-                                                className={`flex gap-3 items-center cursor-pointer ${isDownvoted ? 'text-red-500' : 'text-gray-500'}`}
-                                            >
-                                                <FontAwesomeIcon icon={faCircleDown} />
-                                            </div>
-                                            <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
-                                                <FontAwesomeIcon icon={faComment} />
-                                                {datum?.commentCount}
-                                            </div>
-                                            <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
-                                                •••
+                                            <div className="w-full pl-10 pr-15 mt-3 flex gap-5">
+                                                <div className="flex gap-3">
+                                                    <div
+                                                        id="upvote"
+                                                        onClick={handleUpvoteClick}
+                                                        className={`flex gap-3 items-center cursor-pointer ${isUpvoted ? 'text-blue-500' : 'text-gray-500'}`}
+                                                    >
+                                                        <FontAwesomeIcon icon={faCircleUp} />
+                                                        <span>{datum?.upvote}</span>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    id="downvote"
+                                                    onClick={handleDownvoteClick}
+                                                    className={`flex gap-3 items-center cursor-pointer ${isDownvoted ? 'text-red-500' : 'text-gray-500'}`}
+                                                >
+                                                    <FontAwesomeIcon icon={faCircleDown} />
+                                                </div>
+                                                <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
+                                                    <FontAwesomeIcon icon={faComment} />
+                                                    {datum?.commentCount}
+                                                </div>
+                                                <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
+                                                    •••
+                                                </div>
                                             </div>
                                         </div>
 
@@ -307,7 +321,7 @@ export default function LandingPage() {
                     </div>
 
                     {/*right section*/}
-                    <div className="lg:col-span-3 lg:col-start-10 col-span-12 md:col-span-4 bg-white w-full h-dvh border-1 border-gray-200 px-2 pt-3">
+                    <div className="lg:col-span-3 lg:col-start-10 col-span-12 md:col-span-4 bg-white w-full border-1 h-auto border-gray-200 px-2 pt-3 rounded-lg lg:mt-16 md:-mt-36 mt-10">
                         <div className="flex border-1 border-[#DDE3EF] w-full rounded-xl px-2 py-2 flex-col gap-4">
                             <div className="h-1/4 justify-between flex w-full items-center">
                                 <div className="h-full flex text-md">
