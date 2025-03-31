@@ -4,7 +4,7 @@ import UserPostQ from "@/components/ProfilePostQ";
 import UserPostL from "@/components/ProfilePostLesson";
 import Link from "next/link";
 import Image from "next/image";
-import {useState} from "react";
+import React, {useState} from "react";
 
 export default function Profile() {
     const [isOpen, setIsOpen] = useState(false);  // State to track if filter is open or not
@@ -21,37 +21,13 @@ export default function Profile() {
 
     return (
         <div className="grid grid-cols-12 w-full min-h-screen justify-center">
-            <div className="lg:col-start-3 lg:col-span-8 col-span-12 mt-16 w-full">
+            <button className="lg:hidden flex bg-blue-500 text-white md:px-4 md:py-3 px-2 py-1 rounded-xl sm:col-end-12 col-end-11 md:w-27 md:h-12 w-20 h-8 text-center md:text-md text-sm text-nowrap -mt-23">
+                Edit Profile
+            </button>
+            <div className="lg:col-start-3 lg:col-span-8 col-span-12 lg:mt-16 w-full">
                 {/* Main Content */}
 
                 <div className="flex-1 p-4 md:p-6 pb-20 md:pb-6 w-full">
-                    <div className="lg:hidden block bg-white shadow rounded-lg p-6 mb-6 w-full">
-                        <div className="flex-1 flex md:flex-row gap-8 justify-between items-center">
-                            <div className="flex-shrink-0 flex gap-2">
-                                <img
-                                    src="/Default_pfp.jpg"
-                                    alt="Profile"
-                                    className="w-15 h-15 rounded-full border-4 border-white"
-                                />
-                                <div>
-                                    <h1 className="text-lg font-normal ">
-                                        Meow Meow
-                                        <span className="bg-amber-300 px-1 rounded-full text-white ml-4">
-                                    ★
-                                    </span>
-                                    </h1>
-
-                                    <div className="flex space-x-4 text-xs">
-                                        <span><span className="text-gray-900 font-medium">891</span> Following</span>
-                                        <span><span className="text-gray-900 font-medium">156</span> Posts</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button className="flex bg-blue-500 text-white px-4 py-3 rounded-xl text-center text-md">
-                                Edit Profile
-                            </button>
-                        </div>
-                    </div>
 
                     {/* Profile Header - Hidden on mobile, shown on desktop */}
                     <div className="hidden lg:block bg-white shadow rounded-lg p-6 mb-6 lg:w-full">
@@ -86,6 +62,7 @@ export default function Profile() {
                             </div>
                         </div>
                     </div>
+
                     <div className="flex pb-2 mb-6 border-b border-gray-300 w-full">
                         <div className="md:ml-8 flex md:gap-6 gap-2 w-full">
                             {['All Posts', 'Q&A', 'Lesson', 'Group'].map((tab, index) => (

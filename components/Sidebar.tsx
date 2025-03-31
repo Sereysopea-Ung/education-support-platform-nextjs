@@ -70,80 +70,109 @@ const Sidebar = () => {
     }, [session]);
 
     return (
-        <div className="hidden lg:flex flex-col lg:flex-row min-h-screen bg-white mt-16 w-2/12 border-[#E5E7EB] border-1 fixed top-0 left-0">
-            <div className="block md:w-64 sticky  top-0 h-screen">
-                <Link href='/profile/${id}' className="flex items-center mb-8 ml-5 mt-5">
-                    <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden">
-                        {user?.profile_pic && (
-                            <img
-                                src={urlFor(user.profile_pic).width(50).height(50).fit('crop').url()}
-                                alt="Profile"
-                                className="w-full h-full object-cover"
-                            />
-                        )}
-                    </div>
+        <div>
+            <div className="lg:hidden flex flex-col md:px-5 md:w-8/12 border-black mt-20 w-full mb-5">
+                <div className="top-0 bg-white w-full border-[#E5E7EB] border-1 rounded-lg flex">
+                    <Link href='/profile/${id}' className="flex m-5 justify-between w-full items-center">
+                        <div className="flex items-center">
+                            <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden">
+                                {user?.profile_pic && (
+                                    <img
+                                        src={urlFor(user.profile_pic).width(50).height(50).fit('crop').url()}
+                                        alt="Profile"
+                                        className="w-full h-full object-cover"
+                                    />
+                                )}
+                            </div>
 
-                    <div>
-                        <h3 className="text-md font-normal text-gray-800">{user?.username}</h3>
-                        <p className="font-mono text-[10px] text-gray-600">
-                            {user?.major} <br /> • year {user?.year}
-                        </p>
-                    </div>
-                </Link>
-
-                {/* Sidebar Links */}
-                <div className="flex mb-8 flex-col w-full">
-
-                    <ul className="space-y-4">
-                        <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
-                            <FontAwesomeIcon icon={faHome} size="lg" />
-                            <span className="ml-1">Home</span>
+                            <div>
+                                <h3 className="text-xl font-normal text-gray-800">{user?.username}</h3>
+                                <p className="font-mono text-md text-gray-600">
+                                    {user?.major} • year {user?.year}
+                                </p>
+                            </div>
                         </div>
-                    </ul>
 
-                    <ul className="space-y-4">
-                        <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
-                            <FontAwesomeIcon icon={faUser} size="lg" />
-                            <span className="ml-1">My Network</span>
-                        </div>
-                    </ul>
-
-                    <ul className="space-y-4">
-                        <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
-                            <FontAwesomeIcon icon={faStar} size="lg" />
-                            <span className="ml-1">Collection</span>
-                        </div>
-                    </ul>
-
-                    <ul className="space-y-4">
-                        <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
-                            <FontAwesomeIcon icon={faBriefcase} size="lg" />
-                            <span className="ml-1">Job</span>
-                        </div>
-                    </ul>
-
-                    <ul className="space-y-4">
-                        <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
-                            <FontAwesomeIcon icon={faBullhorn} size="lg" />
-                            <span className="ml-1">News</span>
-                        </div>
-                    </ul>
-
-                    <ul className="space-y-4">
-                        <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
-                            <FontAwesomeIcon icon={faGraduationCap} size="lg" />
-                            <span>Scholarship</span>
-                        </div>
-                    </ul>
-
-                    <ul className="space-y-4">
-                        <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
-                            <FontAwesomeIcon icon={faGear} size="lg" />
-                            <span >Setting</span>
-                        </div>
-                    </ul>
+                    </Link>
                 </div>
+            </div>
 
+            <div className="hidden lg:flex flex-col lg:flex-row min-h-screen bg-white mt-16 w-2/12 border-[#E5E7EB] border-1 fixed top-0 left-0">
+                <div className="top-0 h-screen w-full">
+                    <Link href='/profile/${id}' className="flex items-center mb-8 pl-5 mt-5 w-full">
+                        <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden">
+                            {user?.profile_pic && (
+                                <img
+                                    src={urlFor(user.profile_pic).width(50).height(50).fit('crop').url()}
+                                    alt="Profile"
+                                    className="w-full h-full object-cover"
+                                />
+                            )}
+                        </div>
+
+                        <div className="flex-col w-full">
+                            <h3 className="text-xl font-normal text-gray-800 w-full break-words lg:max-w-23 xl:max-w-full">{user?.username}</h3>
+                            <p className="font-mono text-md text-gray-600">
+                                {user?.major} <br /> • year {user?.year}
+                            </p>
+                        </div>
+                    </Link>
+
+
+            {/* Sidebar Links */}
+                    <div className="flex mb-8 flex-col w-full">
+
+                        <ul className="space-y-4">
+                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                                <FontAwesomeIcon icon={faHome} size="lg" />
+                                <span className="ml-1">Home</span>
+                            </div>
+                        </ul>
+
+                        <ul className="space-y-4">
+                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
+                                <FontAwesomeIcon icon={faUser} size="lg" />
+                                <span className="ml-1">My Network</span>
+                            </div>
+                        </ul>
+
+                        <ul className="space-y-4">
+                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                                <FontAwesomeIcon icon={faStar} size="lg" />
+                                <span className="ml-1">Collection</span>
+                            </div>
+                        </ul>
+
+                        <ul className="space-y-4">
+                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                                <FontAwesomeIcon icon={faBriefcase} size="lg" />
+                                <span className="ml-1">Job</span>
+                            </div>
+                        </ul>
+
+                        <ul className="space-y-4">
+                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                                <FontAwesomeIcon icon={faBullhorn} size="lg" />
+                                <span className="ml-1">News</span>
+                            </div>
+                        </ul>
+
+                        <ul className="space-y-4">
+                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                                <FontAwesomeIcon icon={faGraduationCap} size="lg" />
+                                <span>Scholarship</span>
+                            </div>
+                        </ul>
+
+                        <ul className="space-y-4">
+                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
+                                <FontAwesomeIcon icon={faGear} size="lg" />
+                                <span >Setting</span>
+                            </div>
+                        </ul>
+                    </div>
+
+                </div>
             </div>
         </div>
     );
