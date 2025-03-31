@@ -84,15 +84,9 @@ const Sidebar = () => {
                     </div>
 
                     <div>
-
-                        <h3 className="text-md font-normal text-gray-800">Meow Meow</h3>
-                        <p className="font-mono text-xs text-gray-600">
-                            Computer Science <br /> • Year 3
-=======
                         <h3 className="text-md font-normal text-gray-800">{user?.username}</h3>
                         <p className="font-mono text-[10px] text-gray-600">
                             {user?.major} <br /> • year {user?.year}
-
                         </p>
                     </div>
                 </Link>
