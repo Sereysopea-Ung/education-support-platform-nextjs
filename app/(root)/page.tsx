@@ -68,10 +68,7 @@ export default function LandingPage() {
     const [latestJobs,setLatestJobs] = useState<any[]>([]);
     const [mostApplyJobs,setMostApplyJobs] = useState<any[]>([]);
     const [scholarshipByDate,setScholarshipByDate] = useState<any[]>([]);
-
-=======
     const [postData, setPostData] = useState<any[]>([]);
-
 
 
     useEffect(() => {
@@ -158,8 +155,6 @@ export default function LandingPage() {
             }
         };
 
-
-=======
         const fetchAllPosts = async () => {
             try {
                 const res = await fetch('/api/getAllPosts');
@@ -180,10 +175,7 @@ export default function LandingPage() {
         fetchLatestJobs();
         fetchMostApplyJobs();
         fetchScholarshipByDate();
-
-=======
         fetchAllPosts();
-
     }, []);
 
     const [isUpvoted, setIsUpvoted] = useState(false);
@@ -336,32 +328,40 @@ export default function LandingPage() {
 
                     {/*right section*/}
                     <div className="lg:col-span-3 lg:col-start-10 col-span-12 md:col-span-4 bg-white w-full h-dvh border-1 border-gray-200 px-2 pt-3">
-                        <div className="flex border-1 border-[#DDE3EF] w-full min-h-60 rounded-xl px-2 py-2 flex-col gap-2">
-                            <div className="h-1/2 justify-between flex w-full items-center">
-                                <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">
+                        <div className="flex border-1 border-[#DDE3EF] w-full rounded-xl px-2 py-2 flex-col gap-4">
+                            <div className="h-1/4 justify-between flex w-full items-center">
+                                <div className="h-full flex text-md">
                                     People to follow
                                 </div>
-                                <div className="h-full flex text-lg  text-[#1E3A8A]">
-                                    View More
+                                <div className="h-full flex text-md text-[#1E3A8A]">
+                                    view more
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex items-center cursor-pointer">
-                                <div className="flex items-center">
-                                    <div id="profile" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                            <div className="h-1/3 justify-between flex items-center cursor-pointer">
+                                <div className="flex h-full w-full">
+                                    <div id="profile-1" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
 
                                     </div>
 
-                                    <div>
+                                    <div className="h-full flex-col w-full">
                                         <div className="flex gap-4">
-                                            <h3 id="name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <h3 id="username-1" className="text-md font-normal text-gray-800">Name</h3>
                                             <div id="famous?" className=" h-full flex">
                                                 icon
                                             </div>
                                         </div>
-                                        <p id="major and year" className="font-mono text-sm text-gray-600">
-                                            Data Science • Year 3
-                                        </p>
+                                        <div className="flex gap-1 text-sm text-gray-600 w-full h-full flex-wrap">
+                                            <div className="flex items-center gap-2 text-nowrap ">
+                                                <p id="major-1">
+                                                    Data Science
+                                                </p>
+                                                •
+                                            </div>
+                                            <div id="year-1" className="text-nowrap flex items-center">
+                                                Year 3
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex gap-3 items-center text-[#2563EB]">
@@ -369,19 +369,27 @@ export default function LandingPage() {
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex items-center cursor-pointer">
-                                <div className="flex items-center">
-                                    <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                            <div className="h-1/3 justify-between flex items-center cursor-pointer">
+                                <div className="flex h-full w-full">
+                                    <div id="profile-2" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
 
                                     </div>
 
-                                    <div>
+                                    <div className="h-full flex-col w-full">
                                         <div className="flex gap-4">
-                                            <h3 id="name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <h3 id="username-2" className="text-md font-normal text-gray-800">Name</h3>
                                         </div>
-                                        <p id="major and year" className="font-mono text-gray-600 text-sm">
-                                            Data Science • Year 3
-                                        </p>
+                                        <div className="flex gap-1 text-sm text-gray-600 w-full h-full flex-wrap">
+                                            <div className="flex items-center gap-2 text-nowrap ">
+                                                <p id="major-2">
+                                                    Data Science
+                                                </p>
+                                                •
+                                            </div>
+                                            <div id="year-2" className="text-nowrap flex items-center">
+                                                Year 3
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex gap-3 items-center text-[#2563EB]">
@@ -389,19 +397,27 @@ export default function LandingPage() {
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex items-center cursor-pointer">
-                                <div className="flex items-center">
-                                    <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                            <div className="h-1/3 justify-between flex items-center cursor-pointer">
+                                <div className="flex h-full w-full">
+                                    <div id="profile-3" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
 
                                     </div>
 
-                                    <div>
+                                    <div className="h-full flex-col w-full">
                                         <div className="flex gap-4">
-                                            <h3 id="name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <h3 id="username-3" className="text-md font-normal text-gray-800">Name</h3>
                                         </div>
-                                        <p id="major and year" className="font-mono text-gray-600 text-sm">
-                                            Data Science • Year 3
-                                        </p>
+                                        <div className="flex gap-1 text-sm text-gray-600 w-full h-full flex-wrap">
+                                            <div className="flex items-center gap-2 text-nowrap ">
+                                                <p id="major-3">
+                                                    Data Science
+                                                </p>
+                                                •
+                                            </div>
+                                            <div id="year-3" className="text-nowrap flex items-center">
+                                                Year 3
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex gap-3 items-center text-[#2563EB]">
@@ -411,34 +427,34 @@ export default function LandingPage() {
 
                         </div>
 
-                        <div className="flex border-1 border-[#DDE3EF] w-full min-h-60 rounded-xl px-2 py-2 flex-col gap-2 mt-5">
+                        <div className="flex border-1 border-[#DDE3EF] w-full rounded-xl px-2 py-2 flex-col gap-4 mt-5">
                             <div className="h-1/2 justify-between flex w-full items-center">
-                                <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">
+                                <div className="h-full flex text-md">
                                     Popular Communities
                                 </div>
-                                <div className="h-full flex text-lg text-[#1E3A8A] text-nowrap">
+                                <div className="h-full flex text-md  text-[#1E3A8A] text-nowrap">
                                     View All
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex cursor-pointer flex-col">
+                            <div className="h-1/3 justify-between flex cursor-pointer flex-col">
                                 <div className="flex items-center justify-between">
-                                    <div className="h-full flex text-lg items-center">
-                                        <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                                    <div className="h-full flex text-lg">
+                                        <div id="community-profile-1" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
                                         </div>
                                         <div>
-                                            <h3 id="community name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <h3 id="community-name-1" className="text-md font-normal text-gray-800">Community Name</h3>
                                             <div className="h-full flex gap-2">
                                                 <div className="h-8 flex">
-                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    <div id="member-1" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
-                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    <div id="member-2" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
-                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    <div id="member-3" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
                                                 </div>
-                                                <p id="member" className="font-mono text-sm text-gray-600">
-                                                    member
+                                                <p className="font-mono text-sm text-gray-600">
+                                                    members
                                                 </p>
                                             </div>
                                         </div>
@@ -449,24 +465,24 @@ export default function LandingPage() {
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex cursor-pointer flex-col">
+                            <div className="h-1/3 justify-between flex cursor-pointer flex-col">
                                 <div className="flex items-center justify-between">
-                                    <div className="h-full flex text-lg items-center">
-                                        <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                                    <div className="h-full flex text-lg">
+                                        <div id="community-profile-2" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
                                         </div>
                                         <div>
-                                            <h3 id="community name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <h3 id="community-name-2" className="text-md font-normal text-gray-800">Community Name</h3>
                                             <div className="h-full flex gap-2">
                                                 <div className="h-8 flex">
-                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    <div id="member-4" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
-                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    <div id="member-5" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
-                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    <div id="member-6" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
                                                 </div>
-                                                <p id="member" className="font-mono text-sm text-gray-600">
-                                                    member
+                                                <p className="font-mono text-sm text-gray-600">
+                                                    members
                                                 </p>
                                             </div>
                                         </div>
@@ -477,24 +493,24 @@ export default function LandingPage() {
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex cursor-pointer flex-col">
+                            <div className="h-1/3 justify-between flex cursor-pointer flex-col">
                                 <div className="flex items-center justify-between">
-                                    <div className="h-full flex text-lg items-center">
-                                        <div id="profile picture" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                                    <div className="h-full flex text-lg">
+                                        <div id="community-profile-3" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
                                         </div>
                                         <div>
-                                            <h3 id="community name" className="text-md font-normal text-gray-800">Name</h3>
+                                            <h3 id="community-name-3" className="text-md font-normal text-gray-800">Community Name</h3>
                                             <div className="h-full flex gap-2">
                                                 <div className="h-8 flex">
-                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    <div id="member-7" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
-                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    <div id="member-8" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
-                                                    <div id="profile picture" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
+                                                    <div id="member-9" className="min-w-4 min-h-4 max-w-4 max-h-4 bg-gray-100 rounded-full overflow-hidden border-1 mr-[-4px]">
                                                     </div>
                                                 </div>
-                                                <p id="member" className="font-mono text-sm  text-gray-600">
-                                                    member
+                                                <p className="font-mono text-sm text-gray-600">
+                                                    members
                                                 </p>
                                             </div>
                                         </div>
@@ -504,27 +520,28 @@ export default function LandingPage() {
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
-                        <div className="flex border-1 border-[#DDE3EF] w-full min-h-60 rounded-xl px-2 py-2 flex-col gap-2 mt-5">
+                        <div className="flex border-1 border-[#DDE3EF] w-full rounded-xl px-2 py-2 flex-col gap-4 mt-5">
                             <div className="h-1/2 justify-between flex w-full items-center">
-                                <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">
+                                <div className="h-full flex text-md">
                                     Latest Opportunities
                                 </div>
-                                <div className="h-full flex text-lg  text-[#1E3A8A]">
+                                <div className="h-full flex text-md  text-[#1E3A8A] text-nowrap">
                                     View All
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                            <div className="h-1/4 justify-between flex items-center cursor-pointer">
                                 <div className="flex-col">
                                     <div className="w-full flex lg:text-[18px] items-center">
                                         <div id="job-icon" className="min-w-8 min-h-8 max-w-8 max-h-8 bg-gray-100 mr-3 overflow-hidden border-1">
                                         </div>
-                                        <h3 id="job-name" className="text-md font-normal text-gray-800">Name</h3>
+                                        <h3 id="job-name-1" className="text-md font-normal text-gray-800">Name</h3>
                                     </div>
                                     <div className="h-full flex text-sm items-center text-gray-600 gap-1">
-                                        <p id="company" className="font-mono">
+                                        <p id="company-1" className="font-mono">
                                             Google
                                         </p>
                                         •
@@ -535,15 +552,15 @@ export default function LandingPage() {
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                            <div className="h-1/4 justify-between flex items-center cursor-pointer">
                                 <div className="flex-col">
                                     <div className="w-full flex lg:text-[18px] items-center">
                                         <div id="job-icon" className="min-w-8 min-h-8 max-w-8 max-h-8 bg-gray-100 mr-3 overflow-hidden border-1">
                                         </div>
-                                        <h3 id="job-name" className="text-md font-normal text-gray-800">Name</h3>
+                                        <h3 id="job-name-2" className="text-md font-normal text-gray-800">Name</h3>
                                     </div>
                                     <div className="h-full flex text-sm items-center text-gray-600 gap-1">
-                                        <p id="company" className="font-mono">
+                                        <p id="company-2" className="font-mono">
                                             Google
                                         </p>
                                         •
@@ -554,25 +571,25 @@ export default function LandingPage() {
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                            <div className="h-1/4 justify-between flex items-center cursor-pointer">
                                 <div className="flex-col">
                                     <div className="w-full flex lg:text-[18px] items-center">
                                         <div id="scholarship-icon" className="min-w-8 min-h-8 max-w-8 max-h-8 bg-gray-100 mr-3 overflow-hidden border-1">
                                         </div>
-                                        <h3 id="Scholarship name" className="text-md font-normal text-gray-800">Name</h3>
+                                        <h3 id="Scholarship-name-1" className="text-md font-normal text-gray-800">Name</h3>
                                     </div>
-                                    <div id="coverage" className="h-full flex text-sm items-center text-gray-600 gap-1">
+                                    <div id="type-of-coverage" className="h-full flex text-sm items-center text-gray-600 gap-1">
                                         Full tuition coverage
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="h-15 justify-between flex items-center cursor-pointer">
+                            <div className="h-1/4 justify-between flex items-center cursor-pointer">
                                 <div className="flex-col">
                                     <div className="w-full flex lg:text-[18px] items-center">
                                         <div id="scholarship-icon" className="min-w-8 min-h-8 max-w-8 max-h-8 bg-gray-100 mr-3 overflow-hidden border-1">
                                         </div>
-                                        <h3 id="Scholarship name" className="text-md font-normal text-gray-800">Name</h3>
+                                        <h3 id="Scholarship name-2" className="text-md font-normal text-gray-800">Name</h3>
                                     </div>
                                     <div id="coverage" className="h-full flex text-sm items-center text-gray-600 gap-1">
                                         Full tuition coverage
@@ -582,42 +599,70 @@ export default function LandingPage() {
 
                         </div>
 
-                        {/*<div className="flex border-1 border-[#DDE3EF] w-full min-h-60 rounded-xl px-2 py-2 flex-col gap-2 mt-5">*/}
-                        {/*    <div className="h-1/2 justify-between flex w-full items-center">*/}
-                        {/*        <div className="h-full flex lg:text-[18px] md:text-[17px] text-lg">*/}
-                        {/*            Trending News*/}
-                        {/*        </div>*/}
-                        {/*        <div className="h-full flex text-lg  text-[#1E3A8A]">*/}
-                        {/*            View All*/}
-                        {/*        </div>*/}
-                        {/*    </div>*/}
+                        <div className="flex border-1 border-[#DDE3EF] w-full h-auto rounded-xl px-2 py-2 flex-col gap-2 mt-5 ">
 
-                        {/*    <div className="h-25 justify-between flex items-center cursor-pointer">*/}
-                        {/*        <div className="flex-col">*/}
-                        {/*            <div className="w-full flex lg:text-[18px] items-center">*/}
-                        {/*                <div id="school-logo" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 mr-3 overflow-hidden border-1 rounded-4xl">*/}
-                        {/*                </div>*/}
-                        {/*                <h3 id="university" className="text-md font-normal text-gray-800">Royal University</h3>*/}
-                        {/*            </div>*/}
+                            <div className="h-1/2 justify-between flex w-full items-center">
+                                <div className="h-full flex text-md">
+                                    Trending News
+                                </div>
+                                <div className="h-full flex text-md  text-[#1E3A8A]">
+                                    View All
+                                </div>
+                            </div>
 
-                        {/*        </div>*/}
-                        {/*    </div>*/}
+                            <div className="h-1/2 justify-between flex items-center cursor-pointer">
+                                <div className="flex-col">
+                                    <div className="w-full flex lg:text-[18px] items-center">
+                                        <div id="school-logo" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 mr-3 overflow-hidden border-1 rounded-4xl">
+                                        </div>
+                                        <h3 id="university" className="text-md font-normal text-gray-800">Royal University</h3>
+                                    </div>
+                                    <div className="h-full flex text-sm gap-1 pl-13 flex-col">
+                                        <div id="news-1">
+                                            សាកលវិទ្យាល័យភូមិន្ទភ្នំពេញជ្រើសរើស និស្សិតស្ម័គ្រចិត្តក្នុងកម្មវិធីសង្រ្កាន RUPP។
+                                        </div>
+                                        <div className="text-gray-600 flex gap-5">
+                                            <div id="date-1">
+                                                11.feb.2025• 11:11PM
+                                            </div>
+                                            <div id="read-1">
+                                                234 reads
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="text-lg text-center">
+                                        See more
+                                    </div>
+                                </div>
+                            </div>
 
-                        {/*    <div className="h-25 justify-between flex items-center cursor-pointer">*/}
-                        {/*        <div className="flex">*/}
-                        {/*            <div className="h-full flex">*/}
-                        {/*                <div id="school-logo" className="w-full min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 mr-3 overflow-hidden border-1 rounded-4xl">*/}
-                        {/*                </div>*/}
-                        {/*            </div>*/}
-                        {/*            <h3 id="university" className="w-full text-md font-normal text-gray-800">Royal University</h3>*/}
-                        {/*            <div className="h-full flex text-sm items-center text-gray-600 gap-1">*/}
-                        {/*                <div className="flex gap-3 items-center text-[#2563EB]">*/}
-                        {/*                </div>*/}
-                        {/*            </div>*/}
-                        {/*        </div>*/}
-                        {/*    </div>*/}
+                            <div className="h-1/2 justify-between flex items-center cursor-pointer">
+                                <div className="flex-col">
+                                    <div className="w-full flex lg:text-[18px] items-center">
+                                        <div id="school-logo" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 mr-3 overflow-hidden border-1 rounded-4xl">
+                                        </div>
+                                        <h3 id="university" className="text-md font-normal text-gray-800">Royal University</h3>
+                                    </div>
+                                    <div className="h-full flex text-sm gap-1 pl-13 flex-col">
+                                        <div id="news-2">
+                                            សាកលវិទ្យាល័យភូមិន្ទភ្នំពេញជ្រើសរើស និស្សិតស្ម័គ្រចិត្តក្នុងកម្មវិធីសង្រ្កាន RUPP។
+                                        </div>
+                                        <div className="text-gray-600 flex gap-5">
+                                            <div id="date-2">
+                                                11.feb.2025• 11:11PM
+                                            </div>
+                                            <div id="read-2">
+                                                234 reads
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="text-lg text-center">
+                                        See more
+                                    </div>
+                                </div>
+                            </div>
 
-                        {/*</div>*/}
+                        </div>
 
                     </div>
                 </div>
