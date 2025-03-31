@@ -32,7 +32,6 @@ const VerifyEmail = () => {
                     <div className="flex items-center justify-center gap-3 h-full flex-col">
                         <Image src="/check.svg" alt="Check" width={50} height={50} className="min-w-[60px]"/>
                         <div className="text-lg mx-2 font-bold">{message}</div>
-                        <div className="text-lg mx-2">Your account has been verify.</div>
                         <Link href="/">
                             <button className="rounded-lg bg-[#10B981] text-white h-[50px] px-20 hover:cursor-pointer hover:bg-green-200">
                                 Continue to Dashboard
