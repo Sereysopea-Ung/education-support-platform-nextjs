@@ -108,7 +108,7 @@ export default function Policy(){
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5 md:text-justify ">
                     To exercise these rights, please contact us at:
                     <span className="text-[#2563EB] ml-2">
-                        support@s3tudy.com
+                        forum77777s3@gmail.com
                     </span>
                     .
                 </h1>
@@ -133,7 +133,7 @@ export default function Policy(){
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-6 md:mb-10 md:text-justify ">
                     If you have any questions or concerns about this Privacy Policy or how we handle your data, please contact us at:
                     <span className="text-[#2563EB] ml-2">
-                        support@s3tudy.com
+                        forum77777s3@gmail.com
                     </span>
                     .
                 </h1>

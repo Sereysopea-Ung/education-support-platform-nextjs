@@ -79,7 +79,7 @@ export default function Service(){
                     If you have any questions or concerns about these Terms of Service, please contact us at:
                 </h1>
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5 text-[#2563EB]">
-                    📧 support@s3tudy.com
+                    📧 forum77777s3@gmail.com
                 </h1>
             </div>
         </div>
