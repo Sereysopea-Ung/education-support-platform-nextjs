@@ -165,10 +165,10 @@ const Sidebar = () => {
                         </ul>
 
                         <ul className="space-y-4">
-                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
+                            <Link href="/settings/edit-profile" className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
                                 <FontAwesomeIcon icon={faGear} size="lg" />
-                                <span >Setting</span>
-                            </div>
+                                <span >Settings</span>
+                            </Link>
                         </ul>
                     </div>
 

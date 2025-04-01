@@ -13,7 +13,7 @@ export default function Contact(){
                 </h1>
                 <h1 className="lg:text-3xl md:text-2xl sm:text-xl text-lg font-bold mb-3 md:mb-5">Email Support</h1>
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5 text-[#2563EB]">
-                    📧 support@s3tudy.com
+                    📧 forum77777s3@gmail.com
                 </h1>
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-6 md:mb-10">
                     For general inquiries or if you need help with your account, send us an email, and our team will respond as soon as possible.

@@ -106,7 +106,7 @@ const Navbar = () => {
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Scholarships</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">My Network</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Collection</Link>
-                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Setting</Link>
+                        <Link href="/settings/edit-profile" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Settings</Link>
                     </div>
                 )}
 
@@ -128,9 +128,6 @@ const Navbar = () => {
                 {/* Auth Buttons */}
                 {session?.user?.name ? (
                     <div>
-                        <button className="border bg-blue-600 text-white px-6 py-1 rounded-4xl hover:bg-blue-700 transition cursor-pointer text-nowrap" onClick={doLogout}>
-                            Log out
-                        </button>
                         <button className="border bg-blue-600 text-white px-6 py-1 rounded-4xl hover:bg-blue-700 transition cursor-pointer text-nowrap">
                             + Post
                         </button>
