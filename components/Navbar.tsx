@@ -6,6 +6,7 @@ import { createClient } from "@sanity/client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 // ✅ Ensure environment variables exist before initializing the client
 const client = createClient({
@@ -18,6 +19,15 @@ const Navbar = () => {
     const { data: session } = useSession();
     const [user, setUser] = useState<{ username?: string } | null>(null);
     const [menuOpen, setMenuOpen] = useState(false);
+    const pathname = usePathname(); // Get the current pathname
+    const isHomePage = pathname === "/";
+    const isQnAPage = pathname === "/q&a";
+    const isLessonPage = pathname === "/lesson";
+    const isCommunityPage = pathname === "/community";
+    const isFollowingPage = pathname === "/following";
+    const isJobsPage = pathname === "/jobs";
+    const isNewsPage = pathname === "/news";
+    const isScholarshipsPage = pathname === "/scholarships";
 
     useEffect(() => {
         if (!session?.user?.email) return;
@@ -39,51 +49,58 @@ const Navbar = () => {
                     <Image src="/logo.png" alt="logo" width={32} height={32} className="min-w-[32px] min-h-[32px] " />
                 </Link>
 
-
-
                 {/* Desktop Menu */}
-                <div className="hidden lg:flex items-center justify-between text-black lg:text-xl text-2xs ">
+                <div className="hidden lg:flex items-center justify-between text-black lg:text-md xl:text-xl text-2xs ">
                     {session?.user?.name ? (
-                        <Link href="/" className="group relative p-1 lg:px-2  transition cursor-pointer">
+                        <Link href="/" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isHomePage ? "text-blue-500" : ""
+                        }`} >
                             <span className="z-10 hover:text-blue-600">Newsfeed</span>
                             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300 "></span>
                         </Link>
                         ) : (
-                        <Link href="/" className="group relative p-1 lg:px-2  transition cursor-pointer">
+                        <Link href="/" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isHomePage ? "text-blue-500" : ""
+                        }`} >
                             <span className="z-10 hover:text-blue-600">Home</span>
                             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                         </Link>
                     )}
-                    <Link href="/q&a" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                    <Link href="/q&a" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isQnAPage ? "text-blue-500" : ""
+                    }`} >
                         <span className="z-10 hover:text-blue-600">Q&A</span>
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                     </Link>
-                    <Link href="/lesson" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                    <Link href="/lesson" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isLessonPage ? "text-blue-500" : ""
+                    }`} >
                         <span className="z-10 hover:text-blue-600">Lesson</span>
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                     </Link>
-                    <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                    <Link href="/community" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isCommunityPage ? "text-blue-500" : ""
+                    }`} >
                         <span className="z-10 hover:text-blue-600">Community</span>
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                     </Link>
                     {session?.user?.name ? (
                         <div>
-                            <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                            <Link href="/following" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isFollowingPage ? "text-blue-500" : ""
+                            }`} >
                                 <span className="z-10 hover:text-blue-600">Following</span>
                                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                             </Link>
                         </div>
                         ):(
                         <div>
-                            <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                            <Link href="/news" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isNewsPage ? "text-blue-500" : ""
+                            }`} >
                                 <span className="z-10 hover:text-blue-600">News</span>
                                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                             </Link>
-                            <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                            <Link href="/jobs" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isJobsPage ? "text-blue-500" : ""
+                            }`} >
                                 <span className="z-10 hover:text-blue-600">Jobs</span>
                                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                             </Link>
-                            <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                            <Link href="/scholarships" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isScholarshipsPage ? "text-blue-500" : ""
+                            }`} >
                                 <span className="z-10 hover:text-blue-600">Scholarships</span>
                                 <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                             </Link>
@@ -100,12 +117,12 @@ const Navbar = () => {
                         ):(<div></div>)}
                         <Link href="/q&a" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Q&A</Link>
                         <Link href="/lesson" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Lesson</Link>
-                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Community</Link>
-                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">News</Link>
-                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Jobs</Link>
-                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Scholarships</Link>
-                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">My Network</Link>
-                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Collection</Link>
+                        <Link href="/community" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Community</Link>
+                        <Link href="/news" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">News</Link>
+                        <Link href="/jobs" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Jobs</Link>
+                        <Link href="/scholarships" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Scholarships</Link>
+                        <Link href="/my-network" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">My Network</Link>
+                        <Link href="/collection" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Collection</Link>
                         <Link href="/settings/edit-profile" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Settings</Link>
                     </div>
                 )}

@@ -75,7 +75,7 @@ export default function LandingPage() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const res = await fetch('/api/getMostUpvotePosts');
+                const res = await fetch('/api/getMostUpvoteLesson');
                 if (!res.ok) {
                     throw new Error('Failed to fetch posts');
                 }
@@ -230,7 +230,7 @@ export default function LandingPage() {
                                                     <img src={urlFor(datum?.author.profile_pic).width(50).height(50).fit('crop').url()} className="rounded-full"/>
                                                 </div>
                                             </div>
-                                            <div className="flex w-full h-12">
+                                            <div className="flex w-full h-12"> ml
                                                 <div className="flex-1 h-12 w-5/6">
                                                     <div className="h-1/2 gap-3 flex">
                                                         <div id="username" className="h-full flex text-lg">
@@ -274,9 +274,9 @@ export default function LandingPage() {
                                             </div>
                                         </div>
 
-                                        <div id="post" className="h-1/2 w-full pl-10 pr-15 mt-3">
+                                        <div className="h-1/2 w-full pl-10 pr-15 mt-3">
                                             <div id="post">
-                                                <img src={urlFor(datum?.postImage).width(400).height(400).url()} />
+                                                <img src={urlFor(datum?.postImage).url()} />
                                             </div>
                                             <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
                                                 {datum?._createdAt}
@@ -645,7 +645,7 @@ export default function LandingPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col ml-20 w-full mb-4">
+                                <div className="flex flex-col pl-20 w-full mb-4">
                                     <Link href="/about-us" className="text-[#4B5563] flex pb-2 lg:text-lg md:text-sm sm:text-xs text-xs">
                                         <button className="hover:text-blue-600 hover:cursor-pointer"> About Us </button>
                                     </Link>
@@ -657,7 +657,7 @@ export default function LandingPage() {
                                     </Link>
                                 </div>
 
-                                <div className="md:hidden flex md:ml-20 w-full mb-4 gap-2 flex-col">
+                                <div className="md:hidden flex md:pl-20 w-full mb-4 gap-2 flex-col">
                                     <div className="text-[#4B5563] flex pb-2 lg:text-lg md:text-sm w-full sm:text-xs text-xs">
                                         Contact Us
                                     </div>
@@ -678,7 +678,7 @@ export default function LandingPage() {
                                 </div>
 
 
-                                <div className="flex flex-col ml-20 w-full mb-4">
+                                <div className="flex flex-col pl-20 w-full mb-4">
                                     <Link href="/help-center" className="text-[#4B5563] flex pb-2 lg:text-lg md:text-sm sm:text-xs text-xs">
                                         <button className="hover:text-blue-600 hover:cursor-pointer"> Help Center </button>
                                     </Link>
@@ -690,7 +690,7 @@ export default function LandingPage() {
                                     </Link>
                                 </div>
 
-                                <div className="hidden md:flex ml-20 w-full mb-4 gap-2 flex-col">
+                                <div className="hidden md:flex pl-20 w-full mb-4 gap-2 flex-col">
                                     <div className="text-[#4B5563] flex pb-2 lg:text-lg md:text-sm w-full sm:text-xs text-xs">
                                         Contact Us
                                     </div>
