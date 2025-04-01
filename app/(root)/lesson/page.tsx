@@ -20,7 +20,7 @@ export default function QnA(){
     useEffect(() => {
         const fetchAllPosts = async () => {
             try {
-                const res = await fetch('/api/getQnAPosts');
+                const res = await fetch('/api/getLessonPosts');
                 if (!res.ok) {
                     throw new Error('Failed to fetch all posts');
                 }

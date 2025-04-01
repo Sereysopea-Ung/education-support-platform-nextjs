@@ -54,11 +54,11 @@ const Navbar = () => {
                             <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                         </Link>
                     )}
-                    <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                    <Link href="/q&a" className="group relative p-1 lg:px-2 transition cursor-pointer">
                         <span className="z-10 hover:text-blue-600">Q&A</span>
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                     </Link>
-                    <Link href="/" className="group relative p-1 lg:px-2 transition cursor-pointer">
+                    <Link href="/lesson" className="group relative p-1 lg:px-2 transition cursor-pointer">
                         <span className="z-10 hover:text-blue-600">Lesson</span>
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                     </Link>
@@ -98,8 +98,8 @@ const Navbar = () => {
                         {session?.user?.name ? (
                             <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Newsfeed</Link>
                         ):(<div></div>)}
-                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Q&A</Link>
-                        <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Lesson</Link>
+                        <Link href="/q&a" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Q&A</Link>
+                        <Link href="/lesson" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Lesson</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Community</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">News</Link>
                         <Link href="/" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Jobs</Link>
