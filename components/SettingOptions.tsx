@@ -11,7 +11,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { usePathname } from "next/navigation"; // Client-side hook
-import Sidebar from "@/components/Sidebar";
 import Image from "next/image";
 
 const SettingOptions = () => {
