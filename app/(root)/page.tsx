@@ -8,7 +8,8 @@ import {useEffect, useState} from "react";
 import imageUrlBuilder from '@sanity/image-url';
 import {createClient} from "@sanity/client";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
+import {faChalkboardUser, faCheckCircle, faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
+import isVerified from "@/pages/api/auth/isVerified";
 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -206,7 +207,6 @@ export default function LandingPage() {
         setIsExpanded(!isExpanded);
     };
 
-
     if (status === 'loading') {
         return <div className="mt-20">Loading...</div>; // Show loading while the session is being fetched
     }
@@ -236,11 +236,18 @@ export default function LandingPage() {
                                                         <div id="username" className="h-full flex text-lg">
                                                             {datum?.author.username}
                                                         </div>
-                                                        <div id="role" className="bg-[#DBEAFE] text-[#2563EB] border-1 h-full flex rounded-lg px-2">
+                                                        <div id="role" className={`border-1 h-full flex rounded-lg px-2 ${
+                                                            datum?.author.role === "teacher"
+                                                                ? "bg-[#8E44AD] text-white"  // Teacher role styles
+                                                                : datum?.author.role === "student"
+                                                                    ? "bg-[#D1E8FF] text-[#1D4ED8]" // Student role styles
+                                                                    : "" // Default case (if needed)
+                                                        }`}>
                                                             {datum?.author.role}
                                                         </div>
-                                                        <div id="verify?" className=" h-full flex">
-                                                            verify picture
+
+                                                        <div id="verify?" className="h-full flex items-center">
+                                                            <FontAwesomeIcon icon={faChalkboardUser} />
                                                         </div>
                                                     </div>
                                                     <div id="year and major" className="h-1/2 justify-between flex gap-3 text-[#6B7280] text-center text-md  ">
@@ -252,7 +259,15 @@ export default function LandingPage() {
                                                     </div>
                                                 </div>
                                                 <div id="type" className="h-full flex rounded-lg px-2 w-1/6 justify-end">
-                                                    <div className="bg-[#C7FFDE] text-[#27AE60] border-1 h-1/2 flex rounded-lg px-2 text-center">
+                                                    <div
+                                                        className={`border-1 h-1/2 flex rounded-lg px-2 text-center ${
+                                                            datum?.typePost === "Q&A"
+                                                                ? "bg-[#C7FFDE] text-[#27AE60]" // For Q&A type
+                                                                : datum?.typePost === "Lesson"
+                                                                    ? "bg-[#F4D2C5] text-[#E29578]" // For Lesson type
+                                                                    : "" // Default styles (if needed)
+                                                        }`}
+                                                    >
                                                         {datum?.typePost}
                                                     </div>
                                                 </div>

@@ -9,7 +9,7 @@ const client = createClient({
 
 const getQnAPosts = async () => {
     try {
-        const query = `*[_type == "post" && typePost == "Q&A"] {
+        const query = `*[_type == "post" && typePost == "Lesson"] {
             _id,
             title,
             _createdAt,
