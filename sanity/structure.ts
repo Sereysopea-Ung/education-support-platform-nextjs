@@ -9,5 +9,6 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('post').title('Posts'),
         S.documentTypeListItem('comment').title('Comments'),
         S.documentTypeListItem('scholarship').title('Scholarship'),
-        S.documentTypeListItem('job').title('Job')
+        S.documentTypeListItem('job').title('Job'),
+        S.documentTypeListItem('news').title('News')
     ])

@@ -69,7 +69,7 @@ export default function QnA(){
 
     const [loading, setLoading] = useState<boolean>(true);
     if (loading) {
-        return <div className="mt-16 px-5">Loading Lessons...</div>;
+        return <div className="mt-16 px-5 lg:ml-54">Loading Lessons...</div>;
     }
 
 
