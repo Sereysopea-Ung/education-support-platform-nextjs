@@ -9,6 +9,7 @@ import imageUrlBuilder from '@sanity/image-url';
 import {createClient} from "@sanity/client";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardUser, faCheckCircle, faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
+import formatDate from "@/util/date"
 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -200,10 +201,13 @@ export default function LandingPage() {
         }
     };
 
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [expandedItems, setExpandedItems] = useState<{ [key: string]: boolean }>({});
 
-    const toggleText = () => {
-        setIsExpanded(!isExpanded);
+    const toggleText = (id: string) => {
+        setExpandedItems(prev => ({
+            ...prev,
+            [id]: !prev[id] // Toggle only the clicked item's state
+        }));
     };
 
     if (status === 'loading') {
@@ -278,11 +282,11 @@ export default function LandingPage() {
                                                 <img src={urlFor(datum?.postImage).url()} />
                                             </div>
                                             <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
-                                                {datum?._createdAt}
+                                                {formatDate(datum?._createdAt)}
                                             </div>
                                             <div id="pitch" className="w-full">
                                                 <div
-                                                    className={`truncate ${isExpanded ? "whitespace-normal" : ""}`}
+                                                    className={`truncate ${expandedItems[datum._id] ? "whitespace-normal" : ""}`}
                                                     style={{ width: "100%" }}
                                                 >
                                                     {datum?.pitch}
@@ -290,10 +294,10 @@ export default function LandingPage() {
 
                                                 {/* Button to toggle text visibility */}
                                                 <button
-                                                    onClick={toggleText}
+                                                    onClick={() => toggleText(datum._id)}
                                                     className="text-blue-500 mt-2 text-sm cursor-pointer"
                                                 >
-                                                    {isExpanded ? "Show less" : "See more"}
+                                                    {expandedItems[datum._id] ? "Show less" : "See more"}
                                                 </button>
                                             </div>
                                             <div className="w-full pl-10 pr-15 mt-3 flex gap-5">
