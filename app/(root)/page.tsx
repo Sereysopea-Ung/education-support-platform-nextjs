@@ -9,7 +9,6 @@ import imageUrlBuilder from '@sanity/image-url';
 import {createClient} from "@sanity/client";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardUser, faCheckCircle, faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
-import isVerified from "@/pages/api/auth/isVerified";
 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -75,7 +74,7 @@ export default function LandingPage() {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const res = await fetch('/api/getMostUpvoteLesson');
+                const res = await fetch('/api/getMostUpvotePosts');
                 if (!res.ok) {
                     throw new Error('Failed to fetch posts');
                 }
@@ -230,7 +229,7 @@ export default function LandingPage() {
                                                     <img src={urlFor(datum?.author.profile_pic).width(50).height(50).fit('crop').url()} className="rounded-full"/>
                                                 </div>
                                             </div>
-                                            <div className="flex w-full h-12"> ml
+                                            <div className="flex w-full h-12">
                                                 <div className="flex-1 h-12 w-5/6">
                                                     <div className="h-1/2 gap-3 flex">
                                                         <div id="username" className="h-full flex text-lg">

@@ -123,45 +123,45 @@ const Sidebar = () => {
                     <div className="flex mb-8 flex-col w-full">
 
                         <ul className="space-y-4">
-                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                            <Link href="/" className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
                                 <FontAwesomeIcon icon={faHome} size="lg" />
                                 <span className="ml-1">Home</span>
-                            </div>
+                            </Link>
                         </ul>
 
                         <ul className="space-y-4">
-                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
+                            <Link href="/my-network" className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
                                 <FontAwesomeIcon icon={faUser} size="lg" />
                                 <span className="ml-1">My Network</span>
-                            </div>
+                            </Link>
                         </ul>
 
                         <ul className="space-y-4">
-                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                            <Link href="/collection" className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
                                 <FontAwesomeIcon icon={faStar} size="lg" />
                                 <span className="ml-1">Collection</span>
-                            </div>
+                            </Link>
                         </ul>
 
                         <ul className="space-y-4">
-                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                            <Link href="/jobs" className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
                                 <FontAwesomeIcon icon={faBriefcase} size="lg" />
                                 <span className="ml-1">Job</span>
-                            </div>
+                            </Link>
                         </ul>
 
                         <ul className="space-y-4">
-                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                            <Link href="/news" className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
                                 <FontAwesomeIcon icon={faBullhorn} size="lg" />
                                 <span className="ml-1">News</span>
-                            </div>
+                            </Link>
                         </ul>
 
                         <ul className="space-y-4">
-                            <div className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
+                            <Link href="/scholarships" className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-5 hover:text-white">
                                 <FontAwesomeIcon icon={faGraduationCap} size="lg" />
                                 <span>Scholarship</span>
-                            </div>
+                            </Link>
                         </ul>
 
                         <ul className="space-y-4">

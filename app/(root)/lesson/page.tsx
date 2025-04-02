@@ -31,6 +31,8 @@ export default function QnA(){
             } catch (err) {
                 setError('Error fetching all posts');
                 console.error(err);
+            }finally {
+                setLoading(false);
             }
         };
 
@@ -64,6 +66,11 @@ export default function QnA(){
     const toggleText = () => {
         setIsExpanded(!isExpanded);
     };
+
+    const [loading, setLoading] = useState<boolean>(true);
+    if (loading) {
+        return <div className="mt-16 px-5">Loading Lessons...</div>;
+    }
 
 
     return (

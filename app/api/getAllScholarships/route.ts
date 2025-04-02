@@ -7,9 +7,10 @@ const client = createClient({
     token: process.env.SANITY_API_TOKEN,
 });
 
+// Function to fetch the scholarships
 const route = async () => {
     try {
-        const query = `*[_type == "scholarship"] | order(amountOfMoney desc) {
+        const query = `*[_type == "scholarship"] | order(_createdAt asc) {
             _id,
             scholarshipTitle,
             forApplicant,
@@ -24,24 +25,26 @@ const route = async () => {
             return [];
         }
 
-        return data.slice(0, 2); // Only return if data exists
+        return data; // Only return if data exists
     } catch (error) {
         console.error("Error fetching latest scholarships:", error);
         return [];
     }
 };
 
+// Export GET function for your API endpoint
 export async function GET(req: Request) {
     try {
-        const jobs = await route();
-        return new Response(JSON.stringify(jobs), {
+        const scholarships = await route();
+        return new Response(JSON.stringify(scholarships), {
             status: 200,
             headers: {
                 "Content-Type": "application/json",
             },
         });
     } catch (error) {
-        return new Response(JSON.stringify({ error: "Failed to fetch scholarship by date" }), {
+        console.error("Error in GET request:", error);
+        return new Response(JSON.stringify({ error: "Failed to fetch scholarships" }), {
             status: 500,
             headers: {
                 "Content-Type": "application/json",
