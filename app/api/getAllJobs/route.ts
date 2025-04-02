@@ -7,33 +7,27 @@ const client = createClient({
     token: process.env.SANITY_API_TOKEN,
 });
 
-const route = async () => {
+const getAllJobs = async () => {
     try {
-        const query = `*[_type == "scholarship"] | order(amountOfMoney desc) {
+        const query = `*[_type == "job"] | order(_createdAt desc) {
             _id,
-            scholarshipTitle,
-            forApplicant,
-            amountOfMoney,
+            jobTitle,
+            companyName,
+            numberOfApplication,
             _createdAt
         }`;
+        let data = await client.fetch(query);
 
-        const data = await client.fetch(query);
-
-        if (!data || data.length === 0) {
-            console.warn("No scholarships found.");
-            return [];
-        }
-
-        return data.slice(0, 2); // Only return if data exists
+        return data;
     } catch (error) {
-        console.error("Error fetching latest scholarships:", error);
-        return [];
+        console.error("Error fetching latest jobs:", error);
+        return []; // Return an empty array or handle as needed
     }
 };
 
 export async function GET(req: Request) {
     try {
-        const jobs = await route();
+        const jobs = await getAllJobs();
         return new Response(JSON.stringify(jobs), {
             status: 200,
             headers: {
@@ -41,7 +35,7 @@ export async function GET(req: Request) {
             },
         });
     } catch (error) {
-        return new Response(JSON.stringify({ error: "Failed to fetch scholarship by date" }), {
+        return new Response(JSON.stringify({ error: "Failed to fetch jobs" }), {
             status: 500,
             headers: {
                 "Content-Type": "application/json",
