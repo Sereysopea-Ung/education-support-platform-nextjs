@@ -11,12 +11,6 @@ export const userType = defineType({
             validation: (Rule)=> Rule.required()
         }),
         defineField({
-            name: 'isVerified',
-            title: 'IsVerified',
-            type: 'boolean',
-            initialValue: false
-        }),
-        defineField({
             name: 'password',
             title: 'Password',
             type: 'string',

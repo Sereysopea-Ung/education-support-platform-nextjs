@@ -11,6 +11,12 @@ export const postType = defineType({
             to: { type: 'user' },
         }),
         defineField({
+            name: 'isVerified',
+            title: 'IsVerified',
+            type: 'boolean',
+            initialValue: false
+        }),
+        defineField({
             name: 'slug',
             title: 'Slug',
             type: 'slug',
