@@ -130,7 +130,7 @@ const Sidebar = () => {
                         </ul>
 
                         <ul className="space-y-4">
-                            <Link href="/my-network" className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
+                            <Link href="/profile/{id}" className="flex items-center space-x-2 py-2 w-full hover:cursor-pointer hover:bg-[#2D87F0] pl-6 hover:text-white">
                                 <FontAwesomeIcon icon={faUser} size="lg" />
                                 <span className="ml-1">My Network</span>
                             </Link>
