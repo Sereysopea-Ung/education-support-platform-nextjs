@@ -144,11 +144,11 @@ const Navbar = () => {
 
                 {/* Auth Buttons */}
                 {session?.user?.name ? (
-                    <div>
+                    <Link href="/create-post">
                         <button className="border bg-blue-600 text-white px-6 py-1 rounded-4xl hover:bg-blue-700 transition cursor-pointer text-nowrap">
                             + Post
                         </button>
-                    </div>
+                    </Link>
                 ) : (
                     <div className="flex lg:gap-4">
                         <Link href="/register">

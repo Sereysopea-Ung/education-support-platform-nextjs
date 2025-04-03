@@ -1,6 +1,32 @@
 'use client';
 
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import {setUser} from "@sentry/core";
+
 const RightBar = () => {
+    const [userData, setUserData] = useState<any>(null);
+    const [error, setError] = useState<string | null>(null);
+    const {data: session, status} = useSession();
+    const [posts, setPosts] = useState<any[]>([]);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const res = await fetch('/api/getUserByFollower');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch posts');
+                }
+                const data = await res.json();
+                setPosts(data);
+            } catch (err) {
+                setError('Error fetching posts');
+                console.error(err);
+            }
+        };
+        fetchPosts();
+    }, []);
+
     return (
         <div className="md:w-4/12 lg:w-3/12 md:absolute top-0 right-0 col-span-12 md:col-span-4 bg-white w-full border-1 h-auto border-gray-200 px-2 pt-3 rounded-lg md:mt-16 md:-mt-36 mt-10">
             <div className="flex border-1 border-[#DDE3EF] w-full rounded-xl px-2 py-2 flex-col gap-4">
@@ -15,34 +41,50 @@ const RightBar = () => {
 
                 <div className="h-1/3 justify-between flex items-center cursor-pointer">
                     <div className="flex h-full w-full">
-                        <div id="profile" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1">
+                        <div
+                            id="profile"
+                            className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1"
+                        >
+                            {userData?.profile_pic && (
+                                <img
+                                    src={userData.profile_pic}
+                                    alt="Profile"
+                                    className="object-cover w-full h-full"
+                                />
+                            )}
                         </div>
 
                         <div className="h-full flex-col w-full">
                             <div className="flex gap-4">
-                                <h3 id="username" className="text-md font-normal text-gray-800">Name</h3>
-                                <div id="famous?" className=" h-full flex">
-                                    icon
+                                <h3 id="username" className="text-md font-normal text-gray-800">
+                                    {userData?.username}
+                                </h3>
+                                <div id="famous?" className="h-full flex">
+                                    {/* You can add a "famous" icon if needed */}
+                                    {userData?.followers?.length > 1000 && <span>🌟</span>}
                                 </div>
                             </div>
                             <div className="flex gap-1 text-sm text-gray-600 w-full h-full flex-wrap">
-                                <div className="flex items-center gap-2 text-nowrap ">
-                                    <p id="major">
-                                        Data Science
-                                    </p>
-                                    •
+                                <div className="flex items-center gap-2 text-nowrap">
+                                    <p id="major">{userData?.major}</p> •
                                 </div>
                                 <div id="year" className="text-nowrap flex items-center">
-                                    Year 3
+                                    {userData?.year}
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="flex gap-3 items-center text-[#2563EB]">
-                        follow
+                        {/* Handle follow button click logic */}
+                        <button
+                            onClick={() => {
+                                // Add follow functionality here
+                            }}
+                        >
+                            Follow
+                        </button>
                     </div>
                 </div>
-            </div>
 
             <div className="flex border-1 border-[#DDE3EF] w-full rounded-xl px-2 py-2 flex-col gap-4 mt-5">
                 <div className="h-1/2 justify-between flex w-full items-center">
@@ -164,6 +206,7 @@ const RightBar = () => {
                 </div>
 
             </div>
+        </div>
         </div>
     );
 };
