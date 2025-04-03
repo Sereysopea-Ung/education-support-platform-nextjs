@@ -41,7 +41,6 @@ function urlFor(source:any) {
 
 
 const Sidebar = () => {
-    const [menuOpen, setMenuOpen] = useState(false);
     const { data: session, status } = useSession();
     const [user, setUser] = useState<User | null>(null)
     const [error, setError] = useState<string | null>(null);
