@@ -9,8 +9,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return (
         <main className="font-work-sans">
             <Navbar />
-            <Sidebar />
-            <Quickstats />
+            <div className="hidden lg:flex"><Sidebar /></div>
+            <div className="hidden lg:flex"><Quickstats /></div>
             {children}
         </main>
     );

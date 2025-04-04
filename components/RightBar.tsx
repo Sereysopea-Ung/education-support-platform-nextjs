@@ -3,6 +3,21 @@
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import {setUser} from "@sentry/core";
+import imageUrlBuilder from "@sanity/image-url";
+import {createClient} from "@sanity/client";
+
+const client = createClient({
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+    useCdn: false,
+    token: process.env.SANITY_API_TOKEN,
+});
+
+const builder = imageUrlBuilder(client);
+
+function urlFor(source:any) {
+    return builder.image(source);
+}
 
 const RightBar = () => {
     const [userData, setUserData] = useState<any>(null);
@@ -41,50 +56,54 @@ const RightBar = () => {
 
                 <div className="h-1/3 justify-between flex items-center cursor-pointer">
                     <div className="flex h-full w-full">
-                        <div
-                            id="profile"
-                            className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1"
-                        >
-                            {userData?.profile_pic && (
-                                <img
-                                    src={userData.profile_pic}
-                                    alt="Profile"
-                                    className="object-cover w-full h-full"
-                                />
-                            )}
-                        </div>
+                        {posts.map((datum:any)=>(
+                            <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto min-h-75 rounded-xl px-2 py-2">
+                                <div
+                                    id="profile"
+                                    className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1"
+                                >
+                                    {userData?._id && (
+                                        <img
+                                            src={userData.profile_pic}
+                                            alt="Profile"
+                                            className="object-cover w-full h-full"
+                                        />
+                                    )}
+                                </div>
 
-                        <div className="h-full flex-col w-full">
-                            <div className="flex gap-4">
-                                <h3 id="username" className="text-md font-normal text-gray-800">
-                                    {userData?.username}
-                                </h3>
-                                <div id="famous?" className="h-full flex">
-                                    {/* You can add a "famous" icon if needed */}
-                                    {userData?.followers?.length > 1000 && <span>🌟</span>}
+                                <div className="h-full flex-col w-full">
+                                    <div className="flex gap-4">
+                                        <h3 id="username" className="text-md font-normal text-gray-800">
+                                            {userData?.username}
+                                        </h3>
+                                        <div id="famous?" className="h-full flex">
+                                            {/* You can add a "famous" icon if needed */}
+                                            {userData?.followers?.length > 1000 && <span>🌟</span>}
+                                        </div>
+                                    </div>
+                                    <div className="flex gap-1 text-sm text-gray-600 w-full h-full flex-wrap">
+                                        <div className="flex items-center gap-2 text-nowrap">
+                                            <p id="major">{userData?.major}</p> •
+                                        </div>
+                                        <div id="year" className="text-nowrap flex items-center">
+                                            {userData?.year}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="flex gap-1 text-sm text-gray-600 w-full h-full flex-wrap">
-                                <div className="flex items-center gap-2 text-nowrap">
-                                    <p id="major">{userData?.major}</p> •
+                                <div className="flex gap-3 items-center text-[#2563EB]">
+                                    {/* Handle follow button click logic */}
+                                    <button
+                                        onClick={() => {
+                                            // Add follow functionality here
+                                        }}
+                                    >
+                                        Follow
+                                    </button>
                                 </div>
-                                <div id="year" className="text-nowrap flex items-center">
-                                    {userData?.year}
-                                </div>
-                            </div>
+                            </li>
+                        ))}
                         </div>
                     </div>
-                    <div className="flex gap-3 items-center text-[#2563EB]">
-                        {/* Handle follow button click logic */}
-                        <button
-                            onClick={() => {
-                                // Add follow functionality here
-                            }}
-                        >
-                            Follow
-                        </button>
-                    </div>
-                </div>
 
             <div className="flex border-1 border-[#DDE3EF] w-full rounded-xl px-2 py-2 flex-col gap-4 mt-5">
                 <div className="h-1/2 justify-between flex w-full items-center">

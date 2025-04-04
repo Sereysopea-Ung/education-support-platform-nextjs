@@ -38,8 +38,6 @@ function urlFor(source:any) {
 }
 
 
-
-
 const Sidebar = () => {
     const { data: session, status } = useSession();
     const [user, setUser] = useState<User | null>(null)
