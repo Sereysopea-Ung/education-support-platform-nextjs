@@ -233,7 +233,7 @@ export default function LandingPage() {
                                 const isUpvoted = datum.upvote?.includes(userEmail);
                                 const isDownvoted = datum.downvote?.includes(userEmail);
                                 return(
-                                <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto min-h-75 rounded-xl px-2 py-2">
+                                <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto  rounded-xl px-2 py-2">
                                     <div className="w-full h-full flex-col gap-5">
                                         <div className="flex">
                                             <div className="flex h-12 w-12 ">
@@ -288,7 +288,9 @@ export default function LandingPage() {
                                         <div className="h-1/2 w-full pl-10 pr-15 mt-3">
                                             <Link href="/post/{id}">
                                                 <div id="post">
-                                                    <img src={urlFor(datum?.postImage).url()} />
+                                                    {datum?.postImages?.map((image: any, index: number) => (
+                                                        <img key={index} className="mb-[5px]" src={urlFor(image).url()} alt={image?.alt || 'Image'} />
+                                                    ))}
                                                 </div>
                                                 <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
                                                     {formatDate(datum?._createdAt)}
