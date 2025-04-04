@@ -47,7 +47,7 @@ export default function LandingPage() {
             name: "Bun Seavlang",
             role: "ITE Student",
             description: "Creating beautiful and user-friendly designs",
-            image: "/Seavlang.svg",
+            image: "/Seavlang.jpg",
         },
     ];
 
