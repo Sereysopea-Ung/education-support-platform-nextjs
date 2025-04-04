@@ -13,7 +13,8 @@ const getUserInfo = async (email: string) => {
             username,
             profile_pic,
             year,
-            major
+            major,
+            bio
         }`;
         const params = { email };
 

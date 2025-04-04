@@ -20,6 +20,7 @@ const getUserByFollower = async () => {
 
         console.log('Running query:', query); // Log the query being sent to Sanity
 
+        // Fetch data from Sanity
         const users = await client.fetch(query);
 
         // Log the response from Sanity
@@ -33,6 +34,7 @@ const getUserByFollower = async () => {
     } catch (error: unknown) {
         if (error instanceof Error) {
             console.error('Error fetching top users:', error.message);
+            console.error(error.stack); // Log the stack trace for better debugging
             throw new Error('Failed to fetch top users: ' + error.message); // Include the original error message
         } else {
             console.error('Unknown error:', error);

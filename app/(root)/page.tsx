@@ -24,7 +24,6 @@ function urlFor(source:any) {
     return builder.image(source);
 }
 
-
 export default function LandingPage() {
     const { data: session, status } = useSession();
     const [Mission, setMission] = useState(true);
@@ -287,20 +286,23 @@ export default function LandingPage() {
                                         </div>
 
                                         <div className="h-1/2 w-full pl-10 pr-15 mt-3">
-                                            <div id="post">
-                                                <img src={urlFor(datum?.postImage).url()} />
-                                            </div>
-                                            <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
-                                                {formatDate(datum?._createdAt)}
-                                            </div>
-                                            <div id="pitch" className="w-full">
-                                                <div
-                                                    className={`truncate ${expandedItems[datum._id] ? "whitespace-normal" : ""}`}
-                                                    style={{ width: "100%" }}
-                                                >
-                                                    {datum?.pitch}
+                                            <Link href="/post/{id}">
+                                                <div id="post">
+                                                    <img src={urlFor(datum?.postImage).url()} />
                                                 </div>
-
+                                                <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
+                                                    {formatDate(datum?._createdAt)}
+                                                </div>
+                                                <div id="pitch" className="w-full">
+                                                    <div
+                                                        className={`truncate ${expandedItems[datum._id] ? "whitespace-normal" : ""}`}
+                                                        style={{ width: "100%" }}
+                                                    >
+                                                        {datum?.pitch}
+                                                    </div>
+                                                </div>
+                                            </Link>
+                                            <div>
                                                 {/* Button to toggle text visibility */}
                                                 <button
                                                     onClick={() => toggleText(datum._id)}
