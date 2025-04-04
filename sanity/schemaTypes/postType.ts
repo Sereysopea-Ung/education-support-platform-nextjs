@@ -43,12 +43,14 @@ export const postType = defineType({
         defineField({
             name: 'upvote',
             title: 'Upvotes',
-            type: 'number',
+            type: 'array',
+            of: [{type:'string'}]
         }),
         defineField({
             name: 'downvote',
             title: 'Downvotes',
-            type: 'number',
+            type: 'array',
+            of: [{type:'string'}]
         }),
         defineField({
             name: 'typePost',
