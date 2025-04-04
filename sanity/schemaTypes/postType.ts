@@ -21,12 +21,12 @@ export const postType = defineType({
             title: 'Slug',
             type: 'slug',
             options: {
-                source: 'title',
+                source: 'title', // Assuming 'title' exists as a string field
                 maxLength: 96,
             },
         }),
         defineField({
-            name: 'title',
+            name: 'title', // Adding title field as a string
             title: 'Title',
             type: 'string',
         }),
@@ -38,31 +38,19 @@ export const postType = defineType({
         defineField({
             name: 'postImages',
             title: 'Post Images',
-            type: 'array',
-            of: [
-                {
-                    type: 'image',
-                    fields: [
-                        {
-                            name: 'alt',
-                            title: 'Alt text',
-                            type: 'string',
-                        },
-                    ],
-                },
-            ],
+            type: 'image',
         }),
         defineField({
             name: 'upvote',
             title: 'Upvotes',
             type: 'array',
-            of: [{ type: 'string' }],
+            of: [{type:'string'}]
         }),
         defineField({
             name: 'downvote',
             title: 'Downvotes',
             type: 'array',
-            of: [{ type: 'string' }],
+            of: [{type:'string'}]
         }),
         defineField({
             name: 'typePost',
@@ -70,26 +58,17 @@ export const postType = defineType({
             type: 'string',
         }),
         defineField({
-            name: 'files',
-            title: 'Uploaded Files',
-            type: 'array',
-            of: [
-                {
-                    type: 'file',
-                    fields: [
-                        {
-                            name: 'alt',
-                            title: 'File Description',
-                            type: 'string',
-                        },
-                    ],
-                },
-            ],
+            name: 'pdfFile',
+            title: 'PDF File',
+            type: 'file',
+            options: {
+                accept: 'application/pdf',
+            },
         }),
     ],
     preview: {
         select: {
-            title: 'title',
+            title: 'title', // Change this to 'title' or 'slug.current' if you prefer the slug
         },
     },
 });

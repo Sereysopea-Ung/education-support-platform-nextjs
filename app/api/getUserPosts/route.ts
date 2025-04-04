@@ -30,11 +30,12 @@ export async function GET(req: Request) {
             _id,
             title,
             pitch,
-            postImage,
+            postImages,
             upvote,
             downvote,
             typePost,
-            _createdAt
+            _createdAt,
+            "commentCount": count(*[_type == "comment" && references(^._id)])
         }`;
 
         const posts = await client.fetch(query, { userId: user._id });

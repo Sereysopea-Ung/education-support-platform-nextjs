@@ -257,9 +257,9 @@ export default function LandingPage() {
                                                             {datum?.author.role}
                                                         </div>
 
-                                                        <div id="verify?" className="h-full flex items-center">
+                                                        {/*<div id="verify?" className="h-full flex items-center">
                                                             <FontAwesomeIcon icon={faChalkboardUser} />
-                                                        </div>
+                                                        </div>*/}
                                                     </div>
                                                     <div id="year and major" className="h-1/2 justify-between flex gap-3 text-[#6B7280] text-center text-md  ">
                                                         {datum?.author?.year ? (

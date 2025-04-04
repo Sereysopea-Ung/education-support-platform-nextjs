@@ -54,7 +54,6 @@ export default function Profile() {
         setSelectedFilter(filter);  // Set the selected filter option
         setIsOpen(false);  // Close the dropdown after selection
     };
-
     const [selectedTab, setSelectedTab] = useState('All Posts');
 
     // Array of tab names
@@ -278,13 +277,9 @@ export default function Profile() {
                                             </div>
                                         </div>
                                     </div>
-                                    {post.postImage && (
-                                        <img
-                                            src={urlFor(post.postImage).width(400).height(300).url()}
-                                            alt="Post Image"
-                                            className="w-full mt-2 rounded-md"
-                                        />
-                                    )}
+                                    {post?.postImages?.map((image: any, index: number) => (
+                                        <img key={index} className="mb-[5px]" src={urlFor(image).url()} alt={image?.alt || 'Image'} />
+                                    ))}
                                     <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
                                         {formatDate(post?._createdAt)}
                                     </div>
