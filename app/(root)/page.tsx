@@ -69,6 +69,7 @@ export default function LandingPage() {
     const [mostApplyJobs,setMostApplyJobs] = useState<any[]>([]);
     const [scholarshipByDate,setScholarshipByDate] = useState<any[]>([]);
     const [postData, setPostData] = useState<any[]>([]);
+    const userEmail = session?.user?.email || null;
 
 
     useEffect(() => {
@@ -158,13 +159,11 @@ export default function LandingPage() {
         const fetchAllPosts = async () => {
             try {
                 const res = await fetch('/api/getAllPosts');
-                if (!res.ok) {
-                    throw new Error('Failed to fetch all posts');
-                }
+                if (!res.ok) throw new Error('Failed to fetch posts');
+
                 const data = await res.json();
                 setPostData(data);
             } catch (err) {
-                setError('Error fetching all posts');
                 console.error(err);
             }
         };
@@ -178,25 +177,32 @@ export default function LandingPage() {
         fetchAllPosts();
     }, []);
 
-    const [isUpvoted, setIsUpvoted] = useState(false);
-    const [isDownvoted, setIsDownvoted] = useState(false);
-
-    // Move state settings logic inside the handlers to avoid conditional hook calls
-    const handleUpvoteClick = () => {
-        if (!isUpvoted) {
-            setIsUpvoted(true); // Set to upvoted
-            if (isDownvoted) setIsDownvoted(false); // Remove downvote if upvoted
-        } else {
-            setIsUpvoted(false); // Remove upvote
+    const handleVote = async (postId: string, action: "upvote" | "downvote") => {
+        if (!userEmail) {
+            alert("Please log in to vote.");
+            return;
         }
-    };
 
-    const handleDownvoteClick = () => {
-        if (!isDownvoted) {
-            setIsDownvoted(true); // Set to downvoted
-            if (isUpvoted) setIsUpvoted(false); // Remove upvote if downvoted
-        } else {
-            setIsDownvoted(false); // Remove downvote
+        try {
+            const res = await fetch('/api/vote', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ postId, userEmail, action }),
+            });
+
+            if (!res.ok) throw new Error("Vote failed");
+
+            const updatedPost = await res.json();
+            setPostData(prevData =>
+                prevData.map(datum =>
+                    datum._id === postId
+                        ? { ...datum, upvote: updatedPost.upvote, downvote: updatedPost.downvote }
+                        : datum
+                )
+            );
+
+        } catch (error) {
+            console.error("Voting error:", error);
         }
     };
 
@@ -223,7 +229,10 @@ export default function LandingPage() {
                         <div className="flex flex-col w-full h-full lg:mt-5 gap-5">
 
                             {/*UNGSEREYSOPEA Correct*/}
-                            {postData.map((datum:any)=>(
+                            {postData.map((datum:any)=>{
+                                const isUpvoted = datum.upvote?.includes(userEmail);
+                                const isDownvoted = datum.downvote?.includes(userEmail);
+                                return(
                                 <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto min-h-75 rounded-xl px-2 py-2">
                                     <div className="w-full h-full flex-col gap-5">
                                         <div className="flex">
@@ -302,23 +311,22 @@ export default function LandingPage() {
                                                     {expandedItems[datum._id] ? "Show less" : "See more"}
                                                 </button>
                                             </div>
-                                            <div className="w-full pl-10 pr-15 mt-3 flex gap-5">
+                                            <div className="w-full pr-15 mt-3 flex gap-5">
                                                 <div className="flex gap-3">
                                                     <div
-                                                        id="upvote"
-                                                        onClick={handleUpvoteClick}
+                                                        onClick={() => handleVote(datum._id, "upvote")}
                                                         className={`flex gap-3 items-center cursor-pointer ${isUpvoted ? 'text-blue-500' : 'text-gray-500'}`}
                                                     >
                                                         <FontAwesomeIcon icon={faCircleUp} />
-                                                        <span>{datum?.upvote}</span>
+                                                        <span>{datum.upvote?.length ?? 0}</span>
                                                     </div>
                                                 </div>
                                                 <div
-                                                    id="downvote"
-                                                    onClick={handleDownvoteClick}
+                                                    onClick={() => handleVote(datum._id, "downvote")}
                                                     className={`flex gap-3 items-center cursor-pointer ${isDownvoted ? 'text-red-500' : 'text-gray-500'}`}
                                                 >
                                                     <FontAwesomeIcon icon={faCircleDown} />
+                                                    <span>{datum.downvote?.length ?? 0}</span>
                                                 </div>
                                                 <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
                                                     <FontAwesomeIcon icon={faComment} />
@@ -333,7 +341,8 @@ export default function LandingPage() {
                                     </div>
 
                                 </li>
-                            ))}
+                            )}
+                            )}
                         </div>
                     </div>
 

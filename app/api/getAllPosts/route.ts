@@ -15,6 +15,7 @@ const getAllPosts = async () => {
             _createdAt,
             typePost,
             upvote,
+            downvote,
             postImage,
             pitch,
             "commentCount": count(*[_type == "comment" && references(^._id)]),
