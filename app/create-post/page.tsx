@@ -63,6 +63,7 @@ export default function CreatePost() {
         const files = event.target.files as FileList;  // Type assertion: we are asserting that `files` is not null
         if (files) {
             setFiles(prevFiles => [...prevFiles, ...Array.from(files)]);
+            console.log("File change " + files);
         }
     };
 

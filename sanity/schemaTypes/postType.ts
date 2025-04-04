@@ -21,12 +21,12 @@ export const postType = defineType({
             title: 'Slug',
             type: 'slug',
             options: {
-                source: 'title', // Assuming 'title' exists as a string field
+                source: 'title',
                 maxLength: 96,
             },
         }),
         defineField({
-            name: 'title', // Adding title field as a string
+            name: 'title',
             title: 'Title',
             type: 'string',
         }),
@@ -36,21 +36,33 @@ export const postType = defineType({
             type: 'text',
         }),
         defineField({
-            name: 'postImage',
-            title: 'Post Image',
-            type: 'image',
+            name: 'postImages',
+            title: 'Post Images',
+            type: 'array',
+            of: [
+                {
+                    type: 'image',
+                    fields: [
+                        {
+                            name: 'alt',
+                            title: 'Alt text',
+                            type: 'string',
+                        },
+                    ],
+                },
+            ],
         }),
         defineField({
             name: 'upvote',
             title: 'Upvotes',
             type: 'array',
-            of: [{type:'string'}]
+            of: [{ type: 'string' }],
         }),
         defineField({
             name: 'downvote',
             title: 'Downvotes',
             type: 'array',
-            of: [{type:'string'}]
+            of: [{ type: 'string' }],
         }),
         defineField({
             name: 'typePost',
@@ -58,17 +70,26 @@ export const postType = defineType({
             type: 'string',
         }),
         defineField({
-            name: 'pdfFile',
-            title: 'PDF File',
-            type: 'file',
-            options: {
-                accept: 'application/pdf',
-            },
+            name: 'files',
+            title: 'Uploaded Files',
+            type: 'array',
+            of: [
+                {
+                    type: 'file',
+                    fields: [
+                        {
+                            name: 'alt',
+                            title: 'File Description',
+                            type: 'string',
+                        },
+                    ],
+                },
+            ],
         }),
     ],
     preview: {
         select: {
-            title: 'title', // Change this to 'title' or 'slug.current' if you prefer the slug
+            title: 'title',
         },
     },
 });
