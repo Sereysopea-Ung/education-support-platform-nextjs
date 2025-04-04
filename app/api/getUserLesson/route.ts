@@ -26,7 +26,7 @@ export async function GET(req: Request) {
         }
 
         // Fetch only the posts of the logged-in user
-        const query = `*[_type == "post" && author._ref == $userId] | order(_createdAt desc) {
+        const query = `*[_type == "post" && author._ref == $userId && typePost == "Lesson"] | order(_createdAt desc) {
             _id,
             title,
             pitch,

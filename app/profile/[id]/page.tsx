@@ -11,15 +11,19 @@ import {
     faAngleDown,
     faAngleUp,
     faBuilding,
-    faCalendarDays,
+    faCalendarDays, faCircleDown, faCircleUp, faComment,
     faGraduationCap
 } from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import formatDate from "@/util/date";
 
 interface User {
     username: string;
     profile_pic?: string;
     bio?: string;
+    major?: string;
+    year?: number;
+    role: string;
 }
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -40,6 +44,7 @@ export default function Profile() {
     const [user, setUser] = useState<User | null>(null)
     const { data: session, status } = useSession();
     const [error, setError] = useState<string | null>(null);
+    const userEmail = session?.user?.email || null;
 
     const handleToggle = () => {
         setIsOpen(!isOpen);  // Toggle the filter dropdown
@@ -49,6 +54,7 @@ export default function Profile() {
         setSelectedFilter(filter);  // Set the selected filter option
         setIsOpen(false);  // Close the dropdown after selection
     };
+
     const [selectedTab, setSelectedTab] = useState('All Posts');
 
     // Array of tab names
@@ -80,14 +86,24 @@ export default function Profile() {
 
     const [posts, setPosts] = useState([]);  // Add posts state
 
+    // Fetch user posts based on selected tab
     useEffect(() => {
         const fetchUserPosts = async () => {
-            if (!session?.user?.email) return;
+            if (!userEmail) return;
+
+            // Define the endpoint based on the selected tab
+            let endpoint = '/api/getUserPosts?email=' + userEmail;
+
+            // Filter posts based on selected tab
+            if (selectedTab === 'Q&A') {
+                endpoint = `/api/getUserQnA?email=${userEmail}`;
+            } else if (selectedTab === 'Lesson') {
+                endpoint = `/api/getUserLesson?email=${userEmail}`;
+            }
 
             try {
-                const res = await fetch(`/api/getUserPosts?email=${session.user.email}`);
-                if (!res.ok) throw new Error("Failed to fetch user posts");
-
+                const res = await fetch(endpoint);
+                if (!res.ok) throw new Error("Failed to fetch posts");
                 const data = await res.json();
                 setPosts(data);
             } catch (err) {
@@ -96,8 +112,47 @@ export default function Profile() {
         };
 
         fetchUserPosts();
-    }, [session]);
+    }, [userEmail, selectedTab]);
 
+    const [expandedItems, setExpandedItems] = useState<{ [key: string]: boolean }>({});
+
+    const toggleText = (id: string) => {
+        setExpandedItems(prev => ({
+            ...prev,
+            [id]: !prev[id] // Toggle only the clicked item's state
+        }));
+    };
+
+    const [postData, setPostData] = useState<any[]>([]);
+
+    const handleVote = async (postId: string, action: "upvote" | "downvote") => {
+        if (!userEmail) {
+            alert("Please log in to vote.");
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/vote', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ postId, userEmail, action }),
+            });
+
+            if (!res.ok) throw new Error("Vote failed");
+
+            const updatedPost = await res.json();
+            setPostData(prevData =>
+                prevData.map(datum =>
+                    datum._id === postId
+                        ? { ...datum, upvote: updatedPost.upvote, downvote: updatedPost.downvote }
+                        : datum
+                )
+            );
+
+        } catch (error) {
+            console.error("Voting error:", error);
+        }
+    };
 
     return (
         <div className="grid grid-cols-12 w-full min-h-screen justify-center">
@@ -144,10 +199,10 @@ export default function Profile() {
                                     key={index}
                                     onClick={() => setSelectedTab(tab)}
                                     className={`relative pb-2 whitespace-nowrap px-2 lg:text-xl md:text-lg sm:text-md text-sm transition-colors duration-200
-                                    ${selectedTab === tab
-                                            ? 'text-blue-500 font-bold after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-blue-500'
-                                            : 'text-gray-700 hover:text-blue-500'}
-                                    `}
+                                ${selectedTab === tab
+                                        ? 'text-blue-500 font-bold after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-blue-500'
+                                        : 'text-gray-700 hover:text-blue-500'
+                                    }`}
                                 >
                                     {tab}
                                 </button>
@@ -172,7 +227,7 @@ export default function Profile() {
                                         Recent
                                     </div>
                                     <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm rounded-b-xl" onClick={() => handleSelectFilter("Oldest")}>
-                                        Oldest mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 mb-30 z-10
+                                        Oldest
                                     </div>
                                 </div>
                             )}
@@ -181,19 +236,100 @@ export default function Profile() {
 
                     {/* Posts Section */}
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 mb-30 z-10">
-                        {(posts as any[]).map((post) => (
-                            <div key={post._id} className="bg-white shadow-md rounded-lg p-4">
-                                <h3 className="font-bold text-lg">{post.title}</h3>
-                                <p className="text-gray-600">{post.pitch}</p>
-                                {post.postImage && (
-                                    <img
-                                        src={urlFor(post.postImage).width(400).height(300).url()}
-                                        alt="Post Image"
-                                        className="w-full mt-2 rounded-md"
-                                    />
-                                )}
-                            </div>
-                        ))}
+                        {posts.map((post: any) => {
+                            const isUpvoted = post.upvote?.includes(userEmail);
+                            const isDownvoted = post.downvote?.includes(userEmail);
+
+                            return (
+                                <div key={post._id} className="bg-white shadow-md p-4 border-[#E5E7EB] border-1 rounded-lg">
+                                    <div className="flex">
+                                        <div className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden">
+                                            {user?.profile_pic && (
+                                                <img
+                                                    src={urlFor(user.profile_pic).width(250).height(250).fit('crop').url()}
+                                                    alt="Profile"
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            )}
+                                        </div>
+                                        <div className="flex justify-between w-full">
+                                            <div className="flex-col justify-between flex gap-3">
+                                                <div>
+                                                    <h3 className="lg:text-xl md:text-lg sm:text-md text-sm font-normal text-gray-800">
+                                                        {user?.username}
+                                                    </h3>
+                                                    <p className="font-mono text-md text-gray-600 lg:text-lg md:text-md sm:text-sm text-xs">
+                                                        {user?.major} • Year {user?.year}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div id="type" className="h-full flex rounded-lg px-2 w-1/6 justify-end">
+                                                <div
+                                                    className={`border-1 h-1/2 flex rounded-lg px-2 text-center ${
+                                                        post?.typePost === "Q&A"
+                                                            ? "bg-[#C7FFDE] text-[#27AE60]"
+                                                            : post?.typePost === "Lesson"
+                                                                ? "bg-[#F4D2C5] text-[#E29578]"
+                                                                : ""
+                                                    }`}
+                                                >
+                                                    {post?.typePost}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {post.postImage && (
+                                        <img
+                                            src={urlFor(post.postImage).width(400).height(300).url()}
+                                            alt="Post Image"
+                                            className="w-full mt-2 rounded-md"
+                                        />
+                                    )}
+                                    <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
+                                        {formatDate(post?._createdAt)}
+                                    </div>
+                                    <div id="pitch" className="w-full">
+                                        <div
+                                            className={`truncate ${expandedItems[post._id] ? "whitespace-normal" : ""}`}
+                                            style={{ width: "100%" }}
+                                        >
+                                            {post?.pitch}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <button
+                                            onClick={() => toggleText(post._id)}
+                                            className="text-blue-500 mt-2 text-sm cursor-pointer"
+                                        >
+                                            {expandedItems[post._id] ? "Show less" : "See more"}
+                                        </button>
+                                    </div>
+                                    <div className="w-full pr-15 mt-3 flex gap-5">
+                                        <div className="flex gap-3">
+                                            <div
+                                                onClick={() => handleVote(post._id, "upvote")}
+                                                className={`flex gap-3 items-center cursor-pointer ${isUpvoted ? "text-blue-500" : "text-gray-500"}`}
+                                            >
+                                                <FontAwesomeIcon icon={faCircleUp} />
+                                                <span>{post.upvote?.length ?? 0}</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            onClick={() => handleVote(post._id, "downvote")}
+                                            className={`flex gap-3 items-center cursor-pointer ${isDownvoted ? "text-red-500" : "text-gray-500"}`}
+                                        >
+                                            <FontAwesomeIcon icon={faCircleDown} />
+                                            <span>{post.downvote?.length ?? 0}</span>
+                                        </div>
+                                        <div className="text-gray-500 flex gap-3 items-center cursor-pointer">
+                                            <FontAwesomeIcon icon={faComment} />
+                                            {post?.commentCount}
+                                        </div>
+                                        <div className="text-gray-500 flex gap-3 items-center cursor-pointer">•••</div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             </div>
