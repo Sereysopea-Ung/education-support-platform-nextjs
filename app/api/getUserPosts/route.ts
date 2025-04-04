@@ -30,11 +30,10 @@ export async function GET(req: Request) {
             _id,
             title,
             pitch,
-            postImage,
+            postImages,
             upvote,
             downvote,
-            typePost,
-            _createdAt
+            typePost
         }`;
 
         const posts = await client.fetch(query, { userId: user._id });

@@ -233,7 +233,7 @@ export default function LandingPage() {
                                 const isUpvoted = datum.upvote?.includes(userEmail);
                                 const isDownvoted = datum.downvote?.includes(userEmail);
                                 return(
-                                <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto min-h-75 rounded-xl px-2 py-2">
+                                <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto  rounded-xl px-2 py-2">
                                     <div className="w-full h-full flex-col gap-5">
                                         <div className="flex">
                                             <div className="flex h-12 w-12 ">
@@ -288,7 +288,9 @@ export default function LandingPage() {
                                         <div className="h-1/2 w-full pl-10 pr-15 mt-3">
                                             <Link href="/post/{id}">
                                                 <div id="post">
-                                                    <img src={urlFor(datum?.postImage).url()} />
+                                                    {datum?.postImages?.map((image: any, index: number) => (
+                                                        <img key={index} className="mb-[5px]" src={urlFor(image).url()} alt={image?.alt || 'Image'} />
+                                                    ))}
                                                 </div>
                                                 <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
                                                     {formatDate(datum?._createdAt)}
@@ -448,7 +450,7 @@ export default function LandingPage() {
                                                     <div className="w-[40px] h-[50px]"><img className="rounded-full" src={urlFor(post.author.profile_pic).width(40).height(40).fit('crop').url()} alt="fetch_image"/></div>
                                                     <div className="flex flex-col gap-1">
                                                         <div className="font-bold">{post.title}</div>
-                                                        <div><span className="text-blue-600">{post.upvote}</span>&nbsp;upvotes</div>
+                                                        <div><span className="text-blue-600">{post.upvote?.length ?? 0}</span>&nbsp;upvotes</div>
                                                     </div>
                                                 </li>
                                             ))}
@@ -489,7 +491,7 @@ export default function LandingPage() {
                                         {lessons.map((post: any) => (
                                             <li key={post._id} className="bg-gray-100 rounded-[10px] px-[5px] py-[5px]">
                                                 <div className="font-bold">{post.title}</div>
-                                                <p><span className="text-blue-600">{post.upvote}</span>&nbsp;students</p>
+                                                <p><span className="text-blue-600">{post.upvote?.length ?? 0}</span>&nbsp;students</p>
                                             </li>
                                         ))}
                                     </ul>
