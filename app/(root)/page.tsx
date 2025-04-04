@@ -448,7 +448,7 @@ export default function LandingPage() {
                                                     <div className="w-[40px] h-[50px]"><img className="rounded-full" src={urlFor(post.author.profile_pic).width(40).height(40).fit('crop').url()} alt="fetch_image"/></div>
                                                     <div className="flex flex-col gap-1">
                                                         <div className="font-bold">{post.title}</div>
-                                                        <div><span className="text-blue-600">{post.upvote}</span>&nbsp;upvotes</div>
+                                                        <div><span className="text-blue-600">{post.upvote?.length ?? 0}</span>&nbsp;upvotes</div>
                                                     </div>
                                                 </li>
                                             ))}
@@ -489,7 +489,7 @@ export default function LandingPage() {
                                         {lessons.map((post: any) => (
                                             <li key={post._id} className="bg-gray-100 rounded-[10px] px-[5px] py-[5px]">
                                                 <div className="font-bold">{post.title}</div>
-                                                <p><span className="text-blue-600">{post.upvote}</span>&nbsp;students</p>
+                                                <p><span className="text-blue-600">{post.upvote?.length ?? 0}</span>&nbsp;students</p>
                                             </li>
                                         ))}
                                     </ul>
