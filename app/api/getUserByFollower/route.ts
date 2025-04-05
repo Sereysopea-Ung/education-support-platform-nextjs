@@ -40,7 +40,7 @@ const getTopUsersByFollowers = async () => {
 export async function GET(req: Request) {
     try {
 
-        const users = await getUserByFollower();
+        const users = await getTopUsersByFollowers();
 
         return new Response(JSON.stringify(users), {
             status: 200,
