@@ -7,6 +7,7 @@ import imageUrlBuilder from "@sanity/image-url";
 import {createClient} from "@sanity/client";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGraduationCap, faSuitcase} from "@fortawesome/free-solid-svg-icons";
+import formatDate from "@/util/date";
 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -27,6 +28,7 @@ const RightBar = () => {
     const [posts, setPosts] = useState<any[]>([]);
     const [jobs, setjobs] = useState<any[]>([]);
     const [scholarships, setscholarships] = useState<any[]>([]);
+    const [news, setnews] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -68,10 +70,33 @@ const RightBar = () => {
                 console.error(err);
             }
         };
+        const fetchNews = async () => {
+            try {
+                const res = await fetch('/api/getTopNews');
+                if (!res.ok) {
+                    throw new Error('Failed to fetch News');
+                }
+                const data = await res.json();
+                setnews(data);
+            } catch (err) {
+                setError('Error fetching news');
+                console.error(err);
+            }
+        };
         fetchUsers();
         fetchJobs();
         fetchScholarship();
+        fetchNews()
     }, []);
+
+    const [expandedItems, setExpandedItems] = useState<{ [key: string]: boolean }>({});
+
+    const toggleText = (id: string) => {
+        setExpandedItems(prev => ({
+            ...prev,
+            [id]: !prev[id] // Toggle only the clicked item's state
+        }));
+    };
 
     return (
         <div className="md:w-4/12 lg:w-3/12 md:absolute top-0 right-0 col-span-12 md:col-span-4 bg-white w-full border-1 border-gray-200 px-2 pt-3 rounded-lg md:mt-16 mt-10">
@@ -213,7 +238,7 @@ const RightBar = () => {
                     </div>
 
                     <div className="justify-between flex items-center">
-                        <div className="flex-col">
+                        <div className="flex-col w-full">
                             {scholarships.map((scholarship: any) => (
                                 <li
                                     key={scholarship._id}
@@ -245,29 +270,54 @@ const RightBar = () => {
                         </div>
                     </div>
 
-                    <div className="h-1/2 justify-between flex items-center cursor-pointer">
-                        <div className="flex-col">
-                            <div className="w-full flex lg:text-[18px] items-center">
-                                <div id="school-logo" className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 mr-3 overflow-hidden border-1 rounded-4xl">
-                                </div>
-                                <h3 id="university" className="text-md font-normal text-gray-800">Royal University</h3>
-                            </div>
-                            <div className="h-full flex text-sm gap-1 pl-13 flex-col">
-                                <div id="news">
-                                    សាកលវិទ្យាល័យភូមិន្ទភ្នំពេញជ្រើសរើស និស្សិតស្ម័គ្រចិត្តក្នុងកម្មវិធីសង្រ្កាន RUPP។
-                                </div>
-                                <div className="text-gray-600 flex gap-5">
-                                    <div id="date">
-                                        11.feb.2025• 11:11PM
+                    <div className="justify-between flex items-center">
+                        <div className="flex-col w-full">
+                            {news.map((newItem: any) => (
+                                <div key={newItem._id} className="flex-col w-full mt-3">
+                                    <div className="flex w-full gap-2">
+                                        <div id="profile_picture" className="border-gray-500 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
+                                            <img src={urlFor(newItem?.author.profile_pic).width(50).height(50).fit('crop').url()} className="rounded-full"/>
+                                        </div>
+                                        <div id="username" className="h-full flex text-lg">
+                                            {newItem?.author.username}
+                                        </div>
                                     </div>
-                                    <div id="read">
-                                        234 reads
+                                    <div className="flex w-full mt-2">
+                                        <div
+                                            className={`truncate ${expandedItems[newItem._id] ? "whitespace-normal" : ""}`}
+                                            style={{
+                                                width: "100%",
+                                                height: "100%",
+                                                display: "block",               // Use block to allow text wrapping
+                                                whiteSpace: expandedItems[newItem._id] ? "normal" : "nowrap",  // Allow wrapping when expanded, otherwise truncate
+                                                overflow: "hidden",            // Hide any content that overflows
+                                                textOverflow: "ellipsis",      // Display ellipsis when content is truncated
+                                                lineHeight: "1.5rem",          // Optional: Define line height for better readability
+                                            }}
+                                        >
+                                            {newItem?.pitch}
+                                        </div>
+                                    </div>
+
+                                    <div className="flex text-[#6B7280] text-sm mt-3 gap-2">
+                                        <div id="date">
+                                            {formatDate(newItem?._createdAt)}
+                                        </div>
+                                        <div>
+                                            {newItem?.read} reads
+                                        </div>
+                                    </div>
+                                    <div>
+                                        {/* Button to toggle text visibility */}
+                                        <button
+                                            onClick={() => toggleText(newItem._id)}
+                                            className="text-center mt-2 text-md font-bold cursor-pointer w-full"
+                                        >
+                                            {expandedItems[newItem._id] ? "See less" : "See more"}
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="text-lg text-center">
-                                See more
-                            </div>
+                            ))}
                         </div>
                     </div>
                 </div>
