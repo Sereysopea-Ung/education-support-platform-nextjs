@@ -9,6 +9,7 @@ const client = createClient({
 
 const getAllPosts = async () => {
     try {
+
         const query = `*[_type == "post"]{
             _id,
             title,
@@ -21,6 +22,7 @@ const getAllPosts = async () => {
             "commentCount": count(*[_type == "comment" && references(^._id)]),
             author->{profile_pic, role, year, major, experience, username, department, followers}
         }`;
+
 
         let posts = await client.fetch(query);
 

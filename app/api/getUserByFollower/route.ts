@@ -1,3 +1,5 @@
+// app/api/top-users/route.ts
+
 import { createClient } from '@sanity/client';
 
 const client = createClient({
@@ -7,8 +9,9 @@ const client = createClient({
     token: process.env.SANITY_API_TOKEN, // Secure your token
 });
 
-const getUserByFollower = async () => {
+const getTopUsersByFollowers = async () => {
     try {
+
         // Fetch user documents, sorting by the number of followers (length of the array)
         const query = `*[_type == "user"] | order(length(followers) asc)[0..2]{
             username, 
@@ -28,13 +31,16 @@ const getUserByFollower = async () => {
         return users || [];
     } catch (error) {
         console.error("Error fetching users:", error);
+
         return [];
     }
 };
 
 export async function GET(req: Request) {
     try {
+
         const users = await getUserByFollower();
+
         return new Response(JSON.stringify(users), {
             status: 200,
             headers: {
@@ -43,7 +49,9 @@ export async function GET(req: Request) {
         });
     } catch (error) {
         console.error("Error in GET request:", error);
+
         return new Response(JSON.stringify({ error: "Failed to fetch users" }), {
+
             status: 500,
             headers: {
                 "Content-Type": "application/json",
