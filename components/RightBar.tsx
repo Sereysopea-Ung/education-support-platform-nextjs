@@ -62,31 +62,29 @@ const RightBar = () => {
                                     id="profile"
                                     className="min-w-10 min-h-10 max-w-10 max-h-10 bg-gray-100 rounded-full mr-3 overflow-hidden border-1"
                                 >
-                                    {userData?._id && (
-                                        <img
-                                            src={userData.profile_pic}
-                                            alt="Profile"
-                                            className="object-cover w-full h-full"
-                                        />
-                                    )}
+                                    <img
+                                        src={urlFor(datum?.profile_pic).url()}
+                                        alt="Profile"
+                                        className="object-cover w-full h-full"
+                                    />
                                 </div>
 
                                 <div className="h-full flex-col w-full">
                                     <div className="flex gap-4">
                                         <h3 id="username" className="text-md font-normal text-gray-800">
-                                            {userData?.username}
+                                            {datum?.username}
                                         </h3>
                                         <div id="famous?" className="h-full flex">
                                             {/* You can add a "famous" icon if needed */}
-                                            {userData?.followers?.length > 1000 && <span>🌟</span>}
+                                            {datum?.followers?.length > 1000 && <span>🌟</span>}
                                         </div>
                                     </div>
                                     <div className="flex gap-1 text-sm text-gray-600 w-full h-full flex-wrap">
                                         <div className="flex items-center gap-2 text-nowrap">
-                                            <p id="major">{userData?.major}</p> •
+                                            <p id="major">{datum?.major}</p> •
                                         </div>
                                         <div id="year" className="text-nowrap flex items-center">
-                                            {userData?.year}
+                                            {datum?.year}
                                         </div>
                                     </div>
                                 </div>
