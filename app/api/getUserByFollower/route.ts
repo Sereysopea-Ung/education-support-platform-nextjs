@@ -13,12 +13,13 @@ const getTopUsersByFollowers = async () => {
     try {
 
         // Fetch user documents, sorting by the number of followers (length of the array)
-        const query = `*[_type == "user"] | order(length(followers) asc)[0..2]{
+        const query = `*[_type == "user"] | order(_createdAt asc)[0..2]{
             username, 
             profile_pic, 
             year, 
             major,
-            followers
+            followers,
+            _createdAt
         }`;
 
         const users = await client.fetch(query);

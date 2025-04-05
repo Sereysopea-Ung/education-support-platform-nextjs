@@ -30,7 +30,7 @@ export default function JobsPage() {
     const { data: session, status } = useSession();
 
     if (loading) {
-        return <div className="mt-16 px-5">Loading jobs...</div>;
+        return <div className="lg:mt-16 lg:ml-54 px-5">Loading jobs...</div>;
     }
 
     if (error) {

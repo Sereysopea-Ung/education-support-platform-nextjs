@@ -30,7 +30,7 @@ export default function ScholarshipsPage() {
     const { data: session, status } = useSession();
 
     if (loading) {
-        return <div className="mt-16 px-5">Loading scholarships...</div>;
+        return <div className="lg:mt-16 lg:ml-54 px-5">Loading scholarships...</div>;
     }
 
     if (error) {
