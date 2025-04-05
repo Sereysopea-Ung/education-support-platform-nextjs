@@ -19,5 +19,17 @@ export const scholarshipType = defineType({
         name: 'amountOfMoney',
         title: 'AmountOfMoney',
         type: 'number'
+    }),
+    defineField({
+        name: 'typeofcoverage',
+        title: 'TypeOfCoverage',
+        type: 'string',
+        options: {
+            list: [
+                { title: 'Full Coverage', value: 'Full Coverage' },
+                { title: 'Partial Coverage', value: 'Partial Coverage' },
+                { title: 'No Coverage', value: 'No Coverage' },
+            ],
+        },
     })]
 });
