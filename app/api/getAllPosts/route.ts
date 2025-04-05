@@ -10,7 +10,7 @@ const client = createClient({
 const getAllPosts = async () => {
     try {
 
-        const query = `*[_type == "post"]{
+        const query = `*[_type == "post"] | order(_createdAt desc){
             _id,
             title,
             _createdAt,
