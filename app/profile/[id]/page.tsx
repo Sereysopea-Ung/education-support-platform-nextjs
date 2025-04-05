@@ -11,7 +11,6 @@ import {
     faAngleDown,
     faAngleUp,
     faBuilding,
-
     faCalendarDays, faCircleDown, faCircleUp, faComment,
     faGraduationCap
 } from "@fortawesome/free-solid-svg-icons";
@@ -22,11 +21,10 @@ interface User {
     username: string;
     profile_pic?: string;
     bio?: string;
-
     major?: string;
     year?: number;
     role: string;
-
+}
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
     dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
@@ -46,7 +44,6 @@ export default function Profile() {
     const [user, setUser] = useState<User | null>(null)
     const { data: session, status } = useSession();
     const [error, setError] = useState<string | null>(null);
-
     const userEmail = session?.user?.email || null;
 
     const handleToggle = () => {
@@ -57,56 +54,6 @@ export default function Profile() {
         setSelectedFilter(filter);  // Set the selected filter option
         setIsOpen(false);  // Close the dropdown after selection
     };
-    const [selectedTab, setSelectedTab] = useState('All Posts');
-
-    // Array of tab names
-    const tabs = ['All Posts', 'Q&A', 'Lesson', 'Group'];
-
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                // Correct way to interpolate session.email into the URL
-                const res = await fetch(`/api/profileUser?email=${session?.user?.email}`);
-                if (!res.ok) {
-                    throw new Error('Failed to fetch posts');
-                }
-                const data = await res.json();
-                setUser(data);
-            } catch (err) {
-                setError('Error fetching posts');
-                console.error(err);
-            }
-        };
-
-        if (session?.user?.email) {
-            fetchUser();
-        } else {
-            setError('No session found');
-        }
-    }, [session]);
-
-    const [posts, setPosts] = useState([]);  // Add posts state
-
-    useEffect(() => {
-        const fetchUserPosts = async () => {
-            if (!session?.user?.email) return;
-
-            try {
-                const res = await fetch(`/api/getUserPosts?email=${session.user.email}`);
-                if (!res.ok) throw new Error("Failed to fetch user posts");
-
-                const data = await res.json();
-                setPosts(data);
-            } catch (err) {
-                console.error(err);
-            }
-        };
-
-        fetchUserPosts();
-    }, [session]);
-
-
     const [selectedTab, setSelectedTab] = useState('All Posts');
 
     // Array of tab names
@@ -251,7 +198,6 @@ export default function Profile() {
                                     key={index}
                                     onClick={() => setSelectedTab(tab)}
                                     className={`relative pb-2 whitespace-nowrap px-2 lg:text-xl md:text-lg sm:text-md text-sm transition-colors duration-200
-
                                 ${selectedTab === tab
                                         ? 'text-blue-500 font-bold after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-full after:bg-blue-500'
                                         : 'text-gray-700 hover:text-blue-500'
@@ -280,9 +226,7 @@ export default function Profile() {
                                         Recent
                                     </div>
                                     <div className="cursor-pointer hover:bg-blue-600 hover:text-white transition w-full py-2 px-4 lg:text-xl md:text-lg sm:text-md text-sm rounded-b-xl" onClick={() => handleSelectFilter("Oldest")}>
-
                                         Oldest
-
                                     </div>
                                 </div>
                             )}
@@ -291,7 +235,6 @@ export default function Profile() {
 
                     {/* Posts Section */}
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4 mb-30 z-10">
-
                         {posts.map((post: any) => {
                             const isUpvoted = post.upvote?.includes(userEmail);
                             const isDownvoted = post.downvote?.includes(userEmail);
@@ -334,13 +277,9 @@ export default function Profile() {
                                             </div>
                                         </div>
                                     </div>
-                                    {post.postImage && (
-                                        <img
-                                            src={urlFor(post.postImage).width(400).height(300).url()}
-                                            alt="Post Image"
-                                            className="w-full mt-2 rounded-md"
-                                        />
-                                    )}
+                                    {post?.postImages?.map((image: any, index: number) => (
+                                        <img key={index} className="mb-[5px]" src={urlFor(image).url()} alt={image?.alt || 'Image'} />
+                                    ))}
                                     <div id="date" className="text-[#6B7280] w-3/4 text-sm mt-3">
                                         {formatDate(post?._createdAt)}
                                     </div>
@@ -386,7 +325,6 @@ export default function Profile() {
                                 </div>
                             );
                         })}
-
                     </div>
                 </div>
             </div>
