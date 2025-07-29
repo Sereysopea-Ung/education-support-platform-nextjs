@@ -1,6 +1,6 @@
 export default function Policy(){
     return (
-        <div>
+        <div className="bg-white  text-[#374151]">
             <div className="flex flex-col w-full justify-center items-center mt-5 md:mt-10 group relative">
                 <h1 className="flex lg:text-5xl md:text-4xl sm:text-3xl text-2xl font-bold">Privacy Policy</h1>
                 <span className="absolute bottom-[-10px] left-0 w-full h-[2px] bg-[#4B5563] mx-5 md:mx-10"></span>
@@ -121,7 +121,7 @@ export default function Policy(){
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-6 md:mb-10 md:text-justify ">
                     S3TUDY may contain links to third-party websites or services that are not operated by us. We are not responsible for the privacy practices of these third parties. We encourage you to read the privacy policies of any external sites you visit.
                 </h1>
-                <h1 className="lg:text-3xl md:text-2xl sm:text-xl text-lg font-bold mb-3 md:mb-5">8. Children's Privacy</h1>
+                <h1 className="lg:text-3xl md:text-2xl sm:text-xl text-lg font-bold mb-3 md:mb-5">8. Children&#39;s Privacy</h1>
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-6 md:mb-10 md:text-justify ">
                     S3TUDY is not intended for use by children under the age of 13. We do not knowingly collect or solicit personal information from children under 13. If you are a parent or guardian and believe we have collected such information, please contact us so we can delete it.
                 </h1>

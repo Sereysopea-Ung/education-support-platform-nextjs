@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Service(){
     return (
-        <div>
+        <div className="bg-white  text-[#374151]">
             <div className="flex flex-col w-full justify-center items-center mt-5 md:mt-10 group relative">
                 <h1 className="flex lg:text-5xl md:text-4xl sm:text-3xl text-2xl font-bold">Terms of Service</h1>
                 <span className="absolute bottom-[-10px] left-0 w-full h-[2px] bg-[#4B5563] mx-5 md:mx-10"></span>
@@ -54,11 +54,11 @@ export default function Service(){
                 </h1>
                 <h1 className="lg:text-3xl md:text-2xl sm:text-xl text-lg font-bold mb-3 md:mb-5">6. Termination</h1>
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5 text-justify ">
-                    S3TUDY reserves the right to suspend or terminate your account if you violate these Terms of Service or engage in activities that compromise the platform's integrity. You may also terminate your account at any time by contacting support.
+                    S3TUDY reserves the right to suspend or terminate your account if you violate these Terms of Service or engage in activities that compromise the platform&#39;s integrity. You may also terminate your account at any time by contacting support.
                 </h1>
                 <h1 className="lg:text-3xl md:text-2xl sm:text-xl text-lg font-bold mb-3 md:mb-5">7. Disclaimers and Limitation of Liability</h1>
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5 text-justify ">
-                    🔹 S3TUDY is provided "as is" without warranties of any kind, either express or implied.
+                    🔹 S3TUDY is provided as is without warranties of any kind, either express or implied.
                 </h1>
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5 text-justify ">
                     🔹 We do not guarantee the accuracy, completeness, or reliability of any content provided on the platform.

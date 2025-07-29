@@ -62,7 +62,7 @@ export default function NewsPage() {
     }
 
     return(
-        <div className="lg:mt-20 px-5 grid grid-cols-12">
+        <div className="lg:mt-16 pt-4 min-h-screen px-5 grid grid-cols-12 bg-white text-[#111827]">
             <div className={session?.user ? "lg:col-span-10 col-span-12 lg:col-start-3 gap-5" : "mt-16 lg:mt-0 col-span-12"}>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">
                     {news.map((newItem: any) => (

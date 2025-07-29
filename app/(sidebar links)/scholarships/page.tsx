@@ -38,7 +38,7 @@ export default function ScholarshipsPage() {
     }
 
     return (
-        <div className="lg:mt-20 px-5 grid grid-cols-12">
+        <div className="lg:mt-16 pt-4 px-5 grid grid-cols-12 bg-white min-h-screen h-full min-w-screen text-black">
             <div className={session?.user ? "lg:col-span-10 col-span-12 lg:col-start-3 gap-5" : "mt-16 lg:mt-0 col-span-12"}>
                 {/* Adjusting the grid layout for scholarships */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-5">

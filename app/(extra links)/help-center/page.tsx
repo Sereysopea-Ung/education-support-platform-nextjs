@@ -1,6 +1,6 @@
 export default function Help(){
     return (
-        <div>
+        <div className="bg-white  text-[#374151]">
             <div className="flex flex-col w-full justify-center items-center mt-5 md:mt-10 group relative">
                 <h1 className="flex lg:text-5xl md:text-4xl sm:text-3xl text-2xl font-bold">Help Center</h1>
                 <span className="absolute bottom-[-10px] left-0 w-full h-[2px] bg-[#4B5563] mx-5 md:mx-10"></span>

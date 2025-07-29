@@ -351,8 +351,8 @@ export default function LandingPage() {
                 </div>
                 ) : (
                 <>
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 bg-white pl-8 pr-8 duration-300">
-                        <div className="flex p-4 pt-20 w-full min-h-[300px] row-span-1 md:col-span-12 flex-col items-center justify-between">
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-4 bg-white pl-8 pr-8 duration-300  text-[#374151]">
+                        <div className="flex p-4 pt-20 w-full min-h-[300px] row-span-1 md:col-span-12 flex-col items-center justify-between ">
                             <div className="flex gap-4 w-full">
                                 <div className="flex-col flex-1 bg-white px-4 md:py-20 text-left">
                                     <div className="text-black pb-8 lg:text-5xl md:text-4xl sm:text-3xl w-full text-2xl">
@@ -729,7 +729,7 @@ export default function LandingPage() {
                             </div>
                         </div>
                     </div>
-                    <div className="flex items-center justify-center w-full md:mt-[-120px] mt-[-60px] md:text-xl text-3xs">
+                    <div className="flex items-center justify-center w-full md:mt-[-120px] mt-[-60px] md:text-xl text-3xs text-[#374151]">
                         © 2025 UniConnect. All rights reserved.
                     </div>
                 </>

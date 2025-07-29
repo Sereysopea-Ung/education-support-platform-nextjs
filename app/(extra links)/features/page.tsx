@@ -1,6 +1,6 @@
 export default function Features() {
     return (
-        <div>
+        <div className="bg-white  text-[#374151]">
             <div className="flex flex-col w-full justify-center items-center mt-5 md:mt-10 group relative">
                 <h1 className="flex lg:text-5xl md:text-4xl sm:text-3xl text-2xl font-bold">🌟 Explore Our Features</h1>
                 <span className="absolute bottom-[-10px] left-0 w-full h-[2px] bg-[#4B5563] mx-5 md:mx-10"></span>
@@ -12,7 +12,7 @@ export default function Features() {
                     we believe the best learning comes from those who’ve been in your shoes. Our platform is built for students, by students. Where seniors share lessons and everyone benefits from a dynamic Q&A system.
                 </h1>
                 <h1 className="lg:text-3xl md:text-2xl sm:text-xl text-lg font-bold mb-3 md:mb-5">🧠 Q&A System</h1>
-                <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5">Have a question? We've got the answers! </h1>
+                <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5">Have a question? We got the answers! </h1>
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5">🔹 Post Any Question –
                     <span className="text-[#6B7280]"> Get expert help and community support instantly.</span>
                 </h1>

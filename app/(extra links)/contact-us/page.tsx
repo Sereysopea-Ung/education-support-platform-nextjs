@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Contact(){
     return (
-        <div>
+        <div className="bg-white h-screen text-[#374151]">
             <div className="flex flex-col w-full justify-center items-center mt-5 md:mt-10 group relative">
                 <h1 className="flex lg:text-5xl md:text-4xl sm:text-3xl text-2xl font-bold">📬 Contact Us</h1>
                 <span className="absolute bottom-[-10px] left-0 w-full h-[2px] bg-[#4B5563] mx-5 md:mx-10"></span>
@@ -20,7 +20,7 @@ export default function Contact(){
                 </h1>
                 <h1 className="lg:text-3xl md:text-2xl sm:text-xl text-lg font-bold mb-3 md:mb-5">Need Help?</h1>
                 <h1 className="lg:text-2xl md:text-xl sm:text-lg text-md mb-3 md:mb-5 ">
-                    Before reaching out, you might find the answer you're looking for in our
+                    Before reaching out, you might find the answer you are looking for in our
                     <span>
                         <Link href="/help-center">
                             <button className="text-[#2563EB] ml-2 hover:cursor-pointer"> Help Center </button>
