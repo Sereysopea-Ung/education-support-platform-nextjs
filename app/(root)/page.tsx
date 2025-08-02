@@ -730,7 +730,7 @@ export default function LandingPage() {
                         </div>
                     </div>
                     <div className="flex items-center justify-center w-full md:mt-[-120px] mt-[-60px] md:text-xl text-3xs text-[#374151]">
-                        © 2025 UniConnect. All rights reserved.
+                        © 2025 S3TUDY. All rights reserved.
                     </div>
                 </>
                 )}
