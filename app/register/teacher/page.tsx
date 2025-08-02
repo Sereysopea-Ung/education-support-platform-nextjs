@@ -131,7 +131,7 @@ const RegistrationForm = () => {
     };
 
     return (
-        <div className="flex justify-center h-auto bg-gray-100">
+        <div className="flex justify-center h-auto bg-gray-100  w-full text-gray-800">
             <div className="border border-gray-300 rounded-lg p-6 w-96 shadow-lg bg-white h-auto my-5 md:my-10 flex-col items-center">
                 <div className="w-full flex justify-center">
                     <Image src="/Teacher.svg" alt="Teacher logo" width={50} height={50} className="max-h-5xl mb-4"/>

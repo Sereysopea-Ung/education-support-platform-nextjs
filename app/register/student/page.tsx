@@ -133,7 +133,7 @@ const RegistrationForm = () => {
     };
 
     return (
-        <div className="flex justify-center h-auto bg-gray-100">
+        <div className="flex justify-center h-auto bg-gray-100 w-full text-gray-800">
             <div className="border border-gray-300 rounded-lg p-6 w-96 shadow-lg bg-white h-auto my-5 md:my-10">
                 <h1 className="text-5xl font-semibold mb-4 text-center text-[#2563EB]"><FontAwesomeIcon icon={faUserGraduate} /></h1>
                 <h2 className="text-2xl font-semibold mb-4 text-center">Student Registration</h2>

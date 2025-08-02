@@ -4,7 +4,7 @@ import Link from "next/link";
 
 const FailedRegistration = () => {
     return (
-        <section id="choose-role" className="bg-blue-200 flex justify-center items-center w-full h-dvh">
+        <section id="choose-role" className="bg-blue-200 flex justify-center items-center w-full h-dvh text-gray-800">
             <div className="bg-inherit w-11/12 md:w-6/12 sm:w-9/12">
                 <div className="bg-white rounded-[10px] shadow-md h-100 items-center flex-col justify-center">
                     <div className="flex items-center justify-center gap-3 h-full flex-col">

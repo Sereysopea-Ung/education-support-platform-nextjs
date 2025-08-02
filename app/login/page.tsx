@@ -31,7 +31,7 @@ export default function LoginForm() {
     }
 
     return (
-        <div className="flex justify-center items-center h-screen bg-gray-100">
+        <div className="flex justify-center items-center h-screen bg-gray-100 w-full text-gray-800">
             <div className="border border-gray-300 rounded-lg p-6 w-96 shadow-lg bg-white">
                 <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
                 <form onSubmit={handleFormSubmit} className="flex flex-col space-y-4">
