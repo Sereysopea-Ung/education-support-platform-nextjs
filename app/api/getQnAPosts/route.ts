@@ -15,7 +15,7 @@ const getQnAPosts = async () => {
             _createdAt,
             typePost,
             upvote,
-            postImage,
+            postImages, 
             pitch,
             isVerified,
             "commentCount": count(*[_type == "comment" && references(^._id)]),

@@ -12,7 +12,7 @@ export default function SecurityPage() {
     };
 
     return (
-        <div className="grid grid-cols-12">
+        <div className="grid grid-cols-12 bg-white min-h-screen w-screen text-black">
             <div className="col-span-8 col-start-4 ">
                 <div>Security</div>
                 <button

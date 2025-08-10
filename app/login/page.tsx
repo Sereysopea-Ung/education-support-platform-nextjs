@@ -22,7 +22,7 @@ export default function LoginForm() {
                 router.push('../'); // Navigate to the parent directory
             }
         } catch (e) {
-            if (e instanceof Error) {
+            if (e instanceof Error) { 
                 console.error("An error occurred:", e.message);
             } else {
                 console.error("An unknown error occurred");
@@ -59,7 +59,7 @@ export default function LoginForm() {
                     </button>
                 </form>
                 <div className="flex justify-center items-center w-full">
-                    Don't have an account? <Link href="/register" className="text-[#2563EB] ml-2">Sign up</Link>
+                    Do not have an account? <Link href="/register" className="text-[#2563EB] ml-2">Sign up</Link>
                 </div>
             </div>
         </div>

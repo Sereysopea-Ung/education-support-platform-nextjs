@@ -39,7 +39,8 @@ export default function EditProfilePage() {
     const roleOptions = ["Student", "Teacher"];
 
     return (
-        <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <div className="min-h-screen grid grid-cols-12 w-screen ">
+        <div className="bg-white p-8 rounded-lg shadow-md col-start-2 col-end-10 text-gray-500">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Profile</h2>
             <form onSubmit={handleSubmit}>
                 {/* Profile Photo */}
@@ -163,6 +164,7 @@ export default function EditProfilePage() {
                     SAVE CHANGES
                 </button>
             </form>
+        </div>
         </div>
     );
 }

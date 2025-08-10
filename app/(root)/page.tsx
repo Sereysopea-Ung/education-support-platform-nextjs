@@ -216,17 +216,17 @@ export default function LandingPage() {
     };
 
     if (status === 'loading') {
-        return <div className="mt-20">Loading...</div>; // Show loading while the session is being fetched
+        return <div className="mt-20 bg-white">Loading...</div>; // Show loading while the session is being fetched
     }
 
 
     return (
         <div>
             {session?.user ? (
-                <div className="grid grid-cols-12">
+                <div className="grid grid-cols-12 bg-white">
                     {/*middle section*/}
-                    <div className="lg:col-span-7 lg:col-start-3 col-span-12 md:col-span-8 bg-[#F9FAFB] w-full lg:px-10 md:px-5 lg:mt-20">
-                        <div className="flex flex-col w-full h-full lg:mt-5 gap-5">
+                    <div className="lg:col-span-7 lg:col-start-3 col-span-12 md:col-span-8 bg-[#F9FAFB] w-full lg:px-10 md:px-5 lg:mt-16 text-black">
+                        <div className="flex flex-col w-full h-full lg:pt-5 gap-5">
 
                             {/*UNGSEREYSOPEA Correct*/}
                             {postData.map((datum:any)=>{
@@ -240,7 +240,7 @@ export default function LandingPage() {
                                                 <div id="profile_picture" className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
                                                     <img src={urlFor(datum?.author.profile_pic).width(50).height(50).fit('crop').url()} className="rounded-full"/>
                                                 </div>
-                                            </div>
+                                            </div> 
                                             <div className="flex w-full h-12">
                                                 <div className="flex-1 h-12 w-5/6">
                                                     <div className="h-1/2 gap-3 flex">

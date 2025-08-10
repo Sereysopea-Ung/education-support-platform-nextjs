@@ -99,7 +99,7 @@ const RightBar = () => {
     };
 
     return (
-        <div className="md:w-4/12 lg:w-3/12 md:absolute top-0 right-0 col-span-12 md:col-span-4 bg-white w-full border-1 border-gray-200 px-2 pt-3 rounded-lg md:mt-16 mt-10">
+        <div className="md:w-4/12 lg:w-3/12 md:absolute top-0 right-0 col-span-12 md:col-span-4 bg-white w-full border-1 border-gray-200 px-2 pt-3 rounded-lg md:mt-16 mt-10 text-black">
             <div className="flex border-1 border-[#DDE3EF] w-full rounded-xl px-2 py-2 flex-col">
 
                 <div className="justify-between flex-col w-full items-center border-1 border-[#DDE3EF] rounded-xl p-2">

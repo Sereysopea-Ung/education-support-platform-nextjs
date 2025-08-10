@@ -47,6 +47,7 @@ const Navbar = () => {
                 {/* Logo */}
                 <Link href="/" className="flex items-center">
                     <Image src="/logo.png" alt="logo" width={32} height={32} className="min-w-[32px] min-h-[32px] " />
+                    <span className="text-2xl font-bold ml-2 text-[#0092C6]">S3TUDY</span>
                 </Link>
 
                 {/* Desktop Menu */}
