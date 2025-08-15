@@ -14,7 +14,7 @@ export default function ModalLayout({ title, onClose, children }) {
                     <path d="M20.5 1.5L1.5 20.5M1.5 1.5L20.5 20.5" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
             </div>
-
+ 
             {/* Title */}
             <div className="flex items-center justify-center -mt-[50px] mb-8">
                 <h2 className="text-[45px] font-bold">{title}</h2>

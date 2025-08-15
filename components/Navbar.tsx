@@ -24,7 +24,6 @@ const Navbar = () => {
     const isHomePage = pathname === "/";
     const isQnAPage = pathname === "/q&a";
     const isLessonPage = pathname === "/lesson";
-    const isCommunityPage = pathname === "/community";
     const isFollowingPage = pathname === "/following";
     const isJobsPage = pathname === "/jobs";
     const isNewsPage = pathname === "/news";
@@ -83,11 +82,7 @@ const Navbar = () => {
                         <span className="z-10 hover:text-blue-600">Lesson</span>
                         <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
                     </Link>
-                    <Link href="/community" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isCommunityPage ? "text-blue-500" : ""
-                    }`} >
-                        <span className="z-10 hover:text-blue-600">Community</span>
-                        <span className="absolute bottom-0 left-0 w-full h-[2px] bg-transparent group-hover:bg-blue-600 transition-all duration-300"></span>
-                    </Link>
+                    
                     {session?.user?.name ? (
                         <div>
                             <Link href="/following" className={`group relative p-1 lg:px-2  transition cursor-pointer ${isFollowingPage ? "text-blue-500" : ""
@@ -126,7 +121,6 @@ const Navbar = () => {
                         ):(<div></div>)}
                         <Link href="/q&a" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Q&A</Link>
                         <Link href="/lesson" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Lesson</Link>
-                        <Link href="/community" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Community</Link>
                         <Link href="/news" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">News</Link>
                         <Link href="/jobs" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Jobs</Link>
                         <Link href="/scholarships" onClick={() => setMenuOpen(false)} className="hover:bg-blue-600 w-full py-2 hover:text-white transition cursor-pointer">Scholarships</Link>

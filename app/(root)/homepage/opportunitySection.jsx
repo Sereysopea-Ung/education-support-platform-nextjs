@@ -1,58 +1,43 @@
-import { type } from "os";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+"use client";
 
-export default function OppSection({
-  items = [],
-  title = "",
-  propertyName = {},
-}) {
-  const [showAll, setShowAll] = useState(false);
-  const visibleOpp = showAll ? items : items?.slice?.(0, 3);
+import { useState, useEffect } from "react";
 
-  const {category = "type", position = "pos" } = propertyName;
+export default function OppSection() {
+  const [opportunities, setOpportunities] = useState([]);
 
-  const router = useRouter();
-  const handleOpportunityClick = () => {
-    router.push("/opportunity");
-  };
+  useEffect(() => {
+    (async () => {
+      try {
+        const [jobsRes, scholarshipsRes] = await Promise.all([
+          fetch("/api/getTopJob"),
+          fetch("/api/getTopScholarship"),
+        ]);
+
+        if (!jobsRes.ok || !scholarshipsRes.ok)
+          throw new Error("Failed to fetch opportunities");
+
+        const jobs = await jobsRes.json();
+        const scholarships = await scholarshipsRes.json();
+
+        setOpportunities([...jobs, ...scholarships]);
+      } catch (error) {
+        console.error("Error fetching opportunities:", error);
+      }
+    })();
+  }, []);
 
   return (
-    <div className="mt-6 ml-10 mr-5 w-full bg-gray-100">
-      <div className="w-100">
-        <div className="bg-white border-b-1 border-solid overflow-hidden w-full rounded-2xl">
-          <div className="relative">
-            <p className="text-[20px] text-black p-4">{title}</p>
+    <div className="opp-section border-1 border-gray-300 bg-white rounded-lg p-4 ml-5 mt-5">
+      <h2 className="text-lg font-bold mb-3">Latest Opportunities</h2>
+      <div className="space-y-3">
+        {opportunities.map((opp) => (
+          <div key={opp._id} className="p-3 bg-[#E5E7EB] rounded-lg">
+            <p className="font-medium">{opp.jobTitle || opp.scholarshipTitle || "No title"}</p>
+            <p className="text-sm text-gray-500">
+              {opp.companyName || opp.provider || "N/A"}
+            </p>
           </div>
-
-          <div className="relative">
-            <button
-              onClick={() => setShowAll(!showAll)}
-              className="text-[20px] text-blue-500 p-4 float-right -mt-12 transform transition-transform duration-200 hover:underline"
-            >
-              <p onClick = {handleOpportunityClick} className="hover:cursor-pointer">View More</p>
-            </button>
-
-            <div
-              className={`relative ${
-                !showAll ? "max-h-[280px]" : "max-h-[280px]"
-              } `}
-            >
-              {visibleOpp.map((item, index) => (
-                <div key={index} className="flex items-center py-2 gap-4 mb-4">
-                  <div className="flex-1 ml-5">
-                    <p className="text-[20px] mt-2 mb-1">
-                      {item[category] || "N/A"}
-                    </p>
-                    <p className="text-[15px] text-gray-500 ">
-                      {item[position] || "N/A"}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

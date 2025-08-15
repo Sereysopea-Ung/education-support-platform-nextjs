@@ -1,14 +1,51 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import ModalLayout from './modalLayout';
 import QuestionPanel from './questionPanel';
 import LessonPanel from './lessonPanel';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import imageUrlBuilder from '@sanity/image-url';
+import { createClient } from '@sanity/client';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faChalkboardUser, faCheckCircle, faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
+import formatDate from "@/util/date"
+
+
+const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN,
+});
+
+const builder = imageUrlBuilder(client);
+function urlFor(source) {
+  return builder.image(source);
+}
+
 export default function CreatePost({items = {}, propertyNames = {}}) {
 
-    const {
-        image = "img",
-        name = "name",
-    } = propertyNames;
+    const [profilePic, setProfilePic] = useState(null);
+    const { data: session} = useSession();
+    const [major, setMajor] = useState('');
+    const [year, setYear] = useState('');
+
+    useEffect(() => {
+    if (session?.user?.email) {
+        client
+        .fetch(`*[_type == "user" && email == $email][0]{ profile_pic, major, year }`, {
+            email: session.user.email,
+        })
+        .then((user) => {
+            if (user?.profile_pic) {
+            setProfilePic(urlFor(user.profile_pic).width(50).height(50).url());
+            }
+            if (user?.major) setMajor(user.major);
+            if (user?.year) setYear(user.year);
+        });
+    }
+    }, [session]);
 
     const [showPostPanel, setShowPostPanel] = useState(false);
     const togglePostPanel = () => setShowPostPanel(!showPostPanel);
@@ -23,12 +60,15 @@ export default function CreatePost({items = {}, propertyNames = {}}) {
             <div className="border-2 border-solid bg-white ml-8 border-blue-100 rounded-[15px] mt-4 p-5 shadow-2xs">
                 {/* input */}
                 <div className="flex items-center w-full">
-                    <img
-                        src={items[image]}
-                        alt="profile"
-                        className="w-14 h-14 mr-3 border-1 border-gray-300 rounded-full hover:cursor-pointer"
-                        onClick={() => {router.push('/profileacc')}}
+                    {profilePic && (
+                    <Image
+                        src={profilePic}
+                        alt={session.user.name || 'User profile'}
+                        width={50}
+                        height={50}
+                        className="rounded-full border-2"
                     />
+                    )}
                     <input
                         onClick={togglePostPanel}
                         className="opacity-50 font-light ml-3 text-[20px] bg-transparent border-none outline-none w-full"

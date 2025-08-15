@@ -69,7 +69,7 @@ export const userType = defineType({
     }),
     defineField({
       name: 'id',
-      type: 'string'
+      type: 'string' 
     }),
     defineField({
       name: 'department',

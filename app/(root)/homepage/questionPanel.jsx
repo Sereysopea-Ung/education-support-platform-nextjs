@@ -1,4 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSession } from 'next-auth/react';
+import Image from 'next/image';
+import imageUrlBuilder from '@sanity/image-url';
+import { createClient } from '@sanity/client';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faChalkboardUser, faCheckCircle, faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
+import formatDate from "@/util/date"
+
+
+const client = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN,
+});
+
+const builder = imageUrlBuilder(client);
+function urlFor(source) {
+  return builder.image(source);
+}
 
 export default function QuestionPanel({ items }) {
 
@@ -20,8 +40,29 @@ export default function QuestionPanel({ items }) {
         }
     };
 
+    const [profilePic, setProfilePic] = useState(null);
+    const { data: session} = useSession();
+    const [major, setMajor] = useState('');
+    const [year, setYear] = useState('');
+
+    useEffect(() => {
+    if (session?.user?.email) {
+        client
+        .fetch(`*[_type == "user" && email == $email][0]{ profile_pic, major, year }`, {
+            email: session.user.email,
+        })
+        .then((user) => {
+            if (user?.profile_pic) {
+            setProfilePic(urlFor(user.profile_pic).width(50).height(50).url());
+            }
+            if (user?.major) setMajor(user.major);
+            if (user?.year) setYear(user.year);
+        });
+    }
+    }, [session]);
+
   return (
-    <>
+    <> 
         <div className="mb-10">
             <p className="text-[15px] font-semibold text-blue-500">Tips:</p>
             <ul className="text-[15px] list-disc list-inside text-blue-500 space-y-2 ml-2">
@@ -31,11 +72,23 @@ export default function QuestionPanel({ items }) {
         </div>
        
         <div className="mb-3">
-            <div className='flex items-center'>
-                <img src={items.img} className="border-1 border-solid w-10 h-10 rounded-full object-cover" />
-                <p className='ml-2 text-gray-500 font-bold -mt-[10px]'>{items.name}</p>
+            <div clasName="flex w-full flex-row">
+                <div className="w-full flex">
+                    {profilePic && (
+                    <div className="flex items-center gap-2">
+                    <Image
+                    src={profilePic}
+                    alt={session.user.name || 'User profile'}
+                    width={50}
+                    height={50}
+                    className="rounded-full border-2"
+                    />
+                    {session?.user?.name}
+                    </div>
+                    )}
+                </div>
             </div>
-
+            
             <div className='w-full mt-2'>
                 <input type="text"
                     placeholder="Share something with your community..."

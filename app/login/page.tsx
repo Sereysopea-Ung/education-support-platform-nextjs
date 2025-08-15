@@ -18,7 +18,7 @@ export default function LoginForm() {
                 console.error(response.error);
             } else {
                 console.log("Login successful:", response);
-                router.push('../admin/users?refresh=1');
+                router.push('/homepage');
             }
 
         } catch (e) {
