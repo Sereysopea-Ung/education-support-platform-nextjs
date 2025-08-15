@@ -17,7 +17,7 @@ export const newsType = defineType({
             validation: (Rule) => Rule.required(), // Make this field required
         }),
         defineField({
-            name: 'pitch', // Field for the pitch/summary of the article
+            name: 'pitch', // Field for the pitch/summary of the article 
             title: 'Pitch', // Displayed title for this field
             type: 'text', // This is a text field for longer descriptions
         }),

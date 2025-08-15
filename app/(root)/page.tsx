@@ -10,6 +10,7 @@ import {createClient} from "@sanity/client";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faChalkboardUser, faCheckCircle, faCircleDown, faCircleUp, faComment} from "@fortawesome/free-solid-svg-icons";
 import formatDate from "@/util/date"
+import { FaSearch } from "react-icons/fa";
 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -70,7 +71,6 @@ export default function LandingPage() {
     const [scholarshipByDate,setScholarshipByDate] = useState<any[]>([]);
     const [postData, setPostData] = useState<any[]>([]);
     const userEmail = session?.user?.email || null;
-
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -215,25 +215,49 @@ export default function LandingPage() {
         }));
     };
 
+    // Cheat search bar state
+    const [search, setSearch] = useState("");
+
     if (status === 'loading') {
-        return <div className="mt-20 bg-white">Loading...</div>; // Show loading while the session is being fetched
+        return <div className="mt-20 lg:ml-60 bg-white">Loading...</div>; // Show loading while the session is being fetched
     }
 
+  
+    const filteredPostData = postData.filter((datum) => {
+    const matchesSearch =
+        datum.author?.username?.toLowerCase().includes(search.toLowerCase()) ||
+        datum.pitch?.toLowerCase().includes(search.toLowerCase()) ||
+        datum.author?.major?.toLowerCase().includes(search.toLowerCase()) ||
+        datum.author?.department?.toLowerCase().includes(search.toLowerCase()) ||
+        datum.author?.year?.toString().includes(search.toLowerCase());
+    return matchesSearch;
+    });
 
     return (
-        <div>
+        <div className="bg-white min-h-screen h-full text-[#111827]">
             {session?.user ? (
-                <div className="grid grid-cols-12 bg-white">
+                <div className="grid grid-cols-12 bg-white w-full min-h-screen max-w-screen">
                     {/*middle section*/}
-                    <div className="lg:col-span-7 lg:col-start-3 col-span-12 md:col-span-8 bg-[#F9FAFB] w-full lg:px-10 md:px-5 lg:mt-16 text-black">
+                    <div className="lg:col-span-7 lg:col-start-3 col-span-12 md:col-span-8 bg-white w-full lg:px-10 md:px-5 lg:mt-16 text-black">
+                        {/* Cheat Search Bar */}
+                        <div className="fixed flex p-2 gap-4 top-3 right-70 z-100 rounded-xl bg-white border border-gray-300 item-center justify-between">
+                        <input
+                            type="text"
+                            placeholder="Search..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="pl-2 pr-4 text-black focus:outline-none"
+                        />
+                        <FaSearch className="text-gray-500 pr-2 text-2xl" />
+                        </div>
                         <div className="flex flex-col w-full h-full lg:pt-5 gap-5">
 
                             {/*UNGSEREYSOPEA Correct*/}
-                            {postData.map((datum:any)=>{
+                            {filteredPostData.map((datum:any)=>{
                                 const isUpvoted = datum.upvote?.includes(userEmail);
                                 const isDownvoted = datum.downvote?.includes(userEmail);
                                 return(
-                                <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto  rounded-xl px-2 py-2">
+                                <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto rounded-xl px-2 py-2">
                                     <div className="w-full h-full flex-col gap-5">
                                         <div className="flex">
                                             <div className="flex h-12 w-12 ">
@@ -516,7 +540,6 @@ export default function LandingPage() {
 
                                 </div>
 
-
                             </div>
                         </div>
 
@@ -543,7 +566,6 @@ export default function LandingPage() {
                                             </li>
                                         ))}
                                     </ul>
-
 
                                 </div>
                                 <div className="pt-4 pl-4 pr-4 flex flex-col items-start min-h-[300px] text-left w-full">
@@ -693,7 +715,6 @@ export default function LandingPage() {
                                     </div>
                                 </div>
 
-
                                 <div className="flex flex-col pl-20 w-full mb-4">
                                     <Link href="/help-center" className="text-[#4B5563] flex pb-2 lg:text-lg md:text-sm sm:text-xs text-xs">
                                         <button className="hover:text-blue-600 hover:cursor-pointer"> Help Center </button>
@@ -737,3 +758,5 @@ export default function LandingPage() {
         </div>
     );
 }
+
+

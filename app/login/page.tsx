@@ -14,13 +14,13 @@ export default function LoginForm() {
             const formData = new FormData(event.currentTarget);
             const response = await doCredentialLogin(formData);
 
-            console.log(response);
-
             if (response?.error) {
                 console.error(response.error);
             } else {
-                router.push('../'); // Navigate to the parent directory
+                console.log("Login successful:", response);
+                router.push('../admin/users?refresh=1');
             }
+
         } catch (e) {
             if (e instanceof Error) { 
                 console.error("An error occurred:", e.message);

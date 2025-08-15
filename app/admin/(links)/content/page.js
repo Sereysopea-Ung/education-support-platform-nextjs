@@ -27,7 +27,7 @@ export default function SettingPage(){
                         {/* Make this functional */}
                         <div className="relative w-full">
                             <input
-                                type="text"
+                                type="text" 
                                 placeholder="Search by title, author, or content..."
                                 className="w-full pl-2 pr-4 py-2 rounded-lg bg-white border-gray-200 border-1 text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />

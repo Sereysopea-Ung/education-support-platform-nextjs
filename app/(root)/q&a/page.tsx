@@ -7,6 +7,7 @@ import imageUrlBuilder from "@sanity/image-url";
 import client from "@/sanity/lib/client";
 import { useSession } from "next-auth/react";
 import formatDate from "@/util/date";
+import { FaSearch } from "react-icons/fa";
 
 const builder = imageUrlBuilder(client);
 function urlFor(source: any) {
@@ -55,15 +56,36 @@ export default function QnA() {
         setExpandedItems(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
-    if (loading) return <div className="mt-16 px-5 lg:ml-54">Loading Q&A...</div>;
+    const [search, setSearch] = useState("");
+    const filteredPostData = postData.filter((datum) => {
+    const matchesSearch =
+        datum.author?.username?.toLowerCase().includes(search.toLowerCase()) ||
+        datum.pitch?.toLowerCase().includes(search.toLowerCase()) ||
+        datum.author?.major?.toLowerCase().includes(search.toLowerCase()) ||
+        datum.author?.department?.toLowerCase().includes(search.toLowerCase()) ||
+        datum.author?.year?.toString().includes(search.toLowerCase());
+    return matchesSearch;
+    });
+
+    if (loading) return <div className="mt-16 px-5 lg:ml-60">Loading Q&A...</div>;
 
     return (
         <div className="bg-white min-h-screen h-full text-[#111827]">
+            <div className="fixed flex p-2 gap-4 top-3 right-70 z-100 rounded-xl bg-white border border-gray-300 item-center justify-between">
+            <input
+                type="text"
+                placeholder="Search..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-2 pr-4 text-black focus:outline-none"
+            />
+            <FaSearch className="text-gray-500 pr-2 text-2xl" />
+            </div>
             {session?.user ? (
                 <div className="grid grid-cols-12">
                     <div className="lg:col-span-7 lg:col-start-3 col-span-12 md:col-span-8 bg-[#F9FAFB] w-full lg:px-10 md:px-5 lg:mt-16">
                         <div className="flex flex-col w-full h-full lg:pt-5 gap-5">
-                            {postData.map((datum: any) => {
+                            {filteredPostData.map((datum: any) => {
                                 const isUpvoted = voteState[datum._id]?.up || false;
                                 const isDownvoted = voteState[datum._id]?.down || false;
                                 const isExpanded = expandedItems[datum._id] || false;
@@ -86,7 +108,7 @@ export default function QnA() {
                                                             <div className="bg-[#DBEAFE] text-[#2563EB] border-1 h-full flex rounded-lg px-2">
                                                                 {datum?.author.role}
                                                             </div>
-                                                            <div className="h-full flex">verify picture</div>
+                                                            
                                                         </div>
                                                         <div className="h-1/2 justify-between flex gap-3 text-[#6B7280] text-center text-md">
                                                             {datum?.author?.year ? (
@@ -155,7 +177,7 @@ export default function QnA() {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-16 pt-4 px-5">
-                    {postData.map((datum: any) => {
+                    {filteredPostData.map((datum: any) => {
                         const isUpvoted = voteState[datum._id]?.up || false;
                         const isDownvoted = voteState[datum._id]?.down || false;
                         const isExpanded = expandedItems[datum._id] || false;

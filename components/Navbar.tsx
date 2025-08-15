@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation"; // Import useRouter for navigation
 
 // ✅ Ensure environment variables exist before initializing the client
 const client = createClient({
@@ -39,6 +40,13 @@ const Navbar = () => {
             .then((userData) => setUser(userData))
             .catch((error) => console.error("Error fetching user data:", error));
     }, [session?.user?.email]);
+
+    const router = useRouter();
+    
+        const handleLogout = async () => {
+            await doLogout(); // Call the logout function
+            router.push("/"); // Navigate to the homepage after logout
+        };
 
     return (
         <header className="fixed top-0 left-0 w-full bg-white px-4 py-4 h-16 border-b border-gray-100 shadow-md z-50">
@@ -132,24 +140,25 @@ const Navbar = () => {
                 <button className="lg:hidden rounded-lg flex items-center justify-center px-1 gap-2 text-black text-2xl transition z-5 hover:cursor-pointer hover:bg-gray-200" onClick={() => setMenuOpen(!menuOpen)}>
                     ☰
                 </button>
+                <div>
 
-                {/* Search Bar */}
-                <button className="flex border border-black rounded-4xl h-[30px] max-w-[250px] md:w-40 w-full lg:w-full items-center justify-left px-2 gap-2 mx-2">
-                    <Image src="/Search.svg" alt="Search" width={8} height={8} className="max-w-[16px] max-h-[16px] w-full h-full" />
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="flex-1 outline-none text-black"
-                    />
-                </button>
+                </div>
 
                 {/* Auth Buttons */}
                 {session?.user?.name ? (
+                    <div className="flex lg:gap-4">
+                    <button
+                        className="border bg-red-600 text-white px-6 py-1 rounded-4xl hover:bg-red-700 transition cursor-pointer text-nowrap col-end-12"
+                        onClick={handleLogout} // Trigger logout and then navigate
+                    >
+                        Log out
+                    </button>
                     <Link href="/create-post">
                         <button className="border bg-blue-600 text-white px-6 py-1 rounded-4xl hover:bg-blue-700 transition cursor-pointer text-nowrap">
                             + Post
                         </button>
                     </Link>
+                    </div>
                 ) : (
                     <div className="flex lg:gap-4">
                         <Link href="/register">

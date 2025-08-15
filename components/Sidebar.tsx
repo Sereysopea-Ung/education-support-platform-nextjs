@@ -116,7 +116,7 @@ const Sidebar = () => {
                             <FontAwesomeIcon icon={faHome} size="lg" />
                             <span>Home</span>
                         </Link>
-                        <Link href={profileLink} className="flex items-center space-x-2 py-2 w-full hover:bg-[#2D87F0] pl-6 hover:text-white">
+                        <Link href="/mynetwork" className="flex items-center space-x-2 py-2 w-full hover:bg-[#2D87F0] pl-6 hover:text-white">
                             <FontAwesomeIcon icon={faUser} size="lg" />
                             <span>My Network</span>
                         </Link>

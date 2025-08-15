@@ -7,6 +7,7 @@ import imageUrlBuilder from "@sanity/image-url";
 import client from "@/sanity/lib/client";
 import { useSession } from "next-auth/react";
 import formatDate from "@/util/date";
+import { FaSearch } from "react-icons/fa";
 
 const builder = imageUrlBuilder(client);
 function urlFor(source: any) {
@@ -55,7 +56,19 @@ export default function Lessons() {
     setExpandedItems(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  if (loading) return <div className="mt-16 px-5 lg:ml-54">Loading Lessons...</div>;
+  const [search, setSearch] = useState("");
+
+  if (loading) return <div className="mt-16 px-5 lg:ml-60">Loading Lessons...</div>;
+
+  const filteredPostData = postData.filter((datum) => {
+  const matchesSearch =
+      datum.author?.username?.toLowerCase().includes(search.toLowerCase()) ||
+      datum.pitch?.toLowerCase().includes(search.toLowerCase()) ||
+      datum.author?.major?.toLowerCase().includes(search.toLowerCase()) ||
+      datum.author?.department?.toLowerCase().includes(search.toLowerCase()) ||
+      datum.author?.year?.toString().includes(search.toLowerCase());
+  return matchesSearch;
+  });
 
   const renderPost = (datum: any) => {
     const isUpvoted = voteState[datum._id]?.up || false;
@@ -73,7 +86,7 @@ export default function Lessons() {
                 className="rounded-full"
                 alt="profile"
               />
-            </div>
+            </div> 
             <div className="flex w-full h-12 pl-2">
               <div className="flex-1 h-12">
                 <div className="h-1/2 gap-3 flex text-lg">
@@ -81,7 +94,7 @@ export default function Lessons() {
                   <div className="bg-[#DBEAFE] text-[#2563EB] border h-full flex rounded-lg px-2">
                     {datum?.author.role}
                   </div>
-                  <div className="h-full flex">verify picture</div>
+                  
                 </div>
                 <div className="h-1/2 flex gap-3 text-[#6B7280] text-md">
                   {datum?.author?.year
@@ -145,18 +158,28 @@ export default function Lessons() {
 
   return (
     <div className="w-full h-full bg-white min-h-screen px-5 lg:px-0 text-[#111827]">
+      <div className="fixed flex p-2 gap-4 top-3 right-70 z-100 rounded-xl bg-white border border-gray-300 item-center justify-between">
+        <input
+            type="text"
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="pl-2 pr-4 text-black focus:outline-none"
+        />
+        <FaSearch className="text-gray-500 pr-2 text-2xl" />
+        </div>
       {error && <div className="text-red-500">{error}</div>}
       {session?.user ? (
         <div className="grid grid-cols-12">
           <div className="lg:col-span-7 lg:col-start-3 col-span-12 bg-[#F9FAFB] w-full lg:px-10 md:px-5 lg:mt-20">
             <div className="flex flex-col w-full gap-5">
-              {postData.map(renderPost)}
+              {filteredPostData.map(renderPost)}
             </div>
           </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-16 px-5">
-          {postData.map(renderPost)}
+          {filteredPostData.map(renderPost)}
         </div>
       )}
     </div>
