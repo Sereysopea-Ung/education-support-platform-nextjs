@@ -41,7 +41,7 @@ export default function EditProfilePage() {
 
     return (
         <div className="grid grid-cols-12 h-full w-full">
-            <div className="bg-white p-4 shadow-md lg:w-[1080px] md:w-[600px] sm:w-[480px] text-gray-500">
+            <div className="bg-white p-4 shadow-md lg:w-[850px] md:w-[600px] sm:w-[480px] text-gray-500">
                 <div className="flex items-center justify-between">
                     <h2 className="text-[30px] text-gray-800 ml-4 mb-6">Profile</h2>
                     <button className="text-[#1E3A8A]">
