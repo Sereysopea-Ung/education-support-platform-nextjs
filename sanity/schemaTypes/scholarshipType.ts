@@ -13,7 +13,7 @@ export const scholarshipType = defineType({
     defineField({
         name: 'forApplicant',
         title: 'ForApplicant',
-        type: 'string' 
+        type: 'string'  
     }),
     defineField({
         name: 'amountOfMoney',

@@ -4,16 +4,17 @@ import { useState , useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import EventSection from "./eventSection";
 import OppSection from "./opportunitySection";
-import ProfileInfo from "./profile";
+import ProfileInfo from "./profileacc";
 import NewsSection from "./newsSection";
 import Content from "./content";
-import CreatePost from "./createPost";
 import UserDropdown from './UserDropdown';
 import MyNetworkPage from '../mynetwork/page';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import Link from 'next/link';
 import imageUrlBuilder from '@sanity/image-url';
 import { createClient } from '@sanity/client';
+import Context from "../homepage/content";
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -29,14 +30,6 @@ function urlFor(source) {
 
 export default function HomePage() {
 
-  // CreatePost img
-  var [createPost,setCreatePost] = useState([
-    {
-      name : "Celine Celine",
-      img : "/default_avatar.svg",
-    }
-  ])
-
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleDropdown = () => {
@@ -50,15 +43,7 @@ export default function HomePage() {
 
   const [activeMenu, setActiveMenu] = useState("Homepage");
   
-  // Tab state for mid-sidebar
   const [activeTab, setActiveTab] = useState("NewsFeed");
-
-  // Filtered content for mid-sidebar
-  function getFilteredContent(tab) {
-    if (tab === "Q&A") return content.filter(item => item.type === "Q&A");
-    if (tab === "Lessons") return content.filter(item => item.type === "Lessons");
-    return content; 
-  }
 
   useEffect(() => {
     if (activeTab === "Network") {
@@ -291,7 +276,7 @@ export default function HomePage() {
             <div className="flex flex-col bg-gray-100 overflow-hidden w-full col-start-4 z-10 col-span-6">
               {/* Nav bar */}
               <div className="flex flex-row gap-x-10 h-25 pl-5 bg-white fixed w-1/2 start-92.25">
-                {['NewsFeed', 'Q&A', 'Lessons', 'Network'].map(tab => (
+                {['NewsFeed', 'Q&A', 'Lesson', 'Network'].map(tab => (
                   
                   <p
                     key={tab}
@@ -312,17 +297,27 @@ export default function HomePage() {
               <div className="mt-[100px]"/>
               <div className="ml-2">
                 {/* Create Post */}
-                {createPost.map((item, index)=> (
-                  <CreatePost 
-                    key ={index}
-                    items={item}
-                  />
-                ))}
+                <Link href="/create-post" className="flex items-center gap-x-2 mb-4 rounded-lg border-1 bg-white border-[#DDE3EF] p-3 mt-5 ml-8">
+                    <div className="flex items-center w-full">
+                      {profilePic && (
+                      <Image 
+                          src={profilePic}
+                          alt={session.user.name || 'User profile'}
+                          width={50}
+                          height={50}
+                          className="rounded-full border-2"
+                      />
+                      )}
+                      
+                      <div
+                          className="opacity-50 font-light ml-3 text-[20px] bg-transparent border-none outline-none w-full"
+                          
+                      >Share something with your community...</div>
+                  </div>
+                </Link>
                 
                 {/* content */}
-                <>                  
-                    <Content/>                  
-                </>
+                <Context activeTab={activeTab} />
               </div>
             </div>
 

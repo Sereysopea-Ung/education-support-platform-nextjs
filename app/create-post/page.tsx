@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import Image from "next/image";
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface User {
     username: string;
@@ -33,8 +33,11 @@ export default function CreatePost() {
     const [user, setUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [postText, setPostText] = useState<string>("");
-    const [files, setFiles] = useState<File[]>([]);  // Changed to array to store multiple files
+    const [imageFiles, setImageFiles] = useState<File[]>([]); // Add this line
+    const [files, setFiles] = useState<File[]>([]); // For non-image files
     const [imagePreviews, setImagePreviews] = useState<string[]>([]);  // Store image previews for grid display
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -58,20 +61,12 @@ export default function CreatePost() {
         }
     }, [session]);
 
-    // Handle file input change
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files as FileList;  // Type assertion: we are asserting that `files` is not null
-        if (files) {
-            setFiles(prevFiles => [...prevFiles, ...Array.from(files)]);
-            console.log("File change " + files);
-        }
-    };
-
-// Handle image input change
+    // Handle image input change
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const files = event.target.files as FileList;  // Type assertion: we are asserting that `files` is not null
+        const files = event.target.files as FileList;
         if (files) {
             const selectedImages = Array.from(files);
+            setImageFiles(prev => [...prev, ...selectedImages]); // Store image files
             setImagePreviews(prevPreviews => [
                 ...prevPreviews,
                 ...selectedImages.map(image => URL.createObjectURL(image))
@@ -80,32 +75,92 @@ export default function CreatePost() {
     };
 
 
+    // Handle file input change (non-image files)
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files as FileList;
+        if (files) {
+            const selectedFiles = Array.from(files).filter(file => !file.type.startsWith("image/"));
+            setFiles(prevFiles => [...prevFiles, ...selectedFiles]);
+        }
+    };
+
     // Handle form submission (upload files and images)
     const handlePostSubmit = async () => {
-        if (files.length === 0 && imagePreviews.length === 0) {
-            console.log('No file or image selected');
+        setError(null);
+        setLoading(true);
+
+        if (!postText.trim()) {
+            setError("Post text is required");
+            setLoading(false);
             return;
         }
 
-        // Here you can add logic to upload the files and images to a server or cloud service
-        const formData = new FormData();
-        files.forEach(file => {
-            formData.append("files", file);
-        });
+        // 1. Upload images to Cloudinary
+        const uploadedImageUrls: string[] = [];
+        for (const imageFile of imageFiles) {
+            const imageForm = new FormData();
+            imageForm.append("file", imageFile);
+            imageForm.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+
+            const res = await fetch(
+                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+                { method: "POST", body: imageForm }
+            );
+            const data = await res.json();
+            if (data.secure_url) {
+                uploadedImageUrls.push(data.secure_url);
+            }
+        }
+
+
+        // 2. Upload files to Cloudinary
+        const uploadedFileUrls: string[] = [];
+        for (const file of files) {
+            const fileForm = new FormData();
+            fileForm.append("file", file);
+            fileForm.append("upload_preset", process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!);
+
+            const res = await fetch(
+                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`,
+                { method: "POST", body: fileForm }
+            );
+            const data = await res.json();
+            if (data.secure_url) {
+                uploadedFileUrls.push(data.secure_url);
+            }
+        }
+
+        // 3. Send post data to backend API to save in Sanity
+        const postPayload = {
+            postText,
+            major: selectedMajors,
+            subject: selectedSubjects,
+            typePost: selectedOption,
+            authorEmail: session?.user?.email,
+            images: uploadedImageUrls,
+            files: uploadedFileUrls,
+        };
 
         try {
-            const res = await fetch("/api/uploadFile", {
+            const res = await fetch("/api/createPost", {
                 method: "POST",
-                body: formData,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(postPayload),
             });
-
-            if (!res.ok) {
-                throw new Error("Failed to upload file/image");
-            }
-
-            console.log("Files uploaded successfully!");
+            setLoading(false);
+            if (!res.ok) throw new Error("Failed to create post");
+            // Redirect to homepage instead of alert
+            router.push("/");
+            setPostText("");
+            setFiles([]);
+            setImageFiles([]);
+            setImagePreviews([]);
+            setSelectedMajors([]);
+            setSelectedSubjects([]);
         } catch (err) {
-            console.error("Error uploading files:", err);
+            setError("Error creating post");
+            setLoading(false);
+            console.error(err);
         }
     };
 
@@ -162,7 +217,8 @@ export default function CreatePost() {
     };
 
     // Default state is set to "Question"
-    const [selectedOption, setSelectedOption] = useState<string>("Question");
+    const [selectedOption, setSelectedOption] = useState<string>("Q&A");
+
 
     const handleOptionClick = (option: string) => {
         // Toggle between "Question" and "Lesson"
@@ -182,10 +238,10 @@ export default function CreatePost() {
                 </div>
                 <div className="w-full flex text-xl justify-center items-center gap-10 mt-3">
                     <div
-                        onClick={() => handleOptionClick("Question")}
-                        className={`cursor-pointer ${selectedOption === "Question" ? "text-blue-500 underline" : "text-gray-500"}`}
+                        onClick={() => handleOptionClick("Q&A")}
+                        className={`cursor-pointer ${selectedOption === "Q&A" ? "text-blue-500 underline" : "text-gray-500"}`}
                     >
-                        Question
+                        Q&A
                     </div>
                     <div
                         onClick={() => handleOptionClick("Lesson")}
@@ -245,6 +301,7 @@ export default function CreatePost() {
                         <input
                             id="image-input"
                             type="file"
+
                             accept="image/*"
                             onChange={handleImageChange}
                             className="hidden"
@@ -305,12 +362,13 @@ export default function CreatePost() {
                                 onClick={() => handleMajorClick(major)}
                                 className={`px-3 py-1 text-md rounded-lg border-2 ${selectedMajors.includes(major) ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} flex items-center gap-2`}
                             >
-                                {selectedMajors.includes(major) && <span className="text-white">✔</span>}
+                                {selectedMajors.includes(major) && <span className="text-white">✔️</span>}
                                 {major}
                             </button>
                         ))}
                     </div>
                 </div>
+
 
                 <div className="w-full mt-3">
                     <div>
@@ -326,7 +384,7 @@ export default function CreatePost() {
                                 onClick={() => handleSubjectClick(subject)}
                                 className={`px-4 py-2 rounded-lg border-2 ${selectedSubjects.includes(subject) ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-700'} flex items-center gap-2`}
                             >
-                                {selectedSubjects.includes(subject) && <span className="text-white">✔</span>}
+                                {selectedSubjects.includes(subject) && <span className="text-white">✔️</span>}
                                 {subject}
                             </button>
                         ))}
@@ -334,10 +392,16 @@ export default function CreatePost() {
                 </div>
 
                 <div className="w-full mt-3 flex justify-end items-center gap-2">
-                    Post
-                    <button onClick={handlePostSubmit} className="rounded-md mr-3 hover:cursor-pointer">
-                        <Image src="/go.svg" alt="image" width={20} height={20} />
-                    </button>
+                    {loading ? (
+                        <span className="text-blue-500 font-bold mr-3">Uploading...</span>
+                    ) : (
+                        <>
+                            Post
+                            <button onClick={handlePostSubmit} className="rounded-md mr-3 hover:cursor-pointer">
+                                <Image src="/go.svg" alt="image" width={20} height={20} />
+                            </button>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
