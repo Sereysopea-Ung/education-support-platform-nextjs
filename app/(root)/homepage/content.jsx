@@ -22,7 +22,7 @@ function urlFor(source) {
   return builder.image(source);
 }
 
-export default function Context() {
+export default function Context({ activeTab }){
   const { data: session } = useSession();
   const userEmail = session?.user?.email || null;
 
@@ -49,7 +49,7 @@ export default function Context() {
             },
             typePost,
             _createdAt,
-            pitch,
+            pitch, 
             postImages,
             upvote,
             downvote,
@@ -71,6 +71,13 @@ export default function Context() {
       post.author?.username?.toLowerCase().includes(search.toLowerCase()) ||
       post.pitch?.toLowerCase().includes(search.toLowerCase())
   );
+
+  // final filtered posts = search + tab filter
+  const finalFilteredPosts = filteredPostData.filter((item) => {
+    if (activeTab === "Q&A") return item.typePost === "Q&A";
+    if (activeTab === "Lesson") return item.typePost === "Lesson";
+    return true; // NewsFeed = all
+  });
 
   // Toggle pitch text expand
   const toggleText = (id) => {
@@ -125,12 +132,12 @@ export default function Context() {
       </div>
 
       {/* Posts */}
-      {filteredPostData.map((datum) => {
+      {finalFilteredPosts.map((datum) => {
         const isUpvoted = datum.upvote?.includes(userEmail);
         const isDownvoted = datum.downvote?.includes(userEmail);
 
         return (
-          <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto rounded-xl px-2 py-2 mb-5">
+          <li key={datum._id} className="flex border-1 border-[#DDE3EF] bg-white w-full h-auto rounded-xl px-2 py-2 mb-5">
             <div className="w-full h-full flex-col gap-5">
               {/* Author info */}
               <div className="flex">

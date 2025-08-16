@@ -19,7 +19,7 @@ export const jobType = defineType({
         name: 'numberOfApplication',
         title: 'NumberOfApplication',
         type: 'number'
-    }),
+    }), 
     defineField({
         name: 'typeofjob',
         title: 'TypeOfJob',

@@ -34,11 +34,11 @@ export default function OppSection() {
           <div key={opp._id} className="p-3 bg-[#E5E7EB] rounded-lg">
             <p className="font-medium">{opp.jobTitle || opp.scholarshipTitle || "No title"}</p>
             <p className="text-sm text-gray-500">
-              {opp.companyName || opp.provider || "N/A"}
+              {opp.companyName || opp.typeofcoverage || "N/A"}
             </p>
           </div>
         ))}
-      </div>
+      </div> 
     </div>
   );
 }
