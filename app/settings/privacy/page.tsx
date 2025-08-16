@@ -34,7 +34,7 @@ export default function PrivacyPage() {
 
   return (
     <div className="grid grid-cols-12 h-full w-full">
-      <div className="bg-white p-4 lg:ml-130 md:ml-60 sm:ml-40 shadow-md lg:w-[1280px] md:w-[600px] sm:w-[480px] text-gray-500">
+      <div className="bg-white p-4 lg:ml-130 md:ml-60 sm:ml-40 shadow-md lg:w-[1080px] md:w-[600px] sm:w-[480px] text-gray-500">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
             {/* Title */}
