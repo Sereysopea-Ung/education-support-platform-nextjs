@@ -21,12 +21,12 @@ export const postType = defineType({
             title: 'Slug',
             type: 'slug',
             options: {
-                source: 'title', // Assuming 'title' exists as a string field
+                source: 'title',
                 maxLength: 96,
             },
         }),
         defineField({
-            name: 'title', // Adding title field as a string
+            name: 'title',
             title: 'Title',
             type: 'string',
         }),
@@ -35,10 +35,23 @@ export const postType = defineType({
             title: 'Pitch',
             type: 'text',
         }),
-        defineField({
+        defineField({ 
             name: 'postImages',
-            title: 'Post Images',
-            type: 'image',
+            title: 'Sanity Images',
+            type: 'array',
+            of: [{ type: 'image' }],
+        }),
+        defineField({
+            name: 'images',
+            title: 'Cloudinary Image URLs',
+            type: 'array',
+            of: [{ type: 'url' }],
+        }),
+        defineField({
+            name: 'files',
+            title: 'File URLs',
+            type: 'array',
+            of: [{ type: 'url' }],
         }),
         defineField({
             name: 'upvote',
@@ -58,17 +71,36 @@ export const postType = defineType({
             type: 'string',
         }),
         defineField({
-            name: 'pdfFile',
-            title: 'PDF File',
-            type: 'file',
-            options: {
-                accept: 'application/pdf',
-            },
+            name: 'major',
+            title: 'Majors',
+            type: 'array',
+            of: [{ type: 'string' }],
+        }),
+        defineField({
+            name: 'subject',
+            title: 'Subjects',
+            type: 'array',
+            of: [{ type: 'string' }],
+        }),
+        defineField({
+            name: 'authorEmail',
+            title: 'Author Email',
+            type: 'string',
+        }),
+        defineField({
+            name: 'createdAt',
+            title: 'Created At',
+            type: 'datetime',
+        }),
+        defineField({
+            name: 'text',
+            title: 'Post Text',
+            type: 'string',
         }),
     ],
     preview: {
         select: {
-            title: 'title', // Change this to 'title' or 'slug.current' if you prefer the slug
+            title: 'title',
         },
     },
 });

@@ -16,7 +16,7 @@ const client = createClient({
   token: process.env.SANITY_API_TOKEN,
 });
 
-// Image builder
+// Image builder 
 const builder = imageUrlBuilder(client);
 function urlFor(source) {
   return builder.image(source);
@@ -48,6 +48,8 @@ export default function Context({ activeTab }){
               department
             },
             typePost,
+            images,
+            files,
             _createdAt,
             pitch, 
             postImages,
@@ -69,7 +71,8 @@ export default function Context({ activeTab }){
   const filteredPostData = postData.filter(
     (post) =>
       post.author?.username?.toLowerCase().includes(search.toLowerCase()) ||
-      post.pitch?.toLowerCase().includes(search.toLowerCase())
+      post.pitch?.toLowerCase().includes(search.toLowerCase()) ||
+      post.author?.major?.toLowerCase().includes(search.toLowerCase())
   );
 
   // final filtered posts = search + tab filter
@@ -192,15 +195,48 @@ export default function Context({ activeTab }){
               {/* Post content */}
               <div className="h-1/2 w-full pl-10 pr-15 mt-3">
                 <Link href={`/post/${datum._id}`}>
-                  <div>
-                    {datum?.postImages?.map((image, index) => (
-                      <img
-                        key={index}
-                        className="mb-[5px]"
-                        src={urlFor(image).url()}
-                        alt={image?.alt || "Image"}
-                      />
-                    ))}
+                  
+                    <div id="post">
+                      {/* Sanity images */}
+                      <Link href={`/post/${datum._id}`}>
+                      {datum?.postImages?.map((image, index) => (
+                          <img
+                              key={`sanity-${index}`}
+                              className="mb-[5px]"
+                              src={urlFor(image).url()}
+                              alt={image?.alt || 'Sanity Image'}
+                          />
+                      ))}
+                      {/* Cloudinary images */}
+              
+                      {datum.images?.map((url, index) => (
+                        
+                          <img
+                              key={`cloudinary-${index}`}
+                              className="mb-[5px]"
+                              src={url}
+                              alt="Cloudinary Image"
+                          />
+                      ))}
+                      </Link>
+                      {/* Cloudinary files */}
+                      {datum?.files?.length > 0 && (
+                          <div className="mt-2 flex flex-col gap-2">
+                              {datum.files.map((fileUrl, idx) => (
+                                  <a
+                                      key={`cloudinary-file-${idx}`}
+                                      href={fileUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-600 underline"
+                                      download
+                                  >
+                                      Download file {idx + 1}
+                                  </a>
+                              ))}
+                          </div>
+                      )}
+                                              
                   </div>
                   <div className="text-[#6B7280] w-3/4 text-sm mt-3">
                     {formatDate(datum?._createdAt)}

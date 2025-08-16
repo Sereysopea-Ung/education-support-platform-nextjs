@@ -150,7 +150,7 @@ export default function CreatePost() {
             setLoading(false);
             if (!res.ok) throw new Error("Failed to create post");
             // Redirect to homepage instead of alert
-            router.push("/");
+            router.push("/homepage");
             setPostText("");
             setFiles([]);
             setImageFiles([]);

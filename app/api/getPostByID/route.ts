@@ -1,26 +1,23 @@
 import { NextResponse } from 'next/server';
-import { groq } from 'next-sanity';
 import { createClient } from 'next-sanity';
 
 // Create a Sanity client instance directly here
 const sanityClient = createClient({
-    projectId: 'your-project-id',  // Replace with your Sanity project ID
-    dataset: 'your-dataset',       // Replace with your Sanity dataset name
+    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,  // Replace with your Sanity project ID
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,       // Replace with your Sanity dataset name
     useCdn: true,                  // Set to false for fresh data (useful in development)
 });
 
 // GROQ query to fetch the post by its ID
-const postQuery = groq`
+const postQuery = `
   *[_type == "post" && _id == $id][0] {
     _id,
     title,
     slug,
     pitch,
-    postImage {
-      asset -> {
-        url
-      }
-    },
+    images,
+    files,
+    postImages,
     upvote,
     downvote,
     typePost,
@@ -45,13 +42,14 @@ const postQuery = groq`
 export async function GET(req: Request) {
     try {
         const url = new URL(req.url);
-        const id = url.searchParams.get('id'); // Get the post ID from the query string
+        const id = url.searchParams.get('id');
 
         if (!id) {
             return NextResponse.json({ error: 'Post ID is required' }, { status: 400 });
         }
 
-        const post = await sanityClient.fetch(postQuery, { id });
+        const post = await sanityClient.fetch(postQuery, {id});
+        console.log('Fetched post:', post);
 
         if (!post) {
             return NextResponse.json({ error: 'Post not found' }, { status: 404 });
