@@ -229,7 +229,7 @@ export default function CreatePost() {
         <div className="w-full items-center flex justify-center py-10 px-5 bg-white text-black">
             <div className="h-full w-100 sm:w-120 md:w-140 lg:w-160 border-[#434343] border-1 rounded-lg p-5">
                 <div className="w-full flex text-3xl">
-                    <Link href="/">
+                    <Link href="/homepage">
                         X
                     </Link>
                     <div className="text-center w-full text-bold">

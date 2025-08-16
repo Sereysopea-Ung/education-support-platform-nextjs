@@ -137,7 +137,7 @@ export default function Context({ activeTab }){
         const isDownvoted = datum.downvote?.includes(userEmail);
 
         return (
-          <li key={datum._id} className="flex border-1 border-[#DDE3EF] w-full h-auto rounded-xl px-2 py-2 mb-5">
+          <li key={datum._id} className="flex border-1 border-[#DDE3EF] bg-white w-full h-auto rounded-xl px-2 py-2 mb-5">
             <div className="w-full h-full flex-col gap-5">
               {/* Author info */}
               <div className="flex">
