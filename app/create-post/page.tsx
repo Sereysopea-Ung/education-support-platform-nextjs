@@ -149,7 +149,7 @@ export default function CreatePost() {
             });
             setLoading(false);
             if (!res.ok) throw new Error("Failed to create post");
-            // Redirect to homepage instead of alert
+            // Redirect to homepage instead of alert 
             router.push("/homepage");
             setPostText("");
             setFiles([]);

@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
         const body = await req.json();
         console.log("Received body:", body);
 
-        // Fetch author reference by email
+        // Fetch author reference by email 
         const authorQuery = `*[_type == "user" && email == $email][0]{_id}`;
         const author = await client.fetch(authorQuery, { email: body.authorEmail });
 

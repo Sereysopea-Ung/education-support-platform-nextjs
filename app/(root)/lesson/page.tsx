@@ -8,6 +8,7 @@ import client from "@/sanity/lib/client";
 import { useSession } from "next-auth/react";
 import formatDate from "@/util/date";
 import { FaSearch } from "react-icons/fa";
+import Navbar from "@/components/Navbar";
 
 const builder = imageUrlBuilder(client);
 function urlFor(source: any) {
@@ -76,7 +77,8 @@ export default function Lessons() {
     const isExpanded = expandedItems[datum._id] || false;
 
     return (
-      <li key={datum._id} className="flex border border-[#DDE3EF] w-full rounded-xl px-2 py-2">
+      <li key={datum._id} className="flex border border-[#DDE3EF] w-full rounded-xl px-2 py-2 mt-3">
+        <Navbar />
         <div className="w-full flex-col gap-5">
           {/* Author Section */}
           <div className="flex">

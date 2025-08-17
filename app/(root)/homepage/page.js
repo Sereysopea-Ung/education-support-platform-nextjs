@@ -274,8 +274,8 @@ export default function HomePage() {
             {/* mid-sidebar*/}
             <div className="flex flex-col bg-gray-100 overflow-hidden w-full col-start-4 z-10 col-span-6">
               {/* Nav bar */}
-              <div className="flex flex-row gap-x-10 h-25 pl-5 bg-white fixed w-1/2 start-92.25">
-                {['NewsFeed', 'Q&A', 'Lesson', 'Network'].map(tab => (
+              <div className="flex flex-row gap-x-10 h-25 pl-5 bg-white fixed w-1/2 start-92.25 z-10">
+                {['NewsFeed', 'Q&A', 'Lesson', 'Network'].map(tab => ( 
                   
                   <p
                     key={tab}
@@ -291,8 +291,6 @@ export default function HomePage() {
                 ))}
               </div>
 
-
-
               <div className="mt-[100px]"/>
               <div className="ml-2">
                 {/* Create Post */}
@@ -306,8 +304,7 @@ export default function HomePage() {
                           height={50}
                           className="rounded-full border-2"
                       />
-                      )}
-                      
+                      )}                      
                       <div
                           className="opacity-50 font-light ml-3 text-[20px] bg-transparent border-none outline-none w-full"
                           

@@ -8,6 +8,7 @@ import client from "@/sanity/lib/client";
 import { useSession } from "next-auth/react";
 import formatDate from "@/util/date";
 import { FaSearch } from "react-icons/fa";
+import Navbar from "@/components/Navbar";
 
 const builder = imageUrlBuilder(client);
 function urlFor(source: any) {
@@ -71,6 +72,7 @@ export default function QnA() {
 
     return (
         <div className="bg-white min-h-screen h-full text-[#111827]">
+            <Navbar/>
             <div className="fixed flex p-2 gap-4 top-3 right-70 z-100 rounded-xl bg-white border border-gray-300 item-center justify-between">
             <input
                 type="text"

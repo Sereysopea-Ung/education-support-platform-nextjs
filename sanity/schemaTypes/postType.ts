@@ -5,13 +5,13 @@ export const postType = defineType({
     title: 'Post',
     type: 'document',
     fields: [
-        defineField({
+        defineField({ 
             name: 'author',
             type: 'reference',
             to: { type: 'user' },
         }),
         defineField({
-            name: 'isVerified',
+            name: 'isVerified', 
             title: 'IsVerified',
             type: 'boolean',
             initialValue: false

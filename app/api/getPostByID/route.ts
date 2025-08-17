@@ -21,7 +21,8 @@ const postQuery = `
     upvote,
     downvote,
     typePost,
-    pdfFile {
+    _createdAt,
+    pdfFile { 
       asset -> {
         url
       }
@@ -30,6 +31,8 @@ const postQuery = `
       _id,
       username,
       name,
+      major,
+      year,
       profile_pic {
         asset -> {
           url
