@@ -33,8 +33,8 @@ export default function PrivacyPage() {
   }
 
   return (
-    <div className="bg-white h-screen w-screen">
-      <div className="bg-white p-4 lg:ml-90 md:ml-60 sm:ml-40 shadow-md lg:w-[850px] md:w-[600px] sm:w-[480px] text-gray-500">
+    <div className="bg-white overflow-x-hidden h-screen w-screen">
+      <div className="bg-white p-4 lg:ml-90 md:ml-60 sm:ml-40 lg:w-[1020px] md:w-[600px] sm:w-[480px] text-gray-500">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
             {/* Title */}
@@ -49,13 +49,13 @@ export default function PrivacyPage() {
         <div className="px-4 py-3 mb-3">
           <div className="text-[16px] text-gray-500 mb-1">Profile Visibility</div>
             <select
-                className="w-full appearance-none p-3 border border-gray-200 rounded-lg bg-white
+                className="w-full p-3 border border-gray-200 rounded-lg bg-white
                         focus:outline-none focus:ring-2 focus:ring-indigo-200"
                 value={profileVisibility}
                 onChange={(e) => setProfileVisibility(e.target.value as Audience)}
             >
                 <option>Public</option>
-                <option>Friends</option>
+                <option>Follower</option>
                 <option>Private</option>
             </select>
           <p className="text-[16px] text-gray-500 mt-2">Control who can view your profile information</p>
@@ -65,13 +65,13 @@ export default function PrivacyPage() {
         <div className="px-4 py-3 mb-3">
           <div className="text-[16px] text-gray-500 mb-1">Who Can See My Posts?</div>
           <select
-            className="w-full appearance-none p-3 border border-gray-200 rounded-lg bg-white
+            className="w-full p-3 border border-gray-200 rounded-lg bg-white
                        focus:outline-none focus:ring-2 focus:ring-indigo-200"
             value={postAudience}
             onChange={(e) => setPostAudience(e.target.value as PostAudience)}
           >
             <option>Everyone</option>
-            <option>Friends</option>
+            <option>Follow</option>
             <option>Only me</option>
           </select>
           <p className="text-[16px] text-gray-500 mt-2">Set who can see your posts and activities</p>
