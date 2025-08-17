@@ -71,17 +71,25 @@ export default function AccountSettings() {
   };
 
   return (
-    <div className="bg-white  h-screen w-screen  ">
-      <div className="bg-white p-4 lg:ml-90 md:ml-60 sm:ml-40 shadow-md lg:w-[950px] md:w-[600px] sm:w-[480px] text-gray-500">
+    <div className="bg-white  h-screen  ">
 
-        {/* Top bar */}
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-[30px] text-gray-800 ml-4">Account</h2>
-          <button className="text-[#1E3A8A]">
-            <img src="/favicon.ico" alt="S3TUDY" className='w-[55px] h-[55px]' />
-            <p className='-ml-[145px] -mt-[42px] hover:cursor-pointer text-[20px]'>← Back</p>
-          </button>                
-        </div>
+
+      <div className="bg-white p-4 lg:ml-90 md:ml-60 sm:ml-40 lg:w-[1020px] md:w-[600px] sm:w-[480px] text-gray-500">
+
+
+    
+            {/* Top bar */}
+            <div className="flex items-center justify-between mb-10">
+              <h2 className="text-[30px] text-gray-800 ml-4">Account</h2>
+              <button className="text-[#1E3A8A]">
+                <img src="/favicon.ico" alt="S3TUDY" className='w-[55px] h-[55px]' />
+                <p className='-ml-[145px] -mt-[42px] hover:cursor-pointer text-[20px]'>← Back</p>
+              </button>             
+            </div>
+
+           
+    
+        
 
         {/* Card */}
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm">
