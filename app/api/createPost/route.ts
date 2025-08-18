@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         const postDoc = {
             _type: "post",
             pitch: body.postText,
-            major: body.major,
+            major: body.major, 
             subject: body.subject,
             typePost: body.typePost,
             authorEmail: body.authorEmail,

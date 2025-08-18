@@ -13,7 +13,7 @@ export const postType = defineType({
         defineField({
             name: 'isVerified', 
             title: 'IsVerified',
-            type: 'boolean',
+            type: 'boolean', 
             initialValue: false
         }),
         defineField({
@@ -46,7 +46,7 @@ export const postType = defineType({
             title: 'Cloudinary Image URLs',
             type: 'array',
             of: [{ type: 'url' }],
-        }),
+        }), 
         defineField({
             name: 'files',
             title: 'File URLs',
@@ -97,10 +97,10 @@ export const postType = defineType({
             title: 'Post Text',
             type: 'string',
         }),
-    ],
+    ], 
     preview: {
         select: {
             title: 'title',
         },
     },
-});
+}); 

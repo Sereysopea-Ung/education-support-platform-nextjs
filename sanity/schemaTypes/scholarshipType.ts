@@ -16,14 +16,30 @@ export const scholarshipType = defineType({
         type: 'string'  
     }),
     defineField({
+        name: 'content',
+        title: 'Content',
+        type: 'string'  
+    }),
+    defineField({
         name: 'amountOfMoney',
         title: 'AmountOfMoney',
         type: 'number'
     }),
     defineField({
+        name: 'deadline',
+        title: 'Deadline',
+        type: 'datetime'
+    }),
+    defineField({
+        name: 'requirements',
+        title: 'Requirements',
+        type: 'array',
+            of: [{ type: 'string' }],
+    }),
+    defineField({
         name: 'typeofcoverage',
         title: 'TypeOfCoverage',
-        type: 'string',
+        type: 'string', 
         options: {
             list: [
                 { title: 'Full Coverage', value: 'Full Coverage' },

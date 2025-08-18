@@ -54,11 +54,12 @@ export default function HomePage() {
   const { data: session} = useSession();
   const [major, setMajor] = useState('');
   const [year, setYear] = useState('');
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     if (session?.user?.email) {
       client
-        .fetch(`*[_type == "user" && email == $email][0]{ profile_pic, major, year }`, {
+        .fetch(`*[_type == "user" && email == $email][0]{ profile_pic, major, year, username }`, {
           email: session.user.email,
         })
         .then((user) => {
@@ -67,6 +68,7 @@ export default function HomePage() {
           }
           if (user?.major) setMajor(user.major);
           if (user?.year) setYear(user.year);
+          if (user?.username) setUsername(user.username);
         });
     }
   }, [session]);
@@ -106,7 +108,7 @@ export default function HomePage() {
                         />
                       )}
                       <div className="flex flex-col">
-                        <p className="font-bold">{session?.user?.name}</p>
+                        <p className="font-bold">{username}</p>
                         <p className="text-sm text-gray-500">{major} •</p>
                         <p className="text-sm text-gray-500">year {year}</p>
                       </div>

@@ -152,6 +152,11 @@ const PostPage = ({ params }) => {
                 >
                   <ChevronRight size={20} />
                 </button>
+                <div>
+                  <p className="text-center text-gray-500 mt-2">
+                    {imageIndex + 1} / {allImages.length}
+                  </p>
+                </div>
               </div>
             )}
 
@@ -181,7 +186,7 @@ const PostPage = ({ params }) => {
 
             {/* Date */}
             <div className="text-[#6B7280] w-full max-w-2xl mx-auto text-sm mt-2 flex items-center gap-5 justify-end p-2">
-              <div clasName="">
+              <div>
                 {formatDate(datum?.createdAt || datum?._createdAt)}
               </div>
               {/* Voting + actions */}

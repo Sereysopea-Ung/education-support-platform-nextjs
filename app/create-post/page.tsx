@@ -144,7 +144,7 @@ export default function CreatePost() {
         try {
             const res = await fetch("/api/createPost", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json" }, 
                 body: JSON.stringify(postPayload),
             });
             setLoading(false);

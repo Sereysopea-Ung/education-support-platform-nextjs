@@ -225,6 +225,8 @@ export default function Context({ activeTab }) {
                           ? "bg-[#C7FFDE] text-[#27AE60]"
                           : datum?.typePost === "Lesson"
                           ? "bg-[#F4D2C5] text-[#E29578]"
+                          : datum?.typePost === "Announcement"
+                          ? "bg-[#ff9cfc] text-[#ed11c1]"
                           : ""
                       }`}
                     >

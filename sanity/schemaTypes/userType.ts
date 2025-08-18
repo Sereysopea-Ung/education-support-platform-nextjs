@@ -6,7 +6,7 @@ export const userType = defineType({
   type: 'document',
   fields: [
     defineField({
-      name: 'username', 
+      name: 'username',  
       title: 'Username',
       type: 'string',
       validation: (Rule) => Rule.required()
@@ -17,7 +17,7 @@ export const userType = defineType({
       type: 'boolean',
       initialValue: false
     }),
-    defineField({
+    defineField({ 
       name: 'password',
       title: 'Password',
       type: 'string',
