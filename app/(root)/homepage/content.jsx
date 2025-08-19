@@ -177,14 +177,18 @@ export default function Context({ activeTab }) {
               <div className="flex">
                 <div className="flex h-12 w-12 ">
                   <div className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
-                    <img
-                      src={urlFor(datum?.author.profile_pic)
+                    {datum?.author?.profile_pic?(<img
+                      src={urlFor(datum?.author?.profile_pic)
                         .width(50)
                         .height(50)
                         .fit("crop")
                         .url()}
                       className="rounded-full"
-                    />
+                    />) : (
+                      <div>
+
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex w-full h-12">

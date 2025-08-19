@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
 
-    const { category, title, content, deadline, company, location, salary, requirements, benefits, images, files, authorEmail } = body;
+    const { category, title, content, deadline, company, location, salary, requirements, benefits, images, files, authorEmail, typeofcoverage, typeofjob } = body;
 
     // Find the author
     let authorRef = null;
@@ -40,6 +40,7 @@ export async function POST(req: Request) {
       images,
       files,
       author: authorRef, // ✅ attach author reference if found
+      status: body.status || "published",
     };
 
     // Category-specific mapping
@@ -53,6 +54,7 @@ export async function POST(req: Request) {
       doc.deadline = deadline;
       doc.requirements = requirements || [];
       doc.content = content;
+      doc.typeofcoverage = typeofcoverage || "No Coverage";
     }
 
     if (category === "job") {
@@ -63,6 +65,7 @@ export async function POST(req: Request) {
       doc.requirements = requirements || [];
       doc.benefits = benefits || [];
       doc.content = content;
+      doc.typeofjob = typeofjob || "Full Time";
     }
 
     const result = await client.create(doc);

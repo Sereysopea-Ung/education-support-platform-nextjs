@@ -117,7 +117,7 @@ export default function Dashboard() {
   if (!session) return <p>You are not logged in.</p>;
 
   return (
-    <div className="w-full h-screen bg-[#F9FAFB]">
+    <div className="w-full min-h-screen h-full bg-[#F9FAFB]">
       <div className="grid grid-cols-12 w-full">
 
         {/* Top bar */}
@@ -194,8 +194,8 @@ export default function Dashboard() {
           </div>
           <div className="bg-white flex gap-2 p-4 w-full rounded-b-lg">
             {/* Example row */}
-            <div className="flex items-center gap-2">
-              <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2 w-full">
+              <div className="flex flex-col gap-3 max-h-70 min-h-70 overflow-hidden overflow-y-auto w-full">
                 {fetchAllPosts
                 ?.filter((post) => {
                   if (activityType === "All Activities") return true;
