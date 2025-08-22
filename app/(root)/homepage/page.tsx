@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp, faCircleDown, faComment } from "@fortawesome/free-solid-svg-icons";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import CreatePostForm from "../../../components/CreatePostForm";
+import { doLogout } from "@/pages/api/auth/loginAndLogout";
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
