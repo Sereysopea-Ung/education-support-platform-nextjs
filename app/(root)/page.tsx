@@ -8,6 +8,7 @@ import Arrow from "@/components/Arrow";
 import {useEffect, useState} from "react";
 import imageUrlBuilder from '@sanity/image-url';
 import {createClient} from "@sanity/client";
+import { useRouter } from 'next/navigation' // <-- FIXED IMPORT
 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -23,6 +24,7 @@ function urlFor(source:any) {
 }
 
 export default function LandingPage() {
+    const router = useRouter();
     const { data: session, status } = useSession();
     const [Mission, setMission] = useState(true);
     const [Team, setTeam] = useState(false);
@@ -160,11 +162,17 @@ export default function LandingPage() {
     }, []);
 
     if (status === 'loading') {
-        return <div className="mt-20 lg:ml-60 bg-white">Loading...</div>; // Show loading while the session is being fetched
+        return <div className="mt-20 lg:ml-60 bg-white">Loading...</div>;
+    }
+
+    if (session) {
+        router.push('/homepage');
+        return null; // Prevent rendering anything else
     }
 
     return (
-        <div className="bg-white min-h-screen h-full text-[#111827]">
+        <div>
+            <div className="bg-white min-h-screen h-full text-[#111827]">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4 bg-white pl-8 pr-8 duration-300  text-[#374151]">
                 <Navbar />
                 <div className="flex p-4 pt-20 w-full min-h-[300px] row-span-1 md:col-span-12 flex-col items-center justify-between ">
@@ -541,6 +549,7 @@ export default function LandingPage() {
             <div className="flex items-center justify-center w-full md:mt-[-120px] mt-[-60px] md:text-xl text-3xs text-[#374151]">
                 © 2025 S3TUDY. All rights reserved.
             </div>
+        </div>
         </div>
     );
 }

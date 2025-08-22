@@ -84,6 +84,10 @@ export default function HomePage() {
     const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
     const [imageIndexes, setImageIndexes] = useState<Record<string, number>>({});
 
+    if(!session){
+      router.push('/');
+      return;
+    }
     useEffect(() => {
       async function fetchData() {
         try {
@@ -568,7 +572,7 @@ export default function HomePage() {
                     </li>
 
                     <li className="p-2 hover:cursor-pointer">
-                      <span className="flex items-center gap-x-5">
+                      <span className="flex items-center gap-x-5" onClick={() => router.push("/settings/edit-profile")}>
                         <svg
                           width="30"
                           height="30"

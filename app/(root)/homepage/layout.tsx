@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { doLogout } from '@/pages/api/auth/loginAndLogout';
 
 export default function HomepageLayout({ children }: { children: React.ReactNode }) {
   const [query, setQuery] = useState("");
@@ -50,7 +51,7 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
                 <div className="absolute right-0 mt-2 w-48 rounded-md border bg-white shadow-sm">
                   <Link href="/profileacc" className="block px-4 py-2 text-gray-900 hover:bg-gray-50">Profile</Link>
                   <Link href="/settings" className="block px-4 py-2 text-gray-900 hover:bg-gray-50">Settings</Link>
-                  <button className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-50">Sign out</button>
+                  <button onClick={doLogout} className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-50">Sign out</button>
                 </div>
               )}
             </div>

@@ -14,13 +14,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Keep white background even in dark mode to match app design */
+    --background: #ffffff;
+    --foreground: #171717;
   }
 }
 
-body {
-  background: var(--background);
+html, body {
+  background: #ffffff !important;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
 }

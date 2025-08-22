@@ -23,8 +23,8 @@ const SettingOptions = () => {
     const isSecurityPage = pathname === "/settings/security";
 
     return (
-        <div className="bg-white h-screen fixed top-0 left-0 w-3/12 text-black">
-            <div className="border-[#CED4DA] h-full border-1 rounded-l-lg flex-col">
+        <div className="bg-gray-100 min-h-screen w-56 md:w-64 lg:w-72 xl:w-80 shrink-0 text-black">
+            <div className="h-full flex-col">
                 <div className="md:text-3xl text-xl pt-5 md:pl-5 pl-2 flex gap-2">
                     <Link href="/">
                         <Image src="/logo.png" alt="logo" width={32} height={32} className="md:min-w-[32px] md:min-h-[32px] min-w-[10px] min-h-[10px]" />
