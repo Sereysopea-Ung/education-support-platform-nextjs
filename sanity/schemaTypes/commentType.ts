@@ -5,48 +5,59 @@ export const commentType = defineType({
     title: 'Comment',
     type: 'document',
     fields: [
+        // Core content
         defineField({
             name: 'text',
             title: 'Text',
-            type: 'string'
+            type: 'string',
+            validation: (Rule) => Rule.required().min(1)
         }),
+
+        // Relations
         defineField({
-            name: 'level',
-            type: 'number',
-            title: 'Level',
-            validation: Rule => Rule.min(1).required()
-        }),
-        defineField({
-            name: 'parentId',
+            name: 'author',
+            title: 'Author',
             type: 'reference',
-            title: 'ParentId',
-            to: [{ type: 'post' }, { type: 'comment' }],
-            options: {
-                filter: ({ document }) => {
-                    if (!document?.level) {
-                        return { filter: '_type in ["post", "comment"]' }; // Show all options if level is not defined
-                    }
-                    return {
-                        filter: '_type == $type',
-                        params: { type: document.level === 1 ? 'post' : 'comment' }
-                    };
-                }
-            }
+            to: [{ type: 'user' }],
+            validation: (Rule) => Rule.required()
         }),
         defineField({
-            name:'PostId',
-            title:'postId',
-            type: 'string'
+            name: 'post',
+            title: 'Post',
+            type: 'reference',
+            to: [{ type: 'post' }],
+            validation: (Rule) => Rule.required()
         }),
         defineField({
-            name:'upvote',
-            title: 'Upvote',
-            type: 'number'
+            name: 'parentComment',
+            title: 'Parent Comment',
+            type: 'reference',
+            to: [{ type: 'comment' }],
+            description: 'Optional: set only if this is a reply to another comment.'
+        }),
+
+        // Voting (aligned with postType)
+        defineField({
+            name: 'upvote',
+            title: 'Upvotes',
+            type: 'array',
+            of: [{ type: 'string' }],
+            description: 'Array of user identifiers (e.g., emails) who upvoted.'
         }),
         defineField({
-            name: 'downVote',
-            title: 'DownVote',
-            type: 'number'
+            name: 'downvote',
+            title: 'Downvotes',
+            type: 'array',
+            of: [{ type: 'string' }],
+            description: 'Array of user identifiers (e.g., emails) who downvoted.'
+        }),
+
+        // Timestamps
+        defineField({
+            name: 'createdAt',
+            title: 'Created At',
+            type: 'datetime',
+            initialValue: () => new Date().toISOString()
         })
     ],
     preview: {
