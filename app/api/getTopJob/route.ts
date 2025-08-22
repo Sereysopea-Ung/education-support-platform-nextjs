@@ -9,7 +9,7 @@ const client = createClient({
 
 const getAllJobs = async () => {
     try {
-        const query = `*[_type == "job"] | order(_createdAt desc) [0..1]{
+        const query = `*[_type == "job"] | order(_createdAt desc){
             _id,
             jobTitle,
             companyName,

@@ -215,7 +215,7 @@ export default function CreatePostForm({ onClose, onSuccess }: CreatePostFormPro
       <div className="h-full w-100 sm:w-120 md:w-140 lg:w-160 border-[#434343] border-1 rounded-lg p-5 bg-white">
         <div className="w-full flex text-3xl">
           {onClose ? (
-            <button onClick={onClose} aria-label="Close" className="px-2">X</button>
+            <button onClick={onClose} aria-label="Close" className="px-2 hover:text-red-500 cursor-pointer">X</button>
           ) : null}
           <div className="text-center w-full font-semibold">Create Post</div>
         </div>
@@ -343,15 +343,12 @@ export default function CreatePostForm({ onClose, onSuccess }: CreatePostFormPro
               <button
                 key={index}
                 onClick={() => handleMajorClick(major)}
-                className={`px-3 py-1 text-md rounded-lg border-2 ${
+                className={`px-3 py-1 text-md rounded-lg border-2 cursor-pointer ${
                   selectedMajors.includes(major)
                     ? "bg-blue-500 text-white"
                     : "bg-gray-200 text-gray-700"
                 } flex items-center gap-2`}
               >
-                {selectedMajors.includes(major) && (
-                  <span className="text-white">✔️</span>
-                )}
                 {major}
               </button>
             ))}
@@ -368,15 +365,12 @@ export default function CreatePostForm({ onClose, onSuccess }: CreatePostFormPro
               <button
                 key={index}
                 onClick={() => handleSubjectClick(subject)}
-                className={`px-4 py-2 rounded-lg border-2 ${
+                className={`px-4 py-2 rounded-lg border-2 cursor-pointer ${
                   selectedSubjects.includes(subject)
                     ? "bg-green-500 text-white"
                     : "bg-gray-200 text-gray-700"
                 } flex items-center gap-2`}
               >
-                {selectedSubjects.includes(subject) && (
-                  <span className="text-white">✔️</span>
-                )}
                 {subject}
               </button>
             ))}

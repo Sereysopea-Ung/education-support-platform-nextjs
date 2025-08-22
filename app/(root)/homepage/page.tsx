@@ -1,17 +1,17 @@
 "use client";
 
-import { useState , useEffect } from "react";
+import { useState , useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
-import imageUrlBuilder from '@sanity/image-url';
+import imageUrlBuilder from '@sanity/image-url'; 
 import { createClient } from '@sanity/client';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp, faCircleDown, faComment } from "@fortawesome/free-solid-svg-icons";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import CreatePostForm from "../../../components/CreatePostForm";
-import { doLogout } from "@/pages/api/auth/loginAndLogout";
+import { useHomepageFilters } from '@/components/homepageFilters';
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -48,13 +48,14 @@ export default function HomePage() {
   const [major, setMajor] = useState('');
   const [year, setYear] = useState('');
   const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState<string | null>(null);
   // Create Post modal state
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   useEffect(() => {
     if (session?.user?.email) {
       client
-        .fetch(`*[_type == "user" && email == $email][0]{ profile_pic, major, enroll_year, username, firstName, lastName }`, {
+        .fetch(`*[_type == "user" && email == $email][0]{ _id, profile_pic, major, enroll_year, username, firstName, lastName }`, {
           email: session.user.email,
         })
         .then((user) => {
@@ -64,6 +65,7 @@ export default function HomePage() {
           if (user?.major) setMajor(user.major);
           if (user?.enroll_year) setYear(user.enroll_year);
           if (user?.username) setUsername(user.username);
+          if (user?._id) setUserId(user._id);
         });
     }
   }, [session]);
@@ -77,13 +79,15 @@ export default function HomePage() {
   }, [searchParams]);
 
   // Local components
-  function FeedContent({ activeTab }: { activeTab: string }) {
+  function FeedContent() {
     const { data: session } = useSession();
     const userEmail = session?.user?.email || null;
     const [postData, setPostData] = useState<any[]>([]);
-    const [search, setSearch] = useState("");
+    const { search, activeTab } = useHomepageFilters();
     const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
     const [imageIndexes, setImageIndexes] = useState<Record<string, number>>({});
+    const [canExpand, setCanExpand] = useState<Record<string, boolean>>({});
+    const contentRefs = useRef<Record<string, HTMLParagraphElement | null>>({});
 
     if(!session){
       router.push('/');
@@ -132,6 +136,8 @@ export default function HomePage() {
     const finalFilteredPosts = filteredPostData.filter((item: any) => {
       if (activeTab === "Q&A") return item.typePost === "Q&A";
       if (activeTab === "Lesson") return item.typePost === "Lesson";
+      if (activeTab === "Announcement") return item.typePost === "Announcement";
+      // "All"
       return true;
     });
 
@@ -174,21 +180,6 @@ export default function HomePage() {
             ...(datum?.postImages?.map((img: any) => urlFor(img).url()) || []),
             ...(datum?.images || []),
           ];
-          const currentIndex = imageIndexes[datum._id] || 0;
-          const showImage = allImages.length > 0 ? allImages[currentIndex % allImages.length] : null;
-
-          const handlePrev = () => {
-            setImageIndexes((prev) => ({
-              ...prev,
-              [datum._id]: currentIndex === 0 ? allImages.length - 1 : currentIndex - 1,
-            }));
-          };
-          const handleNext = () => {
-            setImageIndexes((prev) => ({
-              ...prev,
-              [datum._id]: (currentIndex + 1) % allImages.length,
-            }));
-          };
 
           return (
             <li key={datum._id} className="flex border-1 border-[#DDE3EF] bg-white w-full h-auto rounded-xl px-2 py-2 mb-5 text-gray-900">
@@ -247,23 +238,72 @@ export default function HomePage() {
 
                 {/* Post content */}
                 <div className="h-1/2 w-full pl-10 pr-15 mt-3">
-                  <div id="post" className="relative flex items-center justify-center">
-                    {showImage && (
-                      <div className="relative w-full flex items-center justify-center">
-                        <Link href={`/post/${datum._id}`}>
-                          <div className="w-full h-[400px] flex items-center justify-center bg-gray-100 rounded-lg overflow-hidden">
-                            <img key={`img-${currentIndex}`} src={showImage} alt="Post image" className="h-full w-auto object-contain" />
+                  {/* Post images grid layouts */}
+                  {allImages.length > 0 && (
+                    <Link href={`/post/${datum._id}`}>
+                      {/* 1 image: big square */}
+                      {allImages.length === 1 && (
+                        <div className="w-full h-[400px] bg-gray-100 rounded-lg overflow-hidden">
+                          <img src={allImages[0]} alt="Post image" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+
+                      {/* 2 images: two columns */}
+                      {allImages.length === 2 && (
+                        <div className="grid grid-cols-2 gap-2 w-full h-[320px]">
+                          {allImages.slice(0, 2).map((src, i) => (
+                            <div key={i} className="bg-gray-100 rounded-lg overflow-hidden">
+                              <img src={src} alt={`Post image ${i + 1}`} className="w-full h-full object-cover" />
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* 3 images: 4 cols x 2 rows; left spans 2x2, right two stacked */}
+                      {allImages.length === 3 && (
+                        <div className="grid grid-cols-4 grid-rows-2 gap-2 w-full h-[360px]">
+                          <div className="col-span-2 row-span-2 bg-gray-100 rounded-lg overflow-hidden">
+                            <img src={allImages[0]} alt="Post image 1" className="w-full h-full object-cover" />
                           </div>
-                        </Link>
-                        <button onClick={handlePrev} className="absolute top-1/2 left-[-40px] -translate-y-1/2 bg-black/50 text-white p-2 rounded-full">
-                          <ChevronLeft size={20} />
-                        </button>
-                        <button onClick={handleNext} className="absolute top-1/2 right-[-40px] -translate-y-1/2 bg-black/50 text-white p-2 rounded-full">
-                          <ChevronRight size={20} />
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                          <div className="col-span-2 bg-gray-100 rounded-lg overflow-hidden">
+                            <img src={allImages[1]} alt="Post image 2" className="w-full h-full object-cover" />
+                          </div>
+                          <div className="col-span-2 bg-gray-100 rounded-lg overflow-hidden">
+                            <img src={allImages[2]} alt="Post image 3" className="w-full h-full object-cover" />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 4+ images: left big, right 3 stacked. For 5+, last tile shows +N overlay */}
+                      {allImages.length >= 4 && (
+                        <div className="grid grid-cols-4 grid-rows-3 gap-2 w-full h-[420px]">
+                          {/* Left big (spans 3 cols x 3 rows) */}
+                          <div className="col-span-3 row-span-3 bg-gray-100 rounded-lg overflow-hidden">
+                            <img src={allImages[0]} alt="Post image 1" className="w-full h-full object-cover" />
+                          </div>
+                          {/* Right column stacked */}
+                          <div className="col-span-1 row-span-1 bg-gray-100 rounded-lg overflow-hidden">
+                            <img src={allImages[1]} alt="Post image 2" className="w-full h-full object-cover" />
+                          </div>
+                          <div className="col-span-1 row-span-1 bg-gray-100 rounded-lg overflow-hidden">
+                            <img src={allImages[2]} alt="Post image 3" className="w-full h-full object-cover" />
+                          </div>
+                          <div className="relative col-span-1 row-span-1 bg-gray-100 rounded-lg overflow-hidden">
+                            {allImages.length === 4 ? (
+                              <img src={allImages[3]} alt="Post image 4" className="w-full h-full object-cover" />
+                            ) : (
+                              <>
+                                <img src={allImages[3]} alt="Post image more" className="w-full h-full object-cover blur-[2px]" />
+                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                  <span className="text-white text-xl font-semibold">+{allImages.length - 4}</span>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </Link>
+                  )}
 
                   {/* Files */}
                   {Array.isArray(datum?.files) && datum.files.length > 0 && (
@@ -283,17 +323,35 @@ export default function HomePage() {
 
                   <div className="text-gray-700 w-3/4 text-sm mt-3">{formatDate(datum?._createdAt)}</div>
                   <div className="w-full">
-                    <div className={`truncate ${expandedItems[datum._id] ? "whitespace-normal" : ""} text-gray-900`} style={{ width: "100%" }}>
+                    <p
+                      ref={(el) => {
+                        contentRefs.current[datum._id] = el;
+                      }}
+                      className="text-gray-900"
+                      style={
+                        expandedItems[datum._id]
+                          ? undefined
+                          : {
+                              display: "-webkit-box",
+                              WebkitLineClamp: 3,
+                              // @ts-ignore
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden",
+                            }
+                      }
+                    >
                       {datum?.pitch}
-                    </div>
+                    </p>
                   </div>
                 </div>
 
-                <div>
-                  <button onClick={() => toggleText(datum._id)} className="text-blue-500 mt-2 text-sm cursor-pointer w-1/5">
-                    {expandedItems[datum._id] ? "Show less" : "See more"}
-                  </button>
-                </div>
+                {canExpand[datum._id] && (
+                  <div>
+                    <button onClick={() => toggleText(datum._id)} className="text-blue-500 mt-2 text-sm cursor-pointer w-1/5">
+                      {expandedItems[datum._id] ? "Show less" : "See more"}
+                    </button>
+                  </div>
+                )}
 
                 {/* Actions */}
                 <div className="w-full pr-15 mt-3 flex gap-5 ml-10">
@@ -319,6 +377,155 @@ export default function HomePage() {
     );
   }
 
+    // Top users by followers (uses /api/getUserByFollower)
+    function TopUsersByFollowerLocal({ excludeId }: { excludeId?: string | null }) {
+      const [users, setUsers] = useState<any[]>([]);
+      const [loading, setLoading] = useState<boolean>(false);
+      const [error, setError] = useState<string | null>(null);
+      const [busy, setBusy] = useState<Record<string, boolean>>({});
+
+      useEffect(() => {
+        (async () => {
+          setLoading(true);
+          setError(null);
+          try {
+            const url = excludeId ? `/api/getUserByFollower?excludeId=${encodeURIComponent(excludeId)}` : "/api/getUserByFollower";
+            const res = await fetch(url, { cache: "no-store" });
+            if (!res.ok) throw new Error("Failed to fetch top users");
+            const data = await res.json();
+            setUsers(Array.isArray(data) ? data : []);
+          } catch (err: any) {
+            console.error("Error fetching top users:", err);
+            setError("Could not load top users");
+          } finally {
+            setLoading(false);
+          }
+        })();
+      }, [excludeId]);
+
+      const resolveUserAvatar = (user: any) => {
+        const pic = user?.profile_pic;
+        if (!pic) return "/Default_pfp.jpg";
+        try {
+          return urlFor(pic).width(56).height(56).fit("crop").url();
+        } catch {
+          return "/Default_pfp.jpg";
+        }
+      };
+  
+      const handleFollow = async (targetId: string) => {
+        if (!userId || !targetId) return;
+        // Prevent duplicate clicks
+        setBusy(prev => ({ ...prev, [targetId]: true }));
+        try {
+          const res = await fetch('/api/follow', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ targetUserId: targetId })
+          });
+          if (!res.ok) throw new Error('Failed to follow');
+          // Optimistically update the local state
+          setUsers(prev => prev.map(u => {
+            if (u._id === targetId) {
+              const prevFollowers = Array.isArray(u.followers) ? u.followers : [];
+              if (!prevFollowers.includes(userId)) {
+                return { ...u, followers: [...prevFollowers, userId] };
+              }
+            }
+            return u;
+          }));
+        } catch (e) {
+          console.error('Follow action failed:', e);
+        } finally {
+          setBusy(prev => ({ ...prev, [targetId]: false }));
+        }
+      };
+
+      const handleUnfollow = async (targetId: string) => {
+        if (!userId || !targetId) return;
+        setBusy(prev => ({ ...prev, [targetId]: true }));
+        try {
+          const res = await fetch('/api/unfollow', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ targetUserId: targetId })
+          });
+          if (!res.ok) throw new Error('Failed to unfollow');
+          // Optimistically update local state: remove userId from followers
+          setUsers(prev => prev.map(u => {
+            if (u._id === targetId) {
+              const prevFollowers = Array.isArray(u.followers) ? u.followers : [];
+              if (prevFollowers.includes(userId)) {
+                return { ...u, followers: prevFollowers.filter((fid: string) => fid !== userId) };
+              }
+            }
+            return u;
+          }));
+        } catch (e) {
+          console.error('Unfollow action failed:', e);
+        } finally {
+          setBusy(prev => ({ ...prev, [targetId]: false }));
+        }
+      };
+  
+      return (
+        <div className="top-users-section border-1 border-gray-300 bg-white rounded-lg p-4 ml-5 mt-5">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="text-lg font-bold text-gray-900">Top Members</h2>
+            <Link href="/peopleTofollow" className="text-sm text-blue-600 hover:underline">View more</Link>
+          </div>
+          {loading && <p className="text-sm text-gray-700">Loading...</p>}
+          {error && <p className="text-sm text-red-600">{error}</p>}
+          <div className="max-h-60 overflow-y-auto gap-2 flex flex-col">
+            {users.map((u: any, idx: number) => (
+              <div key={u.username ?? idx} className="p-3 bg-[#E5E7EB] rounded-lg flex items-center gap-3">
+                <img
+                  src={resolveUserAvatar(u)}
+                  alt={(u.username || "User") + " avatar"}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="flex-1">
+                  <p className="font-medium text-gray-900">{u.username || "Unknown"}</p>
+                  <p className="text-sm text-gray-700">{u.major ? `${u.major}` : ""}{u.year ? ` • Year ${u.year}` : ""}</p>
+                </div>
+                {(() => {
+                  const alreadyFollowing = Array.isArray(u?.followers) && !!userId && u.followers.includes(userId);
+                  const isBusy = !!busy[u._id];
+                  const handleClick = () => {
+                    if (!userId || isBusy) return;
+                    if (alreadyFollowing) return handleUnfollow(u._id);
+                    return handleFollow(u._id);
+                  };
+                  const className = alreadyFollowing
+                    ? (isBusy
+                        ? "px-3 py-1 rounded-md bg-gray-300 text-gray-500 cursor-wait"
+                        : "px-3 py-1 rounded-md bg-gray-300 text-gray-700 hover:bg-gray-400 cursor-pointer")
+                    : (isBusy
+                        ? "px-3 py-1 rounded-md bg-blue-300 text-white cursor-wait"
+                        : "px-3 py-1 rounded-md bg-blue-600 text-white hover:bg-blue-700 cursor-pointer");
+                  const label = isBusy ? (alreadyFollowing ? "Unfollowing..." : "Following...") : (alreadyFollowing ? "Following" : "Follow");
+                  return (
+                    <button
+                      type="button"
+                      onClick={handleClick}
+                      disabled={!userId || isBusy}
+                      className={className}
+                    >
+                      {label}
+                    </button>
+                  );
+                })()}
+              </div>
+            ))}
+            {!loading && !error && users.length === 0 && (
+              <p className="text-sm text-gray-700">No users to display.</p>
+            )}
+          </div>
+        </div>
+      );
+    }
+  
+
   function OppSectionLocal() {
     const [opportunities, setOpportunities] = useState<any[]>([]);
     useEffect(() => {
@@ -331,7 +538,12 @@ export default function HomePage() {
           if (!jobsRes.ok || !scholarshipsRes.ok) throw new Error("Failed to fetch opportunities");
           const jobs = await jobsRes.json();
           const scholarships = await scholarshipsRes.json();
-          setOpportunities([...jobs, ...scholarships]);
+          const merged = [...jobs, ...scholarships].sort((a: any, b: any) => {
+            const ta = new Date(a?._createdAt || 0).getTime();
+            const tb = new Date(b?._createdAt || 0).getTime();
+            return tb - ta; // desc
+          });
+          setOpportunities(merged);
         } catch (error) {
           console.error("Error fetching opportunities:", error);
         }
@@ -349,16 +561,14 @@ export default function HomePage() {
       }
     };
     return (
-      <div className="opp-section border-1 border-gray-300 bg-white rounded-lg p-4 ml-5 mt-0">
-        <h2 className="text-lg font-bold mb-3 text-gray-900">Latest Opportunities</h2>
-        <div className="space-y-3">
+      <div className="opp-section border-1 border-gray-300 bg-white rounded-lg p-4 ml-5 mt-5">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-gray-900">Latest Opportunities</h2>
+          <Link href="/opportunity" className="text-sm text-blue-600 hover:underline">View more</Link>
+        </div>
+        <div className="max-h-56 overflow-y-auto gap-2 flex flex-col">
           {opportunities.map((opp: any) => (
             <div key={opp._id} className="p-3 bg-[#E5E7EB] rounded-lg flex items-center gap-3">
-              <img
-                src={resolveOppAvatar(opp)}
-                alt={(opp.companyName || opp.scholarshipTitle || opp.jobTitle || "Opportunity") + " logo"}
-                className="w-10 h-10 rounded-full object-cover border"
-              />
               <div>
                 <p className="font-medium text-gray-900">{opp.jobTitle || opp.scholarshipTitle || "No title"}</p>
                 <p className="text-sm text-gray-700">{opp.companyName || opp.typeofcoverage || "N/A"}</p>
@@ -372,6 +582,9 @@ export default function HomePage() {
 
   function NewsSectionLocal() {
     const [news, setNews] = useState<any[]>([]);
+    const [expanded, setExpanded] = useState<Record<string, boolean>>({});
+    const [canExpand, setCanExpand] = useState<Record<string, boolean>>({});
+    const newsRefs = useRef<Record<string, HTMLParagraphElement | null>>({});
     useEffect(() => {
       (async () => {
         try {
@@ -383,22 +596,103 @@ export default function HomePage() {
         }
       })();
     }, []);
+    const toggleExpand = (id: string) =>
+      setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
+
+    // Measure overflow: show See more only when pitch exceeds 5 lines
+    useEffect(() => {
+      const measure = () => {
+        const next: Record<string, boolean> = {};
+        Object.entries(newsRefs.current).forEach(([id, el]) => {
+          if (!el) return;
+          const isExpanded = !!expanded[id];
+          const prevStyle = el.getAttribute("style") || "";
+
+          // 1) Remove clamp to measure full content height
+          el.style.removeProperty("display");
+          // @ts-ignore
+          el.style.removeProperty("WebkitLineClamp");
+          // @ts-ignore
+          el.style.removeProperty("WebkitBoxOrient");
+          el.style.removeProperty("overflow");
+          const fullHeight = el.scrollHeight;
+
+          // 2) Apply clamp styles to measure clamped height
+          el.style.display = "-webkit-box";
+          // @ts-ignore
+          el.style.WebkitLineClamp = "5";
+          // @ts-ignore
+          el.style.WebkitBoxOrient = "vertical";
+          el.style.overflow = "hidden";
+          const clampedHeight = el.clientHeight;
+
+          // 3) Determine overflow
+          next[id] = fullHeight > clampedHeight + 1;
+
+          // 4) Restore element style to the render state
+          if (isExpanded) {
+            // Expanded should have no clamp
+            el.setAttribute("style", prevStyle);
+          } else {
+            // Not expanded should keep clamp (prevStyle also had clamp via React inline style)
+            el.setAttribute("style", prevStyle);
+          }
+        });
+        setCanExpand(next);
+      };
+      measure();
+      window.addEventListener("resize", measure);
+      return () => window.removeEventListener("resize", measure);
+    }, [news, expanded]);
     return (
       <div className="news-section border-1 border-gray-300 bg-white rounded-lg p-4 ml-5 mt-5">
-        <h2 className="text-lg font-bold mb-3 text-gray-900">Trending News</h2>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-lg font-bold text-gray-900">Trending News</h2>
+          <Link href="/new" className="text-sm text-blue-600 hover:underline">View more</Link>
+        </div>
         <div className="space-y-4">
           {news.map((article: any) => (
-            <div key={article._id} className="flex gap-3 pb-3 p-3 bg-[#E5E7EB] rounded-lg">
+            <div key={article._id} className="pb-3 p-3 bg-[#E5E7EB] rounded-lg">
+              <div className="flex gap-3">
               <img
                 src={article.author?.profile_pic ? urlFor(article.author.profile_pic).width(50).height(50).url() : "/placeholder.png"}
                 alt={article.author?.username || "Author"}
-                className="w-14 h-14 rounded-full object-cover"
+                className="w-10 h-10 rounded-full object-cover"
               />
-              <div>
-                <p className="font-medium text-gray-900">{article.author?.username || "Unknown"}</p>
-                <p className="text-sm text-gray-800">{article.pitch || ""}</p>
+              <div className="flex flex-col">
+                <div>
+                <p className="font-medium text-black font-semibold">{article.author?.username || "Unknown"}</p>
+                <p
+                  ref={(el) => {
+                    newsRefs.current[article._id] = el;
+                  }}
+                  className="text-sm text-gray-800"
+                  style={
+                    expanded[article._id]
+                      ? undefined
+                      : {
+                          display: "-webkit-box",
+                          WebkitLineClamp: 5,
+                          WebkitBoxOrient: "vertical" as any,
+                          overflow: "hidden",
+                        }
+                  }
+                >
+                  {article.pitch || ""}
+                </p>
                 <span className="text-xs text-gray-700">{article._createdAt ? new Date(article._createdAt).toLocaleDateString() : ""}</span>
+                </div>
               </div>
+              </div>
+              {canExpand[article._id] && (
+                <button
+                  type="button"
+                  onClick={() => toggleExpand(article._id)}
+                  className="mt-2 text-sm text-blue-700 hover:underline font-semibold items-center text-center w-full cursor-pointer"
+                >
+                  {expanded[article._id] ? "See less" : "See more"}
+                </button>
+              )}
             </div>
           ))}
         </div>
@@ -415,12 +709,12 @@ export default function HomePage() {
         <section>
           <div className="flex-12 h-full w-full grid grid-cols-1 lg:grid-cols-12 bg-gray-100 text-gray-900">
             {/* left-sidebar */}
-            <div className="hidden lg:flex overflow-hidden flex flex-3 sticky top-0 h-screen z-10 w-full col-span-3">
-              <div className="position-absolute w-full bg-gray-100">
+            <div className="hidden lg:flex col-span-3">
+              <div className="sticky top-20 w-full bg-gray-100">
                 
-                <div className="position-absolute w-full mt-5 rounded-t-2xl shadow-2xs bg-white h-full">
+                <div className="position-absolute w-full mt-5 rounded-2xl shadow-2xs bg-white h-full">
                   {/* profile Info */}
-                  <div className = "h-20 flex items-center pr-8 gap-2 text-[#374151]">	
+                  <Link href="/profile" className = "h-20 flex items-center pr-8 gap-2 text-[#374151] cursor-pointer">	
                     <div className="p-4 flex items-center gap-4">
                       <Image
                         src={profilePic ?? '/Default_pfp.jpg'}
@@ -436,7 +730,7 @@ export default function HomePage() {
                       </div>
               
                     </div>
-                  </div>
+                  </Link>
 
                   {/* menu */}
                   <ul className="flex flex-col gap-y-4 mt-5 ml-5">
@@ -523,7 +817,7 @@ export default function HomePage() {
                     </li>
 
                     <li className="p-2 hover:cursor-pointer">
-                      <span className="flex items-center gap-x-5 ml-1" onClick={() => router.push("/news")}>
+                      <span className="flex items-center gap-x-5 ml-1" onClick={() => router.push("/new")}>
                         <svg
                           width="22"
                           height="22"
@@ -544,31 +838,6 @@ export default function HomePage() {
                           </defs>
                         </svg>
                         News
-                      </span>
-                    </li>
-
-                    <li className="p-2 hover:cursor-pointer">
-                      <span className="flex items-center gap-x-5 ml-1">
-                        <svg
-                          width="22"
-                          height="22"
-                          viewBox="0 0 14 14"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <g clipPath="url(#clip0_1665_277)">
-                            <path
-                              d="M11.375 5.6875C11.375 6.94258 10.9676 8.10195 10.2812 9.04258L13.743 12.507C14.0848 12.8488 14.0848 13.4039 13.743 13.7457C13.4012 14.0875 12.8461 14.0875 12.5043 13.7457L9.04258 10.2812C8.10195 10.9703 6.94258 11.375 5.6875 11.375C2.5457 11.375 0 8.8293 0 5.6875C0 2.5457 2.5457 0 5.6875 0C8.8293 0 11.375 2.5457 11.375 5.6875ZM5.6875 9.625C6.20458 9.625 6.7166 9.52315 7.19432 9.32528C7.67204 9.1274 8.1061 8.83736 8.47173 8.47173C8.83736 8.1061 9.1274 7.67204 9.32528 7.19432C9.52315 6.7166 9.625 6.20458 9.625 5.6875C9.625 5.17042 9.52315 4.6584 9.32528 4.18068C9.1274 3.70296 8.83736 3.2689 8.47173 2.90327C8.1061 2.53764 7.67204 2.2476 7.19432 2.04972C6.7166 1.85185 6.20458 1.75 5.6875 1.75C5.17042 1.75 4.6584 1.85185 4.18068 2.04972C3.70296 2.2476 3.2689 2.53764 2.90327 2.90327C2.53764 3.2689 2.2476 3.70296 2.04972 4.18068C1.85185 4.6584 1.75 5.17042 1.75 5.6875C1.75 6.20458 1.85185 6.7166 2.04972 7.19432C2.2476 7.67204 2.53764 8.1061 2.90327 8.47173C3.2689 8.83736 3.70296 9.1274 4.18068 9.32528C4.6584 9.52315 5.17042 9.625 5.6875 9.625Z"
-                              fill="#565D6C"
-                            />
-                          </g>
-                          <defs>
-                            <clipPath id="clip0_1665_277">
-                              <path d="M0 0H14V14H0V0Z" fill="white" />
-                            </clipPath>
-                          </defs>
-                        </svg>
-                        Searching
                       </span>
                     </li>
 
@@ -602,7 +871,7 @@ export default function HomePage() {
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(true)}
-                  className="flex items-center gap-x-2 mb-4 rounded-lg border-1 bg-white border-[#DDE3EF] p-3 mt-5 ml-8 text-gray-900 w-[calc(100%-2rem)]"
+                  className="flex items-center gap-x-2 mb-4 rounded-lg border-1 bg-white border-[#DDE3EF] p-3 mt-5 ml-8 text-gray-900 w-[calc(100%-2rem)] cursor-pointer"
                 >
                   <div className="flex items-center w-full text-left">
                     {profilePic && (
@@ -611,7 +880,7 @@ export default function HomePage() {
                         alt={session?.user?.name ?? 'User profile'}
                         width={50}
                         height={50}
-                        className="rounded-full border-2"
+                        className="rounded-full border-2 w-10 h-10"
                       />
                     )}
                     <span className="opacity-50 font-light ml-3 text-[20px]">Share something with your community...</span>
@@ -619,15 +888,16 @@ export default function HomePage() {
                 </button>
                 
                 {/* content */}
-                <FeedContent activeTab={activeTab} />
+                <FeedContent />
               </div>
             </div>
 
             {/* Right-sidebar */}
             <div className="hidden lg:flex flex-col bg-gray-100 col-span-3 h-full">
               <div className="flex-1 h-full w-full">
+                <TopUsersByFollowerLocal excludeId={userId} />
                 <OppSectionLocal />
-                <NewsSectionLocal />
+                <NewsSectionLocal />                
               </div>
             </div>
           </div>

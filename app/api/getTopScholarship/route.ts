@@ -10,7 +10,7 @@ const client = createClient({
 // Function to fetch the scholarships
 const route = async () => {
     try {
-        const query = `*[_type == "scholarship"] | order(_createdAt asc) [0..1]{
+        const query = `*[_type == "scholarship"] | order(_createdAt desc){
             _id,
             scholarshipTitle,
             forApplicant,
