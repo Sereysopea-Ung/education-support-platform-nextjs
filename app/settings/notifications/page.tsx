@@ -62,8 +62,8 @@ export default function NotificationPage() {
     }
 
   return (
-    <div className="bg-white h-screen w-screen overflow-x-hidden">
-      <div className="bg-white p-4 lg:ml-90 md:ml-60 sm:ml-40 lg:w-[1020px] md:w-[600px] sm:w-[480px] text-gray-500">
+    <div className="bg-white h-screen overflow-x-hidden grid grid-cols-12">
+      <div className="bg-white p-4 col-span-9 col-start-4 text-gray-500">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
             {/* Title */}

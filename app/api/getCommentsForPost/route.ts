@@ -26,6 +26,8 @@ export async function GET(req: Request) {
         parentComment,
         upvote,
         downvote,
+        attachmentUrl,
+        attachmentType,
         author->{ _id, username, email, profile_pic }
       }`,
       { postId }

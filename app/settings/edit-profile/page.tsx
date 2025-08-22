@@ -29,8 +29,8 @@ export default function EditProfilePage() {
     // No dropdown options needed after removing Major/Year/Role
 
     return (
-        <div className="w-full bg-gray-100">
-            <div className="bg-gray-100 text-gray-700 w-full px-0 py-4 sm:py-6 md:py-8 xl:py-10 2xl:py-12 overflow-x-hidden">
+        <div className="w-full bg-gray-100 grid grid-cols-12 bg-white">
+            <div className="col-span-9 col-start-4 text-gray-700 w-full px-0 py-4 sm:py-6 md:py-8 xl:py-10 2xl:py-12 overflow-x-hidden">
                 <div className="w-full">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                     <h2 className="text-2xl sm:text-3xl md:text-4xl text-gray-800">Profile</h2>

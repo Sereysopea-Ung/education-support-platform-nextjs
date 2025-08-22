@@ -49,7 +49,7 @@ export const userType = defineType({
       type: 'text'
     }),
     defineField({
-      name: 'verificationToken',
+      name: 'verificationToken', 
       title: 'Verification Token',
       type: 'string'
     }),

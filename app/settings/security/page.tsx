@@ -112,7 +112,7 @@ export default function SecuritySessions() {
 
   return (
     <div className="grid grid-cols-12 h-full w-full overflow-x-hidden">
-      <div className="bg-white p-4 lg:ml-90 md:ml-60 sm:ml-40 lg:w-[1020px] md:w-[600px] sm:w-[480px] text-gray-500">
+      <div className="bg-white p-4 col-span-9 col-start-4 text-gray-500">
 
         <div className="flex justify-between items-center mb-10">
           <h1 className="text-2xl mt-4">Security</h1>

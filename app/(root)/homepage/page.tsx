@@ -88,6 +88,34 @@ export default function HomePage() {
     const [imageIndexes, setImageIndexes] = useState<Record<string, number>>({});
     const [canExpand, setCanExpand] = useState<Record<string, boolean>>({});
     const contentRefs = useRef<Record<string, HTMLParagraphElement | null>>({});
+    // Three-dots (post menu) state and refs per item
+    const [openMenuById, setOpenMenuById] = useState<Record<string, boolean>>({});
+    const menuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+    // Full edit modal (match post/[id])
+    const [editPostModal, setEditPostModal] = useState({
+      open: false,
+      postId: '' as string | null,
+      pitch: '',
+      images: [] as string[],
+      files: [] as string[],
+      newImageFiles: [] as File[],
+      newFiles: [] as File[],
+      imagePreviews: [] as string[],
+      selectedMajors: [] as string[],
+      selectedSubjects: [] as string[],
+      selectedOption: 'Q&A' as 'Q&A' | 'Lesson',
+      loading: false,
+      error: '',
+      success: false,
+    });
+    const availableMajors = [
+      'ITE','IT','SCA','TEED','BIOE','Biology','Math','Physics','English','DMC','Chemistry','Chinese','Sociology'
+    ];
+    const availableSubjects = [
+      'Linear Algebra','Database','Artificial Intelligence','English','Calculus','C++','JAVA','Computer Fundamental','Label'
+    ];
+    // Report modal (inline)
+    const [reportModal, setReportModal] = useState<{ open: boolean; postId: string | null; reason: string; description: string; loading: boolean; error: string; success: boolean }>({ open: false, postId: null, reason: '', description: '', loading: false, error: '', success: false });
 
     if(!session){
       router.push('/');
@@ -100,6 +128,7 @@ export default function HomePage() {
             *[_type == "post"]{
               _id,
               author->{
+                email,
                 username,
                 profile_pic,
                 role,
@@ -116,7 +145,7 @@ export default function HomePage() {
               postImages,
               upvote,
               downvote,
-              commentCount
+              "commentCount": count(*[_type == "comment" && post._ref == ^._id])
             } | order(_createdAt desc)
           `);
           setPostData(data);
@@ -145,6 +174,146 @@ export default function HomePage() {
       setExpandedItems((prev) => ({ ...prev, [id]: !prev[id] }));
     };
 
+    const openEditPost = (p: any) => {
+      setOpenMenuById({});
+      setEditPostModal((prev) => ({
+        ...prev,
+        open: true,
+        postId: p?._id || '',
+        pitch: p?.pitch || '',
+        images: Array.isArray(p?.images) ? p.images : [],
+        files: Array.isArray(p?.files) ? p.files : [],
+        selectedMajors: Array.isArray(p?.major) ? p.major : [],
+        selectedSubjects: Array.isArray(p?.subject) ? p.subject : [],
+        selectedOption: typeof p?.typePost === 'string' && p.typePost ? p.typePost : 'Q&A',
+        newImageFiles: [],
+        newFiles: [],
+        imagePreviews: [],
+        loading: false,
+        error: '',
+        success: false,
+      }));
+    };
+
+    const closeEditPost = () => {
+      try { editPostModal.imagePreviews.forEach((u) => URL.revokeObjectURL(u)); } catch {}
+      setEditPostModal((p) => ({ ...p, open: false, imagePreviews: [], newImageFiles: [], newFiles: [], loading: false, error: '', success: false }));
+    };
+
+    const onEditAddImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e?.target?.files;
+      if (!files?.length) return;
+      const arr = Array.from(files).filter((f) => f.type.startsWith('image/'));
+      const previews = arr.map((f) => URL.createObjectURL(f));
+      setEditPostModal((p) => ({ ...p, newImageFiles: [...p.newImageFiles, ...arr], imagePreviews: [...p.imagePreviews, ...previews] }));
+    };
+    const onEditAddFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const files = e?.target?.files;
+      if (!files?.length) return;
+      const arr = Array.from(files).filter((f) => !f.type.startsWith('image/'));
+      setEditPostModal((p) => ({ ...p, newFiles: [...p.newFiles, ...arr] }));
+    };
+    const removeExistingImage = (url: string) => setEditPostModal((p) => ({ ...p, images: p.images.filter((u) => u !== url) }));
+    const removeExistingFile = (url: string) => setEditPostModal((p) => ({ ...p, files: p.files.filter((u) => u !== url) }));
+    const removeNewImage = (idx: number) => setEditPostModal((p) => {
+      const previews = [...p.imagePreviews];
+      const files = [...p.newImageFiles];
+      const toRevoke = previews[idx];
+      previews.splice(idx, 1);
+      files.splice(idx, 1);
+      try { if (toRevoke) URL.revokeObjectURL(toRevoke); } catch {}
+      return { ...p, imagePreviews: previews, newImageFiles: files };
+    });
+    const removeNewFile = (file: File) => setEditPostModal((p) => ({ ...p, newFiles: p.newFiles.filter((f) => f !== file) }));
+    const toggleMajor = (m: string) => setEditPostModal((p) => ({ ...p, selectedMajors: p.selectedMajors.includes(m) ? p.selectedMajors.filter((x) => x !== m) : (p.selectedMajors.length < 2 ? [...p.selectedMajors, m] : p.selectedMajors) }));
+    const toggleSubject = (s: string) => setEditPostModal((p) => ({ ...p, selectedSubjects: p.selectedSubjects.includes(s) ? p.selectedSubjects.filter((x) => x !== s) : (p.selectedSubjects.length < 2 ? [...p.selectedSubjects, s] : p.selectedSubjects) }));
+
+    const saveEditPost = async () => {
+      if (!editPostModal.postId) return;
+      if (!userEmail) { setEditPostModal((p) => ({ ...p, error: 'Please log in.' })); return; }
+      try {
+        setEditPostModal((p) => ({ ...p, loading: true, error: '' }));
+        const uploadedImageUrls: string[] = [];
+        for (const f of editPostModal.newImageFiles) {
+          const form = new FormData();
+          form.append('file', f);
+          form.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string);
+          const resUp = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`, { method: 'POST', body: form });
+          const dataUp = await resUp.json();
+          if (dataUp?.secure_url) uploadedImageUrls.push(dataUp.secure_url);
+        }
+        const uploadedFileUrls: string[] = [];
+        for (const f of editPostModal.newFiles) {
+          const form = new FormData();
+          form.append('file', f);
+          form.append('upload_preset', process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET as string);
+          const resUp = await fetch(`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/auto/upload`, { method: 'POST', body: form });
+          const dataUp = await resUp.json();
+          if (dataUp?.secure_url) uploadedFileUrls.push(dataUp.secure_url);
+        }
+        const nextImages = [...editPostModal.images, ...uploadedImageUrls];
+        const nextFiles = [...editPostModal.files, ...uploadedFileUrls];
+        const payload = {
+          postId: editPostModal.postId,
+          userEmail,
+          pitch: editPostModal.pitch,
+          images: nextImages,
+          files: nextFiles,
+          major: editPostModal.selectedMajors,
+          subject: editPostModal.selectedSubjects,
+          typePost: editPostModal.selectedOption,
+        };
+        const res = await fetch('/api/postUpdate', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        if (!res.ok) {
+          let msg = 'Failed to update post';
+          try { const err = await res.json(); if (err?.error) msg = err.error; } catch {}
+          throw new Error(msg);
+        }
+        // Update local state
+        setPostData((prev) => prev.map((p) => p._id === editPostModal.postId ? {
+          ...p,
+          pitch: editPostModal.pitch,
+          images: nextImages,
+          files: nextFiles,
+          major: editPostModal.selectedMajors,
+          subject: editPostModal.selectedSubjects,
+          typePost: editPostModal.selectedOption,
+        } : p));
+        setEditPostModal((p) => ({ ...p, loading: false, success: true }));
+        setTimeout(() => closeEditPost(), 800);
+      } catch (e: any) {
+        setEditPostModal((p) => ({ ...p, loading: false, error: e?.message || 'Update failed' }));
+      }
+    };
+
+    const openReport = (p: any) => {
+      setOpenMenuById({});
+      setReportModal({ open: true, postId: p._id, reason: '', description: '', loading: false, error: '', success: false });
+    };
+
+    const submitReport = async () => {
+      if (!reportModal.postId) return;
+      if (!reportModal.reason) { setReportModal((prev) => ({ ...prev, error: 'Please select a reason.' })); return; }
+      if (!userEmail) { setReportModal((prev) => ({ ...prev, error: 'Please log in to report.' })); return; }
+      try {
+        setReportModal((prev) => ({ ...prev, loading: true, error: '' }));
+        const res = await fetch('/api/report', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ targetId: reportModal.postId, targetType: 'post', userEmail, reason: reportModal.reason, description: reportModal.description }),
+        });
+        if (!res.ok) {
+          let msg = 'Failed to submit report';
+          try { const e = await res.json(); if (e?.error) msg = e.error; } catch {}
+          throw new Error(msg);
+        }
+        setReportModal((prev) => ({ ...prev, loading: false, success: true }));
+        setTimeout(() => setReportModal({ open: false, postId: null, reason: '', description: '', loading: false, error: '', success: false }), 1000);
+      } catch (e: any) {
+        setReportModal((prev) => ({ ...prev, loading: false, error: e?.message || 'Failed to submit report' }));
+      }
+    };
+
     const formatDate = (dateString: string) => new Date(dateString).toLocaleDateString();
 
     const handleVote = async (postId: string, action: "upvote" | "downvote") => {
@@ -167,6 +336,40 @@ export default function HomePage() {
         );
       } catch (err) {
         console.error("Voting error:", err);
+      }
+    };
+
+    // Close open menus on outside click
+    useEffect(() => {
+      const onDocClick = (e: MouseEvent) => {
+        const anyOpen = Object.entries(openMenuById).some(([id, open]) => open);
+        if (!anyOpen) return;
+        const target = e.target as Node;
+        const clickedInsideAny = Object.values(menuRefs.current).some((refEl) => refEl && refEl.contains(target));
+        if (!clickedInsideAny) setOpenMenuById({});
+      };
+      document.addEventListener('mousedown', onDocClick);
+      return () => document.removeEventListener('mousedown', onDocClick);
+    }, [openMenuById]);
+
+    const handleDeletePost = async (postId: string) => {
+      if (!userEmail) { alert('Please log in to delete your post.'); return; }
+      try {
+        const res = await fetch('/api/postDelete', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ postId, userEmail }),
+        });
+        if (!res.ok) {
+          let msg = 'Failed to delete post';
+          try { const err = await res.json(); if (err?.error) msg = err.error; } catch {}
+          throw new Error(msg);
+        }
+        setPostData((prev) => prev.filter((p) => p._id !== postId));
+      } catch (e: any) {
+        alert(e?.message || 'Failed to delete post');
+      } finally {
+        setOpenMenuById({});
       }
     };
 
@@ -365,10 +568,206 @@ export default function HomePage() {
                   </div>
                   <div className="text-gray-700 flex gap-3 items-center cursor-pointer">
                     <FontAwesomeIcon icon={faComment} />
-                    {datum?.commentCount}
+                    {datum?.commentCount ?? 0}
                   </div>
-                  <div className="text-gray-700 flex gap-3 items-center cursor-pointer">•••</div>
+                  {/* Three-dots menu */}
+                  <div className="relative" ref={(el) => { menuRefs.current[datum._id] = el; }}>
+                    <button
+                      type="button"
+                      aria-label="More options"
+                      className="text-gray-700 flex gap-3 items-center cursor-pointer px-2 py-1 rounded hover:bg-gray-100"
+                      onClick={() => setOpenMenuById((prev) => ({ ...prev, [datum._id]: !prev[datum._id] }))}
+                    >
+                      •••
+                    </button>
+                    {openMenuById[datum._id] && (
+                      <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-md shadow-lg z-10 overflow-hidden">
+                        {(datum?.author?.email && userEmail && datum.author.email === userEmail) ? (
+                          <>
+                            <button
+                              className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50"
+                              onClick={() => openEditPost(datum)}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                              onClick={() => handleDeletePost(datum._id)}
+                            >
+                              Delete
+                            </button>
+                          </>
+                        ) : (
+                          <button
+                            className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 text-red-600"
+                            onClick={() => openReport(datum)}
+                          >
+                            Report
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
                 </div>
+                {/* Full Edit Modal (pitch, images, files, majors, subjects, type) */}
+                {editPostModal.open && editPostModal.postId === datum._id && (
+                  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-20">
+                    <div className="bg-white rounded-md shadow-lg w-11/12 max-w-2xl p-4 text-gray-900">
+                      <h3 className="text-lg font-semibold mb-3">Edit Post</h3>
+                      {editPostModal.error && <div className="text-sm text-red-600 mb-2">{editPostModal.error}</div>}
+                      {/* Pitch */}
+                      <label className="block text-sm text-gray-700 mb-1">Pitch</label>
+                      <textarea
+                        value={editPostModal.pitch}
+                        onChange={(e) => setEditPostModal((p) => ({ ...p, pitch: e.target.value }))}
+                        rows={4}
+                        className="w-full border border-gray-300 rounded-md p-2 outline-none bg-white text-black"
+                        disabled={editPostModal.loading}
+                      />
+                      {/* Existing images */}
+                      {Array.isArray(editPostModal.images) && editPostModal.images.length > 0 && (
+                        <div className="mt-3">
+                          <div className="text-sm font-medium mb-1">Existing Images</div>
+                          <div className="grid grid-cols-3 gap-2">
+                            {editPostModal.images.map((url, idx) => (
+                              <div key={idx} className="relative">
+                                <img src={url} alt={`img-${idx}`} className="w-full h-28 object-cover rounded border" />
+                                <button type="button" onClick={() => removeExistingImage(url)} disabled={editPostModal.loading} className="absolute top-1 right-1 text-xs bg-white/90 text-red-600 px-2 py-0.5 rounded border">Remove</button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {/* New images */}
+                      <div className="mt-3">
+                        <label className="inline-block">
+                          <span className="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer">Add images</span>
+                          <input type="file" accept="image/*" multiple className="hidden" onChange={onEditAddImages} disabled={editPostModal.loading} />
+                        </label>
+                        {editPostModal.imagePreviews.length > 0 && (
+                          <div className="grid grid-cols-3 gap-2 mt-2">
+                            {editPostModal.imagePreviews.map((u, i) => (
+                              <div key={i} className="relative">
+                                <img src={u} alt={`preview-${i}`} className="w-full h-28 object-cover rounded border" />
+                                <button type="button" onClick={() => removeNewImage(i)} disabled={editPostModal.loading} className="absolute top-1 right-1 text-xs bg-white/90 text-gray-700 px-2 py-0.5 rounded border">Clear</button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {/* Existing files */}
+                      {Array.isArray(editPostModal.files) && editPostModal.files.length > 0 && (
+                        <div className="mt-3">
+                          <div className="text-sm font-medium mb-1">Existing Files</div>
+                          <div className="flex flex-col gap-2">
+                            {editPostModal.files.map((url, idx) => {
+                              const name = (url || '').split('/').pop()?.split('?')[0] || `File ${idx+1}`;
+                              return (
+                                <div key={idx} className="flex items-center justify-between border rounded p-2">
+                                  <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline break-all">{name}</a>
+                                  <button type="button" onClick={() => removeExistingFile(url)} disabled={editPostModal.loading} className="text-sm text-red-600">Remove</button>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                      {/* Add files */}
+                      <div className="mt-3">
+                        <label className="inline-block">
+                          <span className="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer">Add files</span>
+                          <input type="file" multiple className="hidden" onChange={onEditAddFiles} disabled={editPostModal.loading} />
+                        </label>
+                        {editPostModal.newFiles.length > 0 && (
+                          <div className="flex flex-col gap-2 mt-2">
+                            {editPostModal.newFiles.map((f, i) => (
+                              <div key={i} className="flex items-center justify-between border rounded p-2">
+                                <span className="break-all text-sm">{f.name}</span>
+                                <button type="button" onClick={() => removeNewFile(f)} disabled={editPostModal.loading} className="text-sm text-gray-700">Remove</button>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                      {/* Majors and Subjects */}
+                      <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <div className="text-sm font-medium mb-1">Majors (max 2)</div>
+                          <div className="flex flex-wrap gap-2">
+                            {availableMajors.map((m) => (
+                              <button key={m} type="button" onClick={() => toggleMajor(m)} className={`px-2 py-1 rounded border text-sm ${editPostModal.selectedMajors.includes(m) ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300'}`}>{m}</button>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-sm font-medium mb-1">Subjects (max 2)</div>
+                          <div className="flex flex-wrap gap-2">
+                            {availableSubjects.map((s) => (
+                              <button key={s} type="button" onClick={() => toggleSubject(s)} className={`px-2 py-1 rounded border text-sm ${editPostModal.selectedSubjects.includes(s) ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 border-gray-300'}`}>{s}</button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      {/* Type selection */}
+                      <div className="mt-3">
+                        <div className="text-sm font-medium mb-1">Post type</div>
+                        <div className="flex gap-4">
+                          {['Q&A', 'Lesson', 'Announcement'].map((opt) => (
+                            <label key={opt} className="flex items-center gap-2 text-sm">
+                              <input type="radio" name="editType" value={opt} checked={editPostModal.selectedOption === opt} onChange={() => setEditPostModal((p) => ({ ...p, selectedOption: opt as any }))} disabled={editPostModal.loading} />
+                              <span>{opt}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                      {editPostModal.success && <div className="text-sm text-green-600 mt-2">Saved!</div>}
+                      <div className="mt-4 flex justify-end gap-2">
+                        <button onClick={closeEditPost} disabled={editPostModal.loading} className="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">Cancel</button>
+                        <button onClick={saveEditPost} disabled={editPostModal.loading} className={`px-3 py-1 rounded-md text-white ${editPostModal.loading ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}>{editPostModal.loading ? 'Saving...' : 'Save'}</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Inline Report Modal */}
+                {reportModal.open && reportModal.postId === datum._id && (
+                  <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-20">
+                    <div className="bg-white rounded-md shadow-lg w-11/12 max-w-md p-4 text-gray-900">
+                      <h3 className="text-lg font-semibold mb-3">Report Post</h3>
+                      {reportModal.error && <div className="text-sm text-red-600 mb-2">{reportModal.error}</div>}
+                      <label className="block text-sm text-gray-700 mb-1">Reason</label>
+                      <select
+                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-black"
+                        value={reportModal.reason}
+                        onChange={(e) => setReportModal((prev) => ({ ...prev, reason: e.target.value }))}
+                        disabled={reportModal.loading}
+                      >
+                        <option value="">Select a reason</option>
+                        <option value="spam">Spam</option>
+                        <option value="harassment">Harassment or Bullying</option>
+                        <option value="hate_speech">Hate Speech</option>
+                        <option value="violence">Violence or Threats</option>
+                        <option value="false_info">False Information</option>
+                        <option value="inappropriate">Inappropriate Content</option>
+                        <option value="copyright">Copyright Violation</option>
+                        <option value="other">Other</option>
+                      </select>
+                      <label className="block text-sm text-gray-700 mt-3 mb-1">Description (optional)</label>
+                      <textarea
+                        className="w-full border border-gray-300 rounded-md p-2 bg-white text-black"
+                        rows={3}
+                        value={reportModal.description}
+                        onChange={(e) => setReportModal((prev) => ({ ...prev, description: e.target.value }))}
+                        disabled={reportModal.loading}
+                      />
+                      {reportModal.success && <div className="text-sm text-green-600 mt-1">Report submitted</div>}
+                      <div className="mt-3 flex justify-end gap-2">
+                        <button onClick={() => setReportModal({ open: false, postId: null, reason: '', description: '', loading: false, error: '', success: false })} disabled={reportModal.loading} className="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">Cancel</button>
+                        <button onClick={submitReport} disabled={reportModal.loading} className={`px-3 py-1 rounded-md text-white ${reportModal.loading ? 'bg-gray-400' : 'bg-red-600 hover:bg-red-700'}`}>{reportModal.loading ? 'Submitting...' : 'Submit'}</button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </li>
           );
@@ -712,7 +1111,7 @@ export default function HomePage() {
             <div className="hidden lg:flex col-span-3">
               <div className="sticky top-20 w-full bg-gray-100">
                 
-                <div className="position-absolute w-full mt-5 rounded-2xl shadow-2xs bg-white h-full">
+                <div className="position-absolute w-full mt-5 rounded-2xl shadow-2xs bg-white">
                   {/* profile Info */}
                   <Link href="/profile" className = "h-20 flex items-center pr-8 gap-2 text-[#374151] cursor-pointer">	
                     <div className="p-4 flex items-center gap-4">

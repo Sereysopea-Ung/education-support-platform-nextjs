@@ -311,7 +311,7 @@ export default function CreatePostForm({ onClose, onSuccess }: CreatePostFormPro
                 </div>
               ))}
             </div>
-          )}
+          )} 
 
           {files.length > 0 && (
             <div className="mt-3">

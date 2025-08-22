@@ -52,6 +52,27 @@ export const commentType = defineType({
             description: 'Array of user identifiers (e.g., emails) who downvoted.'
         }),
 
+        // Optional single attachment: image OR file
+        defineField({
+            name: 'attachmentUrl',
+            title: 'Attachment URL',
+            type: 'url',
+            description: 'Direct URL to the uploaded attachment (image or file).',
+        }),
+        defineField({
+            name: 'attachmentType',
+            title: 'Attachment Type',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Image', value: 'image' },
+                    { title: 'File', value: 'file' },
+                ],
+                layout: 'radio'
+            },
+            description: 'Whether the attachment is an image or a generic file.'
+        }),
+
         // Timestamps
         defineField({
             name: 'createdAt',

@@ -6,7 +6,8 @@ import {jobType} from './jobType'
 import {scholarshipType} from './scholarshipType'
 import {newsType} from "@/sanity/schemaTypes/newsType";
 import {feedbackType} from './feedbackType'
+import {reportType} from './reportType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [userType, postType, commentType, jobType, scholarshipType, newsType, feedbackType],
+  types: [userType, postType, commentType, jobType, scholarshipType, newsType, feedbackType, reportType],
 }
