@@ -1,7 +1,5 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getUserByEmail } from "@/database/getUserByEmail";
-import isVerified from "./isVerified"
 import bcrypt from "bcryptjs";
 
 export const authOptions = {
@@ -21,6 +19,12 @@ export const authOptions = {
                 }
 
                 try {
+                    // Lazy import to prevent import-time crashes if env vars are missing
+                    const [{ getUserByEmail }, { default: isVerified }] = await Promise.all([
+                        import("@/database/getUserByEmail"),
+                        import("./isVerified"),
+                    ]);
+
                     const user = await getUserByEmail(credentials.email);
 
                     if (!user) {

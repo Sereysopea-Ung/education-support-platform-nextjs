@@ -45,8 +45,28 @@ export const userType = defineType({
       type: 'image'
     }),
     defineField({
+      name: 'profile_pic_from_cloudinary',
+      title: 'Profile Picture (Cloudinary URL)',
+      type: 'string'
+    }),
+    defineField({
       name: 'bio',
       type: 'text'
+    }),
+    defineField({
+      name: 'phone',
+      title: 'Phone',
+      type: 'string'
+    }),
+    defineField({
+      name: 'telegram',
+      title: 'Telegram',
+      type: 'string'
+    }),
+    defineField({
+      name: 'facebook',
+      title: 'Facebook',
+      type: 'string'
     }),
     defineField({
       name: 'verificationToken', 

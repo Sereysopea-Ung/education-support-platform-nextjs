@@ -55,12 +55,16 @@ export default function HomePage() {
   useEffect(() => {
     if (session?.user?.email) {
       client
-        .fetch(`*[_type == "user" && email == $email][0]{ _id, profile_pic, major, enroll_year, username, firstName, lastName }`, {
+        .fetch(`*[_type == "user" && email == $email][0]{ _id, profile_pic, profile_pic_from_cloudinary, major, enroll_year, username, firstName, lastName }`, {
           email: session.user.email,
         })
         .then((user) => {
-          if (user?.profile_pic) {
+          if (user?.profile_pic_from_cloudinary) {
+            setProfilePic(user.profile_pic_from_cloudinary);
+          } else if (user?.profile_pic) {
             setProfilePic(urlFor(user.profile_pic).width(50).height(50).url());
+          } else {
+            setProfilePic(null);
           }
           if (user?.major) setMajor(user.major);
           if (user?.enroll_year) setYear(user.enroll_year);
