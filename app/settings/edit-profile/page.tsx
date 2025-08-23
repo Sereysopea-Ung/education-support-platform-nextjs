@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
 import SaveChange from "@/components/saveChange";
+import Link from "next/link";
 
 export default function EditProfilePage() {
     // Form states (empty means unchanged; placeholders show existing values)
@@ -10,6 +11,13 @@ export default function EditProfilePage() {
     const [telegram, setTelegram] = useState("");
     const [facebook, setFacebook] = useState("");
     const [saving, setSaving] = useState(false);
+    // OTP flow
+    const [otpOpen, setOtpOpen] = useState(false);
+    const [otpCode, setOtpCode] = useState("");
+    const [submittingOtp, setSubmittingOtp] = useState(false);
+    const [pendingPayload, setPendingPayload] = useState<any | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [otpChannel, setOtpChannel] = useState<string | null>(null);
 
     // Existing data for placeholders and current photo
     const [existing, setExisting] = useState<{
@@ -69,6 +77,7 @@ export default function EditProfilePage() {
         e.preventDefault();
 
         setSaving(true);
+        setErrorMsg(null);
         // Declare controller/timeout in outer scope so we can clear in finally
         let controller: AbortController | null = null;
         let timeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -82,18 +91,20 @@ export default function EditProfilePage() {
             controller = new AbortController();
             timeoutId = setTimeout(() => controller?.abort(), 20000);
 
+            const basePayload = {
+                username: username || undefined,
+                bio: bio || undefined,
+                phone: phone || undefined,
+                telegram: telegram || undefined,
+                facebook: facebook || undefined,
+                profilePhotoDataUrl,
+            };
+
             const resp = await fetch('/api/settings/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 signal: controller.signal,
-                body: JSON.stringify({
-                    username: username || undefined,
-                    bio: bio || undefined,
-                    phone: phone || undefined,
-                    telegram: telegram || undefined,
-                    facebook: facebook || undefined,
-                    profilePhotoDataUrl,
-                }),
+                body: JSON.stringify(basePayload),
             });
 
             if (!resp.ok) {
@@ -101,8 +112,17 @@ export default function EditProfilePage() {
                 throw new Error(err.error || 'Failed to update profile');
             }
 
-            // Optionally refresh existing values
-            const { profilePhotoUrl } = await resp.json();
+            const data = await resp.json();
+            if (data?.requiresOtp) {
+                // Open OTP modal and keep payload for second step
+                setPendingPayload(basePayload);
+                setOtpOpen(true);
+                setOtpChannel(data?.usedChannel || 'sms');
+                return; // Don't proceed to success state yet
+            }
+
+            // Optionally refresh existing values (success without OTP)
+            const { profilePhotoUrl } = data;
             setExisting((prev) => ({
                 ...prev,
                 username: username || prev.username,
@@ -118,12 +138,56 @@ export default function EditProfilePage() {
                 alert('Request timed out. Please try again.');
             } else {
                 console.error(e);
-                alert(e instanceof Error ? e.message : 'Update failed');
+                setErrorMsg(e instanceof Error ? e.message : 'Update failed');
             }
         } finally {
             // Always clear timeout and reset saving state
             try { if (timeoutId) clearTimeout(timeoutId); } catch {}
             setSaving(false);
+        }
+    };
+
+    const submitOtp = async () => {
+        if (!pendingPayload) return;
+        setSubmittingOtp(true);
+        setErrorMsg(null);
+        let controller: AbortController | null = null;
+        let timeoutId: ReturnType<typeof setTimeout> | null = null;
+        try {
+            controller = new AbortController();
+            timeoutId = setTimeout(() => controller?.abort(), 20000);
+
+            const resp = await fetch('/api/settings/update', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                signal: controller.signal,
+                body: JSON.stringify({ ...pendingPayload, otpCode: otpCode || undefined }),
+            });
+            if (!resp.ok) {
+                const err = await resp.json().catch(() => ({}));
+                throw new Error(err.error || 'OTP verification failed');
+            }
+            const { profilePhotoUrl } = await resp.json();
+            // Apply updates now that OTP passed
+            setExisting((prev) => ({
+                ...prev,
+                username: (pendingPayload.username ?? prev.username) || prev.username,
+                bio: (pendingPayload.bio ?? prev.bio) || prev.bio,
+                phone: (pendingPayload.phone ?? prev.phone) || prev.phone,
+                telegram: (pendingPayload.telegram ?? prev.telegram) || prev.telegram,
+                facebook: (pendingPayload.facebook ?? prev.facebook) || prev.facebook,
+                profilePhoto: profilePhotoUrl || prev.profilePhoto,
+            }));
+            // Close modal and clear pending
+            setOtpOpen(false);
+            setOtpCode("");
+            setPendingPayload(null);
+        } catch (e) {
+            console.error(e);
+            setErrorMsg(e instanceof Error ? e.message : 'OTP verification failed');
+        } finally {
+            try { if (timeoutId) clearTimeout(timeoutId); } catch {}
+            setSubmittingOtp(false);
         }
     };
 
@@ -137,7 +201,9 @@ export default function EditProfilePage() {
                     <h2 className="text-2xl sm:text-3xl md:text-4xl text-gray-800">Profile</h2>
                     <button className="text-[#1E3A8A] flex items-center gap-2 hover:underline">
                         <span aria-hidden>←</span>
-                        <span className="text-base sm:text-lg">Back</span>
+                        <Link href="/homepage">
+                        <span className="text-base sm:text-lg">Go to Homepage</span>
+                        </Link>
                     </button>                
                 </div>
 
@@ -246,10 +312,52 @@ export default function EditProfilePage() {
                         </div>
                     </div>
 
+                    {/* Error message */}
+                    {errorMsg && (
+                        <div className="mb-4 text-red-600 text-sm">{errorMsg}</div>
+                    )}
+
                     {/* Save Changes Button */}
                     <SaveChange loading={saving} disabled={saving} />
 
                 </form>
+                {/* OTP Modal */}
+                {otpOpen && (
+                    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                        <div className="bg-white w-11/12 max-w-md rounded-lg p-5 text-gray-900">
+                            <h3 className="text-lg font-semibold mb-2">Verify your phone</h3>
+                            <p className="text-sm text-gray-600 mb-4">
+                                {otpChannel === 'whatsapp' ? 'We sent a code via WhatsApp.' : 'We sent a code.'} Enter it to confirm your phone number.
+                            </p>
+                            <input
+                                type="text"
+                                inputMode="numeric"
+                                value={otpCode}
+                                onChange={(e) => setOtpCode(e.target.value)}
+                                placeholder="Enter 6-digit code"
+                                className="w-full p-3 border border-gray-300 rounded-md mb-4"
+                            />
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    type="button"
+                                    className="px-4 py-2 rounded-md border"
+                                    onClick={() => { setOtpOpen(false); setOtpCode(""); setPendingPayload(null); }}
+                                    disabled={submittingOtp}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    className="px-4 py-2 rounded-md bg-blue-600 text-white disabled:opacity-60"
+                                    onClick={submitOtp}
+                                    disabled={submittingOtp || !otpCode}
+                                >
+                                    {submittingOtp ? 'Verifying...' : 'Verify'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 </div>
             </div>
         </div>

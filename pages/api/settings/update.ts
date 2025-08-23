@@ -22,6 +22,12 @@ const twilioClient = process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_T
   ? twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN)
   : null;
 
+// Basic E.164 validator: +[country][number], 8-15 digits total
+function isE164(phone: string | undefined): boolean {
+  if (!phone) return false;
+  return /^\+[1-9]\d{7,14}$/.test(phone.trim());
+}
+
 // Increase body size limit to allow base64 images (adjust as needed)
 export const config = {
   api: {
@@ -42,7 +48,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ error: "Unauthorized" });
   }
 
-  const { username, bio, phone, telegram, facebook, profilePhotoDataUrl } = req.body || {};
+  const { username, bio, phone, telegram, facebook, profilePhotoDataUrl, otpCode } = req.body || {};
 
   try {
     // Load current user
@@ -53,6 +59,41 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     if (!currentUser?._id) {
       return res.status(404).json({ error: "User not found" });
+    }
+
+    // If phone is provided and no otpCode yet, start verification and return early without saving
+    if (typeof phone === "string" && phone.trim() !== "") {
+      const trimmedPhone = phone.trim();
+      if (!isE164(trimmedPhone)) {
+        return res.status(400).json({ error: "Phone must be in E.164 format (e.g. +85512345678)" });
+      }
+      if (!twilioClient || !process.env.TWILIO_VERIFY_SERVICE_SID) {
+        return res.status(500).json({ error: "Phone verification service not configured" });
+      }
+      if (!otpCode) {
+        try {
+          await twilioClient.verify.v2
+            .services(process.env.TWILIO_VERIFY_SERVICE_SID)
+            .verifications.create({ to: trimmedPhone, channel: "whatsapp" });
+          return res.status(200).json({ requiresOtp: true, usedChannel: "whatsapp" });
+        } catch (twErr: any) {
+          console.error("Twilio Verify (WhatsApp) start error:", twErr);
+          const msg = (twErr?.message as string | undefined) || "Failed to start phone verification";
+          return res.status(400).json({ error: msg });
+        }
+      }
+      // If otpCode is provided, validate it before proceeding
+      try {
+        const check = await twilioClient.verify.v2
+          .services(process.env.TWILIO_VERIFY_SERVICE_SID)
+          .verificationChecks.create({ to: trimmedPhone, code: String(otpCode) });
+        if (check.status !== "approved") {
+          return res.status(400).json({ error: "Invalid or expired OTP code" });
+        }
+      } catch (twErr) {
+        console.error("Twilio Verify check error:", twErr);
+        return res.status(400).json({ error: "Invalid or expired OTP code" });
+      }
     }
 
     // Upload image to Cloudinary if provided
@@ -79,11 +120,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await sanity.patch(currentUser._id).set(patch).commit();
     }
 
-    // If user already had a phone number before update, trigger OTP via Twilio Verify (if configured)
-    if (currentUser.phone && twilioClient && process.env.TWILIO_VERIFY_SERVICE_SID) {
-      await twilioClient.verify.v2.services(process.env.TWILIO_VERIFY_SERVICE_SID)
-        .verifications.create({ to: currentUser.phone, channel: "sms" });
-    }
+    // No further Twilio action here; verification is handled above. Proceed to save.
 
     return res.status(200).json({ success: true, profilePhotoUrl });
   } catch (e) {

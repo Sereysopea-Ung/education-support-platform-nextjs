@@ -23,9 +23,9 @@ export async function POST(req: NextRequest) {
       return new Response(JSON.stringify({ error: 'targetUserId is required' }), { status: 400 });
     }
 
-    // Resolve follower's Sanity _id
-    const me = await client.fetch<{ _id: string } | null>(
-      `*[_type == "user" && email == $email][0]{ _id }`,
+    // Resolve follower's Sanity _id and current following list
+    const me = await client.fetch<{ _id: string; following?: string[] } | null>(
+      `*[_type == "user" && email == $email][0]{ _id, following }`,
       { email }
     );
     if (!me?._id) {
@@ -42,19 +42,31 @@ export async function POST(req: NextRequest) {
     }
 
     const currentFollowers = Array.isArray(target.followers) ? target.followers : [];
-    if (currentFollowers.includes(me._id)) {
-      // Already following; respond OK idempotently
+    const myFollowing = Array.isArray(me.following) ? me.following : [];
+
+    // Idempotency checks
+    const willUpdateFollowers = !currentFollowers.includes(me._id);
+    const willUpdateFollowing = !myFollowing.includes(targetUserId);
+
+    if (!willUpdateFollowers && !willUpdateFollowing) {
       return new Response(JSON.stringify({ ok: true, alreadyFollowing: true }), { status: 200 });
     }
 
-    const newFollowers = [...currentFollowers, me._id];
+    const tx = client.transaction();
+    if (willUpdateFollowers) {
+      tx.patch(target._id, {
+        set: { followers: [...currentFollowers, me._id] },
+      });
+    }
+    if (willUpdateFollowing) {
+      tx.patch(me._id, {
+        set: { following: [...myFollowing, targetUserId] },
+      });
+    }
 
-    await client
-      .patch(target._id)
-      .set({ followers: newFollowers })
-      .commit();
+    const result = await tx.commit();
 
-    return new Response(JSON.stringify({ ok: true }), {
+    return new Response(JSON.stringify({ ok: true, result }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
     });

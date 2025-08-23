@@ -135,6 +135,7 @@ export default function HomePage() {
                 email,
                 username,
                 profile_pic,
+                profile_pic_from_cloudinary,
                 role,
                 year,
                 major,
@@ -396,7 +397,12 @@ export default function HomePage() {
                   <div className="flex h-12 w-12 ">
                     <div className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
                       <img
-                        src={datum?.author?.profile_pic ? urlFor(datum.author.profile_pic).width(50).height(50).fit("crop").url() : "/Default_pfp.jpg"}
+                        src={
+                          datum?.author?.profile_pic_from_cloudinary ||
+                          (datum?.author?.profile_pic
+                            ? urlFor(datum.author.profile_pic).width(50).height(50).fit("crop").url()
+                            : "/Default_pfp.jpg")
+                        }
                         className="rounded-full"
                       />
                     </div>
@@ -514,7 +520,7 @@ export default function HomePage() {
 
                   {/* Files */}
                   {Array.isArray(datum?.files) && datum.files.length > 0 && (
-                    <div className="mt-2 flex flex-col gap-2 w-full max-w-2xl mx-auto">
+                    <div className="mt-2 flex flex-col gap-2 w-full mx-auto">
                       {datum.files.map((file: any, idx: number) => {
                         const href = typeof file === "string" ? file : file?.url || file?.secure_url || "";
                         if (!href) return null;
@@ -786,6 +792,9 @@ export default function HomePage() {
       const [loading, setLoading] = useState<boolean>(false);
       const [error, setError] = useState<string | null>(null);
       const [busy, setBusy] = useState<Record<string, boolean>>({});
+      // Track my following list locally for optimistic sync
+      const [myFollowing, setMyFollowing] = useState<string[]>([]);
+      const [myFollowingReady, setMyFollowingReady] = useState<boolean>(false);
 
       useEffect(() => {
         (async () => {
@@ -805,6 +814,25 @@ export default function HomePage() {
           }
         })();
       }, [excludeId]);
+
+      // Initialize my following list once userId is known
+      useEffect(() => {
+        (async () => {
+          if (!userId) return;
+          try {
+            const me = await client.fetch(
+              `*[_type == "user" && _id == $id][0]{ following }`,
+              { id: userId }
+            );
+            const followingArr = Array.isArray(me?.following) ? me.following : [];
+            setMyFollowing(followingArr);
+            setMyFollowingReady(true);
+          } catch (e) {
+            console.error("Failed to load my following:", e);
+            setMyFollowingReady(true); // prevent fallback loops
+          }
+        })();
+      }, [userId]);
 
       const resolveUserAvatar = (user: any) => {
         const pic = user?.profile_pic;
@@ -827,7 +855,7 @@ export default function HomePage() {
             body: JSON.stringify({ targetUserId: targetId })
           });
           if (!res.ok) throw new Error('Failed to follow');
-          // Optimistically update the local state
+          // Optimistically update: target's followers and my following
           setUsers(prev => prev.map(u => {
             if (u._id === targetId) {
               const prevFollowers = Array.isArray(u.followers) ? u.followers : [];
@@ -837,6 +865,7 @@ export default function HomePage() {
             }
             return u;
           }));
+          setMyFollowing(prev => (prev.includes(targetId) ? prev : [...prev, targetId]));
         } catch (e) {
           console.error('Follow action failed:', e);
         } finally {
@@ -864,6 +893,8 @@ export default function HomePage() {
             }
             return u;
           }));
+          // Also update my following optimistically
+          setMyFollowing(prev => prev.filter(id => id !== targetId));
         } catch (e) {
           console.error('Unfollow action failed:', e);
         } finally {
@@ -892,7 +923,11 @@ export default function HomePage() {
                   <p className="text-sm text-gray-700">{u.major ? `${u.major}` : ""}{u.year ? ` • Year ${u.year}` : ""}</p>
                 </div>
                 {(() => {
-                  const alreadyFollowing = Array.isArray(u?.followers) && !!userId && u.followers.includes(userId);
+                  // If myFollowing is ready, rely on it only; otherwise fall back to followers on each user
+                  const alreadyFollowing = !!userId && (
+                    (myFollowingReady ? myFollowing.includes(u._id) : false) ||
+                    (!myFollowingReady && Array.isArray(u?.followers) && u.followers.includes(userId))
+                  );
                   const isBusy = !!busy[u._id];
                   const handleClick = () => {
                     if (!userId || isBusy) return;
@@ -1112,10 +1147,10 @@ export default function HomePage() {
         <section>
           <div className="flex-12 h-full w-full grid grid-cols-1 lg:grid-cols-12 bg-gray-100 text-gray-900">
             {/* left-sidebar */}
-            <div className="hidden lg:flex col-span-3">
-              <div className="sticky top-20 w-full bg-gray-100">
+            <div className="w-screen ">
+              <div className="flex top-20 bg-gray-100">
                 
-                <div className="position-absolute w-full mt-5 rounded-2xl shadow-2xs bg-white">
+                <div className="fixed w-2/12 mt-5 rounded-2xl shadow-2xs bg-white">
                   {/* profile Info */}
                   <Link href="/profile" className = "h-20 flex items-center pr-8 gap-2 text-[#374151] cursor-pointer">	
                     <div className="p-4 flex items-center gap-4">
@@ -1128,7 +1163,7 @@ export default function HomePage() {
                       />
                       <div className="flex flex-col">
                         <p className="font-bold text-gray-900">{username}</p>
-                        <p className="text-sm text-gray-700">{major} •</p>
+                        <p className="text-sm text-gray-700 break-words">{major} •</p>
                         <p className="text-sm text-gray-700">year {year}</p>
                       </div>
               
@@ -1148,7 +1183,7 @@ export default function HomePage() {
                         >
                           <path
                             d="M16.6667 6.3334L11.6667 2.16923C11.2084 1.77977 10.615 1.56445 10.0001 1.56445C9.38514 1.56445 8.79176 1.77977 8.33341 2.16923L3.33341 6.3334C3.06872 6.55829 2.8575 6.83417 2.71381 7.14268C2.57012 7.45118 2.49726 7.78522 2.50008 8.12257V15.0417C2.50008 15.6716 2.76347 16.2757 3.23231 16.7211C3.70115 17.1665 4.33704 17.4167 5.00008 17.4167H15.0001C15.6631 17.4167 16.299 17.1665 16.7678 16.7211C17.2367 16.2757 17.5001 15.6716 17.5001 15.0417V8.11465C17.5017 7.77864 17.4283 7.44612 17.2846 7.13906C17.141 6.83201 16.9304 6.55741 16.6667 6.3334ZM11.6667 15.8334H8.33341V11.8751C8.33341 11.6651 8.42121 11.4637 8.57749 11.3153C8.73377 11.1668 8.94573 11.0834 9.16675 11.0834H10.8334C11.0544 11.0834 11.2664 11.1668 11.4227 11.3153C11.5789 11.4637 11.6667 11.6651 11.6667 11.8751V15.8334ZM15.8334 15.0417C15.8334 15.2517 15.7456 15.4531 15.5893 15.6015C15.4331 15.75 15.2211 15.8334 15.0001 15.8334H13.3334V11.8751C13.3334 11.2452 13.07 10.6411 12.6012 10.1957C12.1323 9.75029 11.4965 9.50007 10.8334 9.50007H9.16675C8.5037 9.50007 7.86782 9.75029 7.39898 10.1957C6.93014 10.6411 6.66675 11.2452 6.66675 11.8751V15.8334H5.00008C4.77907 15.8334 4.5671 15.75 4.41082 15.6015C4.25454 15.4531 4.16675 15.2517 4.16675 15.0417V8.11465C4.1669 8.00224 4.19224 7.89116 4.24109 7.78878C4.28995 7.68641 4.36119 7.59509 4.45008 7.5209L9.45008 3.36465C9.60215 3.23773 9.79766 3.16773 10.0001 3.16773C10.2025 3.16773 10.398 3.23773 10.5501 3.36465L15.5501 7.5209C15.639 7.59509 15.7102 7.68641 15.7591 7.78878C15.8079 7.89116 15.8333 8.00224 15.8334 8.11465V15.0417ZM7.5 2.375C9.22617 2.375 10.6255 3.70437 10.6255 5.34423C10.6255 6.98409 9.22617 8.31346 7.5 8.31346C5.77383 8.31346 4.37449 6.98409 4.37449 5.34423C4.37449 3.70437 5.77383 2.375 7.5 2.375ZM13.75 3.5625C15.1307 3.5625 16.25 4.62582 16.25 5.9375C16.25 7.24918 15.1307 8.3125 13.75 8.3125C12.3693 8.3125 11.25 7.24918 11.25 5.9375C11.25 4.62582 12.3693 3.5625 13.75 3.5625ZM7.5 3.5625C6.46419 3.5625 5.62449 4.36021 5.62449 5.34423C5.62449 6.32825 6.46419 7.12596 7.5 7.12596C8.53581 7.12596 9.37551 6.32825 9.37551 5.34423C9.37551 4.36021 8.53581 3.5625 7.5 3.5625ZM13.75 4.75C13.0596 4.75 12.5 5.28166 12.5 5.9375C12.5 6.59334 13.0596 7.125 13.75 7.125C14.4404 7.125 15 6.59334 15 5.9375C15 5.28166 14.4404 4.75 13.75 4.75Z"
-                            fill={activeMenu === "Homepage" ? "#FFFFFF" : "#565D6C"}
+                            fill="#565D6C"
                           />
                         </svg>
                         Home
@@ -1178,7 +1213,7 @@ export default function HomePage() {
                         <svg
                           width="30"
                           height="30"
-                          viewBox="0 0 20 20"
+                          viewBox="0 0 20 19"
                           fill="none"
                           xmlns="http://www.w3.org/2000/svg"
                         >
@@ -1268,7 +1303,7 @@ export default function HomePage() {
             </div>
 
             {/* mid-content */}
-            <div className="flex flex-col bg-gray-100 overflow-hidden w-full col-span-1 lg:col-start-4 lg:col-span-6">
+            <div className="flex flex-col bg-gray-100 overflow-hidden w-full col-span-1 lg:col-start-3 lg:col-span-7">
               <div className="ml-2">
                 {/* Create Post trigger (opens modal) */}
                 <button
@@ -1328,4 +1363,3 @@ export default function HomePage() {
     
   );
 }
-

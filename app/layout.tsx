@@ -27,12 +27,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full bg-white flex`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full bg-white`}
         suppressHydrationWarning>
         <SearchProvider>
-        <Providers>
-        {children}
-        </Providers>
+          <Providers>
+            {children}
+          </Providers>
         </SearchProvider>
       </body>
     </html>
