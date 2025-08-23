@@ -111,7 +111,7 @@ export default function SettingPage(){
                 throw new Error(data?.error || `Request failed: ${res.status}`);
             }
             const result = await res.json();
-            const updated = result?.result || {};
+            const _updated = result?.result || {};
             // Update local list label
             setItems((prev) => prev.map((x) => {
                 if (x._id !== editData._id) return x;
@@ -277,10 +277,10 @@ export default function SettingPage(){
 
     // Clamp/reset page when filters/search change
     useEffect(() => {
-        const newTotalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+        const newTotalPages = Math.max(1, Math.ceil(filteredItemsLength / pageSize));
         if (page > newTotalPages) setPage(newTotalPages);
         if (page < 1) setPage(1);
-    }, [search, typeFilter, majorFilter, statusFilter, items]);
+    }, [filteredItemsLength, page]);
 
     // Reset to first page whenever search or filters change
     useEffect(() => {

@@ -17,20 +17,20 @@ const getMostCommentPosts = async () => {
         }`;
 
 
-        let posts = await client.fetch(query);
+        const posts = await client.fetch(query);
 
         // Sort manually in JavaScript
         posts.sort((a:any, b:any) => b.commentCount - a.commentCount);
         const result = [posts[0],posts[1]];
 
         return result;
-    } catch (error) {
-        console.error("Error fetching most commented posts:", error);
+    } catch (_error) {
+        console.error("Error fetching most commented posts:", _error);
         return [];
     }
 };
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         const posts = await getMostCommentPosts();
         return new Response(JSON.stringify(posts), {
@@ -39,7 +39,7 @@ export async function GET(req: Request) {
                 "Content-Type": "application/json",
             },
         });
-    } catch (error) {
+    } catch {
         return new Response(JSON.stringify({ error: "Failed to fetch posts" }), {
             status: 500,
             headers: {

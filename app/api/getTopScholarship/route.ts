@@ -34,7 +34,7 @@ const route = async () => {
 };
 
 // Export GET function for your API endpoint
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         const scholarships = await route();
         return new Response(JSON.stringify(scholarships), {

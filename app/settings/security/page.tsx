@@ -52,7 +52,7 @@ function SessionCard({
   onTerminate,
 }: {
   session: Session;
-  onTerminate: (id: string) => void;
+  onTerminate: (_id: string) => void;
 }) {
   return (
     <section className="bg-white border border-gray-200 rounded-xl shadow-md p-4">

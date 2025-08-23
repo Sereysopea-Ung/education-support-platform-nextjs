@@ -19,7 +19,7 @@ const getAllReport = await client.fetch(`
   } 
 `);
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         const jobs = await getAllReport();
         return new Response(JSON.stringify(jobs), {
@@ -28,7 +28,7 @@ export async function GET(req: Request) {
                 "Content-Type": "application/json",
             },
         });
-    } catch (error) {
+    } catch {
         return new Response(JSON.stringify({ error: "Failed to fetch jobs" }), {
             status: 500,
             headers: {

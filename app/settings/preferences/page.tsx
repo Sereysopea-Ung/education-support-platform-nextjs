@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 const Preferences = () => {
   const [language, setLanguage] = useState("English");
-  const [timezone, setTimezone] = useState("UTC (GMT+0)");
+  const [timezone, _setTimezone] = useState("UTC (GMT+0)");
   const [theme, setTheme] = useState("light");
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {

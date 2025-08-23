@@ -1,14 +1,14 @@
 "use client";
 
-import React, { createContext, useContext } from "react";
+import { createContext, useContext } from "react";
 
 export type PostTab = "NewsFeed" | "All" | "Q&A" | "Lesson" | "Announcement";
 
 export type HomepageFilters = {
   search: string;
-  setSearch: (v: string) => void;
+  setSearch: (_v: string) => void;
   activeTab: PostTab;
-  setActiveTab: (t: PostTab) => void;
+  setActiveTab: (_t: PostTab) => void;
 };
 
 export const HomepageFiltersContext = createContext<HomepageFilters | null>(null);

@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     }
 
     // Base document
-    let doc: any = {
+    const doc: any = {
       _type: category === "announcement" ? "post" : category,
       title,
       typePost:"Announcement",

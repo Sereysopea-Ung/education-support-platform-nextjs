@@ -16,8 +16,8 @@ export default function UsersPage() {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [_loading, setLoading] = useState(true);
+  const [_error, setError] = useState(null);
 
   // Posts tab controls
   const [postSearch, setPostSearch] = useState("");
@@ -262,14 +262,12 @@ export default function UsersPage() {
           <div className="mt-24 mx-8 rounded-t-lg p-6 bg-white shadow-md flex gap-8 border-b border-[#E5E7EB]">
             <div className="min-h-[200px] min-w-[200px] bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden border border-gray-200">
               {user?.profile_pic ? (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={urlFor(user.profile_pic).width(200).height(200).fit('crop').url()}
                   alt="Profile"
                   className="w-full h-full object-cover"
                 />
               ) : (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img src="/Default_pfp.jpg" alt="Profile" className="w-1/2 h-1/2 object-contain opacity-80" />
               )}
             </div>

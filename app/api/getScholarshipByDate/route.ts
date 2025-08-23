@@ -25,13 +25,12 @@ const route = async () => {
         }
 
         return data.slice(0, 2); // Only return if data exists
-    } catch (error) {
-        console.error("Error fetching latest scholarships:", error);
+    } catch {
         return [];
     }
 };
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         const jobs = await route();
         return new Response(JSON.stringify(jobs), {
@@ -40,7 +39,7 @@ export async function GET(req: Request) {
                 "Content-Type": "application/json",
             },
         });
-    } catch (error) {
+    } catch {
         return new Response(JSON.stringify({ error: "Failed to fetch scholarship by date" }), {
             status: 500,
             headers: {

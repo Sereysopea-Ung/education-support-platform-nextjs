@@ -51,7 +51,7 @@ export default function NewsPage() {
         fetchNews()
     }, []);
 
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
 
     if (loading) {
         return <div className="lg:mt-16 lg:ml-54 px-5">Loading news...</div>;
@@ -69,7 +69,11 @@ export default function NewsPage() {
                         <div key={newItem._id} className="flex-col justify-between items-start rounded-xl border shadow-md border-gray-100 w-full mb-4 p-5">
                             <div className="flex w-full gap-2 mb-3">
                                 <div id="profile_picture" className="border-gray-500 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
-                                    <img src={urlFor(newItem?.author.profile_pic).width(50).height(50).fit('crop').url()} className="rounded-full"/>
+                                    <img
+                                      src={urlFor(newItem?.author.profile_pic).width(50).height(50).fit('crop').url()}
+                                      alt={newItem?.author?.username || 'Profile'}
+                                      className="rounded-full"
+                                    />
                                 </div>
                                 <div id="username" className="flex text-lg font-bold">
                                     {newItem?.author.username}

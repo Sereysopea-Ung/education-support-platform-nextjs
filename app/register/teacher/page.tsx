@@ -61,7 +61,7 @@ const RegistrationForm = () => {
         _type: 'user',
     });
 
-    const [usernameError, setUsernameError] = useState('');
+    const [_usernameError, setUsernameError] = useState('');
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [emailFormatError, setEmailFormatError] = useState('');

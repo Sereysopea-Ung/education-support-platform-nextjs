@@ -48,7 +48,7 @@ export async function POST(req: Request) {
     // If there are replies by other users, soft-delete the parent (keep doc, set text to "[deleted]")
     const hasOtherUsers = replies.some((r) => r?.author?._id && r.author._id !== requester._id);
     if (hasOtherUsers) {
-      const patched = await client.patch(commentId).set({ text: '[deleted]' }).commit();
+      const _patched = await client.patch(commentId).set({ text: '[deleted]' }).commit();
       return NextResponse.json({ softDeleted: true, id: commentId });
     }
 

@@ -18,7 +18,7 @@ function urlFor(source: any) {
 export default function QnA() {
     const { data: session } = useSession();
     const [postData, setPostData] = useState<any[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [_error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     // Per-post states
@@ -99,6 +99,7 @@ export default function QnA() {
                                                     <div className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
                                                         <img
                                                             src={urlFor(datum?.author.profile_pic).width(50).height(50).fit('crop').url()}
+                                                            alt={datum?.author?.username || 'Profile'}
                                                             className="rounded-full"
                                                         />
                                                     </div>
@@ -191,6 +192,7 @@ export default function QnA() {
                                             <div className="border-gray-500 border-1 w-1/10 rounded-4xl max-w-10 max-h-10 min-w-10 min-h-10">
                                                 <img
                                                     src={urlFor(datum?.author.profile_pic).width(50).height(50).fit('crop').url()}
+                                                    alt={datum?.author?.username || 'Profile'}
                                                     className="rounded-full"
                                                 />
                                             </div>

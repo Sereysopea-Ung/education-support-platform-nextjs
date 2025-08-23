@@ -1,4 +1,3 @@
-import { reportType } from './../../../sanity/schemaTypes/reportType';
 import { createClient } from '@sanity/client';
 
 const client = createClient({
@@ -36,7 +35,7 @@ const getTypePosts = async () => {
       reportType
     }`;
 
-    let posts = await client.fetch(query);
+    const posts = await client.fetch(query);
     return posts;
   } catch (error) {
     console.error("Error fetching all posts:", error);
@@ -45,7 +44,7 @@ const getTypePosts = async () => {
 };
 
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         const posts = await getTypePosts();
         return new Response(JSON.stringify(posts), {

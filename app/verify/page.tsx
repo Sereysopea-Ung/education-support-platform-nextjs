@@ -1,29 +1,29 @@
 // app/verify/page.tsx
 'use client'
+export const dynamic = 'force-dynamic';
 import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
 
 const VerifyEmail = () => {
     const [message, setMessage] = useState('Verifying token...');
-    const searchParams = useSearchParams();
 
     useEffect(() => {
-        if (searchParams) {
-            const token = searchParams.get('token');
-            const email = searchParams.get('email');
+        // Run only on client
+        if (typeof window === 'undefined') return;
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        const email = params.get('email');
 
-            if (token && email) {
-                fetch(`/api/verify?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`)
-                    .then((res) => res.json())
-                    .then((data) => setMessage(data.message))
-                    .catch(() => setMessage('Error verifying token.'));
-            } else {
-                setMessage('Invalid verification link.');
-            }
+        if (token && email) {
+            fetch(`/api/verify?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`)
+                .then((res) => res.json())
+                .then((data) => setMessage(data.message))
+                .catch(() => setMessage('Error verifying token.'));
+        } else {
+            setMessage('Invalid verification link.');
         }
-    }, [searchParams]);
+    }, []);
 
     return (
         <section id="choose-role" className="bg-blue-200 flex justify-center items-center w-full h-dvh">

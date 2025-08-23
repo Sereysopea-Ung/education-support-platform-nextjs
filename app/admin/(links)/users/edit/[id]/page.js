@@ -13,8 +13,8 @@ export default function EditUserPage(){
     const id = Array.isArray(params?.id) ? params.id[0] : params?.id;
 
     const [selectedCategory, setSelectedCategory] = useState("profile");
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [_loading, setLoading] = useState(true);
+    const [_error, setError] = useState(null);
 
     // Form state
     const [username, setUsername] = useState("");
@@ -23,7 +23,7 @@ export default function EditUserPage(){
     const [bio, setBio] = useState("");
     const [phone, setPhone] = useState("");
     const [profilePic, setProfilePic] = useState(null);
-    const [createdAt, setCreatedAt] = useState("");
+    const [_createdAt, setCreatedAt] = useState("");
 
     // Security state
     const [newPassword, setNewPassword] = useState("");
@@ -120,7 +120,6 @@ export default function EditUserPage(){
                         <div className="mx-8 rounded-t-lg p-6 bg-white shadow-md flex gap-8 border-b border-[#E5E7EB] border-b-[#E5E7EB]">
                             <div className="min-h-[200px] min-w-[200px] bg-gray-200 rounded-lg flex text-[#374151] items-center justify-center overflow-hidden">
                                 {profilePic ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
                                     <img src={urlFor(profilePic)} alt="Profile" className="w-full h-full object-cover" />
                                 ) : (
                                     <div className="text-sm text-gray-500">No Image</div>

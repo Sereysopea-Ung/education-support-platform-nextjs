@@ -41,7 +41,7 @@ export async function GET(req: Request) {
         const posts = await client.fetch(query, { userId: user._id });
 
         return NextResponse.json(posts, { status: 200 });
-    } catch (error) {
+    } catch {
         return NextResponse.json({ error: "Error fetching posts" }, { status: 500 });
     }
 }

@@ -17,16 +17,16 @@ const getAllJobs = async () => {
             _createdAt,
             typeofjob
         }`;
-        let data = await client.fetch(query);
+        const data = await client.fetch(query);
 
         return data;
-    } catch (error) {
-        console.error("Error fetching latest jobs:", error);
+    } catch (_error) {
+        console.error("Error fetching latest jobs:", _error);
         return []; // Return an empty array or handle as needed
     }
 };
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         const jobs = await getAllJobs();
         return new Response(JSON.stringify(jobs), {
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
                 "Content-Type": "application/json",
             },
         });
-    } catch (error) {
+    } catch {
         return new Response(JSON.stringify({ error: "Failed to fetch jobs" }), {
             status: 500,
             headers: {

@@ -3,7 +3,7 @@ import { createContext, useState, useContext, ReactNode } from "react";
 
 type SearchContextType = {
   searchTerm: string;
-  setSearchTerm: (term: string) => void;
+  setSearchTerm: (_term: string) => void;
 };
 
 const SearchContext = createContext<SearchContextType>({

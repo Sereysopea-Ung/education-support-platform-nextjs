@@ -33,7 +33,7 @@ const getMostUpvotePosts = async () => {
     }
 }
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         const posts = await getMostUpvotePosts();
         return new Response(JSON.stringify(posts), { status: 200 });

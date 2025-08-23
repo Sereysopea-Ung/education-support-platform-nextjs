@@ -67,6 +67,32 @@ function Icon({ name, className, ...rest }) {
   return C ? <C className={className} {...rest} /> : null;
 }
 
+// Minimal profile info card used in the left sidebar
+function ProfileInfo({ items, propertyNames = {} }) {
+  const { label = "name", course = "course", year = "year" } = propertyNames;
+  const name = items?.[label] ?? items?.name ?? "User";
+  const courseVal = items?.[course] ?? items?.course ?? "";
+  const yearVal = items?.[year] ?? items?.year ?? "";
+  const img = items?.img || "/Default_pfp.jpg";
+
+  return (
+    <div className="p-4">
+      <div className="flex items-center gap-3 p-4">
+        <img
+          src={img}
+          alt={name}
+          className="h-20 w-20 rounded-full object-cover ring-2 ring-white"
+        />
+        <div>
+          <div className="text-xl font-semibold">{name}</div>
+          {courseVal && <div className="text-slate-600">{courseVal}</div>}
+          {yearVal && <div className="text-slate-600">{yearVal}</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const TABS = ["All Posts", "Q&A", "Lesson", "Collections"];
 const SORTS = ["Popular", "Oldest", "Recently"];
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState , useEffect, useRef } from "react";
+import { useState , useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
@@ -9,7 +9,6 @@ import imageUrlBuilder from '@sanity/image-url';
 import { createClient } from '@sanity/client';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleUp, faCircleDown, faComment } from "@fortawesome/free-solid-svg-icons";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import CreatePostForm from "../../../components/CreatePostForm";
 import { useHomepageFilters } from '@/components/homepageFilters';
 
@@ -25,7 +24,7 @@ function urlFor(source: any) {
   return builder.image(source);
 }
 
-export default function HomePage() {
+function HomePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const handleClickedMyNetwork = () => {
@@ -88,9 +87,7 @@ export default function HomePage() {
     const userEmail = session?.user?.email || null;
     const [postData, setPostData] = useState<any[]>([]);
     const { search, activeTab } = useHomepageFilters();
-    const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
-    const [imageIndexes, setImageIndexes] = useState<Record<string, number>>({});
-    const [canExpand, setCanExpand] = useState<Record<string, boolean>>({});
+    const [expandedItems, _setExpandedItems] = useState<Record<string, boolean>>({});
     const contentRefs = useRef<Record<string, HTMLParagraphElement | null>>({});
     // Three-dots (post menu) state and refs per item
     const [openMenuById, setOpenMenuById] = useState<Record<string, boolean>>({});
@@ -120,11 +117,12 @@ export default function HomePage() {
     ];
     // Report modal (inline)
     const [reportModal, setReportModal] = useState<{ open: boolean; postId: string | null; reason: string; description: string; loading: boolean; error: string; success: boolean }>({ open: false, postId: null, reason: '', description: '', loading: false, error: '', success: false });
-
-    if(!session){
-      router.push('/');
-      return;
-    }
+    // Redirect unauthenticated users without breaking hooks order
+    useEffect(() => {
+      if (!session) {
+        router.push('/');
+      }
+    }, [session]);
     useEffect(() => {
       async function fetchData() {
         try {
@@ -175,9 +173,7 @@ export default function HomePage() {
       return true;
     });
 
-    const toggleText = (id: string) => {
-      setExpandedItems((prev) => ({ ...prev, [id]: !prev[id] }));
-    };
+    
 
     const openEditPost = (p: any) => {
       setOpenMenuById({});
@@ -347,7 +343,7 @@ export default function HomePage() {
     // Close open menus on outside click
     useEffect(() => {
       const onDocClick = (e: MouseEvent) => {
-        const anyOpen = Object.entries(openMenuById).some(([id, open]) => open);
+        const anyOpen = Object.entries(openMenuById).some(([, open]) => open);
         if (!anyOpen) return;
         const target = e.target as Node;
         const clickedInsideAny = Object.values(menuRefs.current).some((refEl) => refEl && refEl.contains(target));
@@ -378,6 +374,11 @@ export default function HomePage() {
       }
     };
 
+    // Safe guard: render nothing while redirecting unauthenticated users
+    if (!session) {
+      return <div className="ml-8 mt-5" />;
+    }
+
     return (
       <div className="ml-8 mt-5">
 
@@ -403,6 +404,7 @@ export default function HomePage() {
                             ? urlFor(datum.author.profile_pic).width(50).height(50).fit("crop").url()
                             : "/Default_pfp.jpg")
                         }
+                        alt={datum?.author?.username ? `${datum.author.username} profile picture` : "User profile"}
                         className="rounded-full"
                       />
                     </div>
@@ -547,8 +549,7 @@ export default function HomePage() {
                           : {
                               display: "-webkit-box",
                               WebkitLineClamp: 3,
-                              // @ts-ignore
-                              WebkitBoxOrient: "vertical",
+                              WebkitBoxOrient: "vertical" as any,
                               overflow: "hidden",
                             }
                       }
@@ -557,14 +558,6 @@ export default function HomePage() {
                     </p>
                   </div>
                 </div>
-
-                {canExpand[datum._id] && (
-                  <div>
-                    <button onClick={() => toggleText(datum._id)} className="text-blue-500 mt-2 text-sm cursor-pointer w-1/5">
-                      {expandedItems[datum._id] ? "Show less" : "See more"}
-                    </button>
-                  </div>
-                )}
 
                 {/* Actions */}
                 <div className="w-full pr-15 mt-3 flex gap-5 ml-10">
@@ -815,14 +808,14 @@ export default function HomePage() {
         })();
       }, [excludeId]);
 
-      // Initialize my following list once userId is known
+      // Initialize my following list once current user id is known (from prop excludeId)
       useEffect(() => {
         (async () => {
-          if (!userId) return;
+          if (!excludeId) return;
           try {
             const me = await client.fetch(
               `*[_type == "user" && _id == $id][0]{ following }`,
-              { id: userId }
+              { id: excludeId }
             );
             const followingArr = Array.isArray(me?.following) ? me.following : [];
             setMyFollowing(followingArr);
@@ -832,7 +825,7 @@ export default function HomePage() {
             setMyFollowingReady(true); // prevent fallback loops
           }
         })();
-      }, [userId]);
+      }, [excludeId]);
 
       const resolveUserAvatar = (user: any) => {
         const pic = user?.profile_pic;
@@ -845,7 +838,7 @@ export default function HomePage() {
       };
   
       const handleFollow = async (targetId: string) => {
-        if (!userId || !targetId) return;
+        if (!excludeId || !targetId) return;
         // Prevent duplicate clicks
         setBusy(prev => ({ ...prev, [targetId]: true }));
         try {
@@ -859,8 +852,8 @@ export default function HomePage() {
           setUsers(prev => prev.map(u => {
             if (u._id === targetId) {
               const prevFollowers = Array.isArray(u.followers) ? u.followers : [];
-              if (!prevFollowers.includes(userId)) {
-                return { ...u, followers: [...prevFollowers, userId] };
+              if (!prevFollowers.includes(excludeId)) {
+                return { ...u, followers: [...prevFollowers, excludeId] };
               }
             }
             return u;
@@ -874,7 +867,7 @@ export default function HomePage() {
       };
 
       const handleUnfollow = async (targetId: string) => {
-        if (!userId || !targetId) return;
+        if (!excludeId || !targetId) return;
         setBusy(prev => ({ ...prev, [targetId]: true }));
         try {
           const res = await fetch('/api/unfollow', {
@@ -887,8 +880,8 @@ export default function HomePage() {
           setUsers(prev => prev.map(u => {
             if (u._id === targetId) {
               const prevFollowers = Array.isArray(u.followers) ? u.followers : [];
-              if (prevFollowers.includes(userId)) {
-                return { ...u, followers: prevFollowers.filter((fid: string) => fid !== userId) };
+              if (prevFollowers.includes(excludeId)) {
+                return { ...u, followers: prevFollowers.filter((fid: string) => fid !== excludeId) };
               }
             }
             return u;
@@ -924,13 +917,13 @@ export default function HomePage() {
                 </div>
                 {(() => {
                   // If myFollowing is ready, rely on it only; otherwise fall back to followers on each user
-                  const alreadyFollowing = !!userId && (
+                  const alreadyFollowing = !!excludeId && (
                     (myFollowingReady ? myFollowing.includes(u._id) : false) ||
-                    (!myFollowingReady && Array.isArray(u?.followers) && u.followers.includes(userId))
+                    (!myFollowingReady && Array.isArray(u?.followers) && u.followers.includes(excludeId))
                   );
                   const isBusy = !!busy[u._id];
                   const handleClick = () => {
-                    if (!userId || isBusy) return;
+                    if (!excludeId || isBusy) return;
                     if (alreadyFollowing) return handleUnfollow(u._id);
                     return handleFollow(u._id);
                   };
@@ -946,7 +939,7 @@ export default function HomePage() {
                     <button
                       type="button"
                       onClick={handleClick}
-                      disabled={!userId || isBusy}
+                      disabled={!excludeId || isBusy}
                       className={className}
                     >
                       {label}
@@ -988,7 +981,7 @@ export default function HomePage() {
       })();
     }, []);
     // Resolve an avatar/logo for opportunity items (supports URL string or Sanity image object)
-    const resolveOppAvatar = (opp: any) => {
+    const _resolveOppAvatar = (opp: any) => {
       const candidate = opp?.companyLogo || opp?.logo || opp?.author?.profile_pic || null;
       if (!candidate) return "/Default_pfp.jpg";
       if (typeof candidate === "string") return candidate;
@@ -1048,19 +1041,15 @@ export default function HomePage() {
 
           // 1) Remove clamp to measure full content height
           el.style.removeProperty("display");
-          // @ts-ignore
           el.style.removeProperty("WebkitLineClamp");
-          // @ts-ignore
           el.style.removeProperty("WebkitBoxOrient");
           el.style.removeProperty("overflow");
           const fullHeight = el.scrollHeight;
 
           // 2) Apply clamp styles to measure clamped height
           el.style.display = "-webkit-box";
-          // @ts-ignore
-          el.style.WebkitLineClamp = "5";
-          // @ts-ignore
-          el.style.WebkitBoxOrient = "vertical";
+          el.style.setProperty("WebkitLineClamp", "5");
+          el.style.setProperty("WebkitBoxOrient", "vertical");
           el.style.overflow = "hidden";
           const clampedHeight = el.clientHeight;
 
@@ -1360,6 +1349,13 @@ export default function HomePage() {
         )}
 
       </section>
-    
+  );
+}
+
+export default function HomePage() {
+  return (
+    <Suspense fallback={null}>
+      <HomePageContent />
+    </Suspense>
   );
 }

@@ -62,7 +62,7 @@ export default function LandingPage() {
 
     //SOPEA CODE DON'T TOUCH
     const [posts, setPosts] = useState<any[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [_error, setError] = useState<string | null>(null);
     const [postsByComment, setPostsByComment] = useState<any[]>([]);
     const [lessons,setLessons] = useState<any[]>([]);
     const [latestJobs,setLatestJobs] = useState<any[]>([]);

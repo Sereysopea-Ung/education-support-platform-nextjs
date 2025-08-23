@@ -40,10 +40,10 @@ function urlFor(source:any) {
 
 export default function Profile() {
     const [isOpen, setIsOpen] = useState(false);  // State to track if filter is open or not
-    const [selectedFilter, setSelectedFilter] = useState(""); // State to track selected filter option
+    const [_selectedFilter, setSelectedFilter] = useState(""); // State to track selected filter option
     const [user, setUser] = useState<User | null>(null)
-    const { data: session, status } = useSession();
-    const [error, setError] = useState<string | null>(null);
+    const { data: session, status: _status } = useSession();
+    const [_error, setError] = useState<string | null>(null);
     const userEmail = session?.user?.email || null;
 
     const handleToggle = () => {
@@ -122,7 +122,7 @@ export default function Profile() {
         }));
     };
 
-    const [postData, setPostData] = useState<any[]>([]);
+    const [_postData, setPostData] = useState<any[]>([]);
 
     const handleVote = async (postId: string, action: "upvote" | "downvote") => {
         if (!userEmail) {

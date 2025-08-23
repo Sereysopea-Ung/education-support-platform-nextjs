@@ -4,8 +4,6 @@ import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import RequirementsInput from "@/components/RequirementsInput";
-import BenefitsInput from "@/components/BenefitsInput";
 
 export default function AnnouncementPage() {
   const { data: session } = useSession();

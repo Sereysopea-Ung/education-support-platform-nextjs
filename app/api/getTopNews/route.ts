@@ -18,7 +18,7 @@ const getAllPosts = async () => {
             author->{profile_pic, username}
         }`;
 
-        let posts = await client.fetch(query);
+        const posts = await client.fetch(query);
 
         return posts;
     } catch (error) {
@@ -27,7 +27,7 @@ const getAllPosts = async () => {
     }
 };
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         const posts = await getAllPosts();
         return new Response(JSON.stringify(posts), {

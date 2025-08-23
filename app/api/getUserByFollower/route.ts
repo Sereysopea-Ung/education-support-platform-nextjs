@@ -45,7 +45,7 @@ const getTopUsersByFollowers = async (excludeId?: string) => {
     }
 };
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         // Resolve session and current user's Sanity _id
         const session = await getServerSession(authOptions);

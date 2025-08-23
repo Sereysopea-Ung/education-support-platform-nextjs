@@ -22,7 +22,7 @@ const getQnAPosts = async () => {
             author->{profile_pic, role, year, major, experience, username, department}
         }`;
 
-        let posts = await client.fetch(query);
+        const posts = await client.fetch(query);
 
         return posts;
     } catch (error) {
@@ -31,7 +31,7 @@ const getQnAPosts = async () => {
     }
 };
 
-export async function GET(req: Request) {
+export async function GET(_req: Request) {
     try {
         const posts = await getQnAPosts();
         return new Response(JSON.stringify(posts), {

@@ -27,7 +27,7 @@ export default function ScholarshipsPage() {
         fetchAllScholarships();
     }, []);
 
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
 
     if (loading) {
         return <div className="lg:mt-16 lg:ml-54 px-5">Loading scholarships...</div>;

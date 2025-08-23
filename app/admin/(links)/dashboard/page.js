@@ -35,7 +35,7 @@ export default function Dashboard() {
   const [totalReports, setTotalReports] = useState(0);
   const [newUsers, setNewUsers] = useState(0);
   const [activityType, setActivityType] = useState("All Activities");
-  const [error, setError] = useState(null);
+  const [_error, setError] = useState(null);
   const [fetchAllPosts, setFetchAllPosts] = useState([]);
 
 
