@@ -111,7 +111,7 @@ export default function SecuritySessions() {
   const count = useMemo(() => sessions.length, [sessions]);
 
   return (
-    <div className="grid grid-cols-12 h-full w-full overflow-x-hidden">
+    <div className="grid grid-cols-12 h-full w-full overflow-x-hidden bg-white">
       <div className="bg-white p-4 col-span-9 col-start-4 text-gray-500">
 
         <div className="flex justify-between items-center mb-10">
