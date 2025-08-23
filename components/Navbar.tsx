@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { doLogout } from "@/pages/api/auth/loginAndLogout";
 import { createClient } from "@sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -58,7 +58,7 @@ const Navbar = () => {
     }, [session?.user?.email]);
 
     // Fetch notifications (recent posts by followings)
-    const fetchNotifications = async () => {
+    const fetchNotifications = useCallback(async () => {
         try {
             const following = Array.isArray(user?.following) ? user!.following! : [];
             if (!user?._id || following.length === 0) {
@@ -79,7 +79,7 @@ const Navbar = () => {
         } catch (e) {
             console.error('Failed to fetch notifications:', e);
         }
-    };
+    }, [user]);
 
     useEffect(() => {
         fetchNotifications();
@@ -92,7 +92,7 @@ const Navbar = () => {
             window.removeEventListener('focus', onFocus);
             document.removeEventListener('visibilitychange', onVisibility);
         };
-    }, [user?._id, JSON.stringify(user?.following)]);
+    }, [fetchNotifications]);
 
     // Close dropdown when clicking outside
     useEffect(() => {

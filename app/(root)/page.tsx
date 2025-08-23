@@ -9,7 +9,7 @@ import {useEffect, useState} from "react";
 import imageUrlBuilder from '@sanity/image-url';
 import {createClient} from "@sanity/client";
 import { useRouter } from 'next/navigation' // <-- FIXED IMPORT
-
+ 
 const client = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
     dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,

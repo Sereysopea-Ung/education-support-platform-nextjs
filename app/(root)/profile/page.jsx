@@ -1,6 +1,5 @@
 "use client";
 import { useMemo, useState } from "react";
-import ProfileInfo from "../homepage/profile";
 import { useRouter } from "next/navigation";
 
 const ICONS = {

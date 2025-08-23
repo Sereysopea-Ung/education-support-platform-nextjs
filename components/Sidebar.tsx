@@ -39,7 +39,7 @@ const Sidebar = () => {
     const { data: session } = useSession();
     const [user, setUser] = useState<User | null>(null);
     const [error, setError] = useState<string | null>(null);
-
+ 
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -62,6 +62,11 @@ const Sidebar = () => {
 
     return (
         <div>
+            {error && (
+                <div className="mx-5 my-3 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                    {error}
+                </div>
+            )}
             {/* Mobile Sidebar */}
             <div className="lg:hidden flex flex-col md:px-5 md:w-8/12 border-black mt-20 w-full mb-5">
                 <div className="top-0 bg-white w-full border-[#E5E7EB] border rounded-lg flex">

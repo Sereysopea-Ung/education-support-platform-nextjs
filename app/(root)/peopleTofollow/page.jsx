@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default function PeopleToFollowPage({tittle}, items = {}) {
+export default function PeopleToFollowPage() {
 
   const mockData = [ 
     {

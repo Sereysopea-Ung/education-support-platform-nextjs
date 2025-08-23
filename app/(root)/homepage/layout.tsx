@@ -8,6 +8,7 @@ import { HomepageFiltersContext, PostTab } from '@/components/homepageFilters';
 import { useSession } from 'next-auth/react';
 import client from '@/sanity/lib/client';
 import imageUrlBuilder from '@sanity/image-url';
+import { useCallback } from 'react';
 
 export default function HomepageLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
@@ -83,7 +84,7 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
   }, [session?.user?.email]);
 
   // Fetch notifications from followings
-  const fetchNotifications = async () => {
+  const fetchNotifications = useCallback(async () => {
     try {
       const following = Array.isArray(user?.following) ? user.following : [];
       if (!user?._id || following.length === 0) {
@@ -105,7 +106,7 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
     } catch (e) {
       console.error('Failed to fetch notifications', e);
     }
-  };
+  }, [user?._id, user?.following]);
 
   useEffect(() => {
     fetchNotifications();
@@ -117,7 +118,7 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
       window.removeEventListener('focus', onFocus);
       document.removeEventListener('visibilitychange', onVisibility);
     };
-  }, [user?._id, JSON.stringify(user?.following)]);
+  }, [fetchNotifications]);
 
   // Close dropdown on outside click
   useEffect(() => {
