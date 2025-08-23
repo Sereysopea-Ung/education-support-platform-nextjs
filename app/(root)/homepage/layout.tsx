@@ -37,6 +37,29 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
     }
   };
 
+  // Seen notifications helpers (persisted in localStorage)
+  const getSeenSet = (): Set<string> => {
+    if (typeof window === 'undefined') return new Set();
+    try {
+      const raw = localStorage.getItem('notif_seen_ids');
+      const arr = raw ? JSON.parse(raw) : [];
+      return new Set(Array.isArray(arr) ? arr : []);
+    } catch {
+      return new Set();
+    }
+  };
+
+  const addSeenId = (id: string) => {
+    if (typeof window === 'undefined' || !id) return;
+    try {
+      const set = getSeenSet();
+      if (!set.has(id)) {
+        set.add(id);
+        localStorage.setItem('notif_seen_ids', JSON.stringify(Array.from(set)));
+      }
+    } catch {}
+  };
+
   // Lock page scroll when feedback modal is open
   useEffect(() => {
     if (showFeedback) {
@@ -72,10 +95,12 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
         `*[_type == "post" && defined(author._ref) && author._ref in $following] | order(_createdAt desc)[0...10]{ _id, pitch, _createdAt, author->{ username, profile_pic, profile_pic_from_cloudinary } }`,
         { following }
       );
-      setNotifications(Array.isArray(posts) ? posts : []);
+      const seen = getSeenSet();
+      const filtered = (Array.isArray(posts) ? posts : []).filter((p: any) => !seen.has(p?._id));
+      setNotifications(filtered);
       const lastSeenStr = typeof window !== 'undefined' ? localStorage.getItem('notif_last_seen') : null;
       const lastSeen = lastSeenStr ? new Date(lastSeenStr).getTime() : 0;
-      const anyNew = (posts || []).some((p: any) => new Date(p?._createdAt || 0).getTime() > lastSeen);
+      const anyNew = (filtered || []).some((p: any) => new Date(p?._createdAt || 0).getTime() > lastSeen);
       setHasUnread(anyNew);
     } catch (e) {
       console.error('Failed to fetch notifications', e);
@@ -111,7 +136,7 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
     <section className="min-h-screen bg-gray-100">
       {/* Unified Top Navbar */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 text-gray-900">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
+        <div className="w-full">
           <div className="h-16 flex items-center gap-4">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
@@ -185,7 +210,12 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
                               <Link
                                 href={`/post/${n._id}`}
                                 className="flex items-start gap-3 px-4 py-3 hover:bg-gray-50"
-                                onClick={() => setNotifOpen(false)}
+                                onClick={() => {
+                                  // Mark as seen and remove from list on first click
+                                  addSeenId(n._id);
+                                  setNotifications((prev) => prev.filter((x) => x._id !== n._id));
+                                  setNotifOpen(false);
+                                }}
                               >
                                 <img
                                   src={n.author?.profile_pic_from_cloudinary
@@ -237,7 +267,7 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
 
       {/* Page content wrapped with filters context */}
       <HomepageFiltersContext.Provider value={{ search: query, setSearch: setQuery, activeTab, setActiveTab }}>
-        <div className="w-full px-4 sm:px-6 lg:px-8 py-4">
+        <div className="w-full">
           {children}
         </div>
       </HomepageFiltersContext.Provider>

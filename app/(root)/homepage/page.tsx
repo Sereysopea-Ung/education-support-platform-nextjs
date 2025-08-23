@@ -1147,7 +1147,7 @@ export default function HomePage() {
         <section>
           <div className="flex-12 h-full w-full grid grid-cols-1 lg:grid-cols-12 bg-gray-100 text-gray-900">
             {/* left-sidebar */}
-            <div className="w-screen ">
+            <div className="col-span-12">
               <div className="flex top-20 bg-gray-100">
                 
                 <div className="fixed w-2/12 mt-5 rounded-2xl shadow-2xs bg-white">
