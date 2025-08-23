@@ -21,7 +21,7 @@ export default function SaveChange() {
                 disabled={isSaved} 
                 >
                 {isSaved ? "Saved..." : "Save Changes"}
-            </button>            
+            </button>
         </div>
     );
 }

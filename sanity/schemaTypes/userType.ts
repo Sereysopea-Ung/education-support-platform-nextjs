@@ -59,6 +59,11 @@ export const userType = defineType({
       of: [{ type: 'string' }]
     }),
     defineField({
+      name: 'following',
+      type: 'array',
+      of: [{ type: 'string' }]
+    }),
+    defineField({
       name: 'role',
       type: 'string'
     }),
