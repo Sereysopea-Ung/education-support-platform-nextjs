@@ -11,18 +11,21 @@ const client = createClient({
 });
 
 export async function POST(req: NextRequest) {
-  try {
+  try { 
     const session = await getServerSession(authOptions);
     const email = session?.user?.email as string | undefined;
     if (!email) return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
 
-    const { feedbackText, rating } = await req.json();
+    const { feedbackText, rating, typefeed } = await req.json();
     if (!feedbackText || typeof feedbackText !== 'string') {
       return new Response(JSON.stringify({ error: 'feedbackText is required' }), { status: 400 });
     }
     const ratingNum = Number(rating);
     if (!ratingNum || ratingNum < 1 || ratingNum > 5) {
       return new Response(JSON.stringify({ error: 'rating must be 1-5' }), { status: 400 });
+    }
+    if (typefeed !== 'feature' && typefeed !== 'bug_report') {
+      return new Response(JSON.stringify({ error: 'typefeed must be "feature" or "bug_report"' }), { status: 400 });
     }
 
     // resolve user id
@@ -37,6 +40,8 @@ export async function POST(req: NextRequest) {
       author: { _type: 'reference', _ref: me._id },
       feedbackText,
       rating: ratingNum,
+      status: 'new' as const,
+      typefeed,
       createdAt: new Date().toISOString(),
     };
 

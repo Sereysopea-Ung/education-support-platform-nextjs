@@ -12,7 +12,7 @@ export const feedbackType = defineType({
       to: [{ type: 'user' }],
       validation: (Rule) => Rule.required(),
     }),
-    defineField({
+    defineField({ 
       name: 'feedbackText',
       title: 'Feedback Text',
       type: 'text',
@@ -25,6 +25,34 @@ export const feedbackType = defineType({
       type: 'number',
       validation: (Rule) => Rule.required().min(1).max(5),
       options: { layout: 'radio', list: [1,2,3,4,5] },
+    }),
+    defineField({
+      name: 'typefeed',
+      title: 'Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Feature', value: 'feature' },
+          { title: 'Bug Report', value: 'bug_report' },
+        ],
+        layout: 'radio',
+      },
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'status',
+      title: 'Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'New', value: 'new' },
+          { title: 'In Progress', value: 'in_progress' },
+          { title: 'Resolved', value: 'resolved' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'new',
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: 'createdAt',

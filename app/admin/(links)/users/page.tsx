@@ -53,12 +53,23 @@ export default function UsersPage() {
           role,
           status,
           profile_pic,
-          lastActive
-        } | order(lastActive desc)
+          "lastActive": coalesce(lastActive, _updatedAt, _createdAt),
+          _updatedAt,
+          _createdAt
+        }
       `);
 
-        // Ensure it's always an array
-        setUsers(Array.isArray(data) ? data : []);
+        // Normalize: ensure array, compute most recent time among lastActive, _updatedAt, _createdAt; sort desc
+        const arr = Array.isArray(data) ? data : [];
+        const toMillis = (v: any) => {
+          const t = v ? new Date(v).getTime() : NaN;
+          return isNaN(t) ? 0 : t;
+        };
+        const normalized = arr.map((u: any) => {
+          const most = Math.max(toMillis(u.lastActive), toMillis(u._updatedAt), toMillis(u._createdAt));
+          return { ...u, lastActive: most ? new Date(most).toISOString() : u.lastActive };
+        }).sort((a: any, b: any) => toMillis(b.lastActive) - toMillis(a.lastActive));
+        setUsers(normalized);
       } catch (error) {
         console.error("Error fetching users:", error);
         setUsers([]); // fallback to empty array
@@ -67,6 +78,17 @@ export default function UsersPage() {
     fetchUsers();
   }, []);
 
+  const computeStatus = (u: User) => {
+    const explicit = (u.status || '').toLowerCase();
+    if (explicit === 'banned') return 'Banned';
+    // Derive from lastActive: < 1 week => Active, else Inactive
+    if (!u.lastActive) return 'Inactive';
+    const last = new Date(u.lastActive).getTime();
+    if (isNaN(last)) return 'Inactive';
+    const oneWeekMs = 7 * 24 * 60 * 60 * 1000;
+    return (Date.now() - last) <= oneWeekMs ? 'Active' : 'Inactive';
+  };
+
   // Filtering
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
@@ -74,9 +96,9 @@ export default function UsersPage() {
       user.email?.toLowerCase().includes(search.toLowerCase());
     const matchesRole =
       roleFilter === "All" || user.role?.toLowerCase() === roleFilter.toLowerCase();
+    const derived = computeStatus(user).toLowerCase();
     const matchesStatus =
-      statusFilter === "Allstat" ||
-      user.status?.toLowerCase() === statusFilter.toLowerCase();
+      statusFilter === "Allstat" || derived === statusFilter.toLowerCase();
     return matchesSearch && matchesRole && matchesStatus;
   });
 
@@ -150,6 +172,7 @@ export default function UsersPage() {
                 <option value="Allstat">All Status</option>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
+                <option value="Banned">Banned</option>
               </select>
               <div className="pointer-events-none absolute inset-y-0 right-3 flex items-center">
                 <TbTriangleInverted className="text-gray-700 w-4 h-4" />
@@ -208,16 +231,19 @@ export default function UsersPage() {
                   </div>
                 </div>
                 <div className="col-start-7 col-span-1 flex items-center">
-                  <div className={`p-1 rounded-lg border
-                     ${user.status?.toLowerCase() === "active"
-                      ? "bg-green-100 text-green-800"
-                      : user.status?.toLowerCase() === "inactive"
-                      ? "bg-red-100 text-red-800"
-                      : "bg-transparent border-none p-0"
-                    }`}
-                  >
-                  {user.status}
-                  </div>
+                  {(() => {
+                    const s = computeStatus(user);
+                    const lower = s.toLowerCase();
+                    let cls = 'bg-transparent border-none p-0';
+                    if (lower === 'active') cls = 'bg-green-100 text-green-800';
+                    else if (lower === 'inactive') cls = 'bg-yellow-100 text-yellow-800';
+                    else if (lower === 'banned') cls = 'bg-red-100 text-red-800';
+                    return (
+                      <div className={`p-1 rounded-lg border ${cls}`}>
+                        {s}
+                      </div>
+                    );
+                  })()}
                 </div>
                 <div className="col-start-8 col-span-1 flex items-center">
                   {user.lastActive

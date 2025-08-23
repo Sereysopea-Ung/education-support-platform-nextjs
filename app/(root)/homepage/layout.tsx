@@ -13,6 +13,7 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedbackText, setFeedbackText] = useState("");
   const [rating, setRating] = useState<number>(5);
+  const [typefeed, setTypefeed] = useState<'feature' | 'bug_report'>('feature');
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -126,6 +127,25 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
                   </div>
                 </div>
                 <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Type</label>
+                  <div className="flex gap-2">
+                    {[
+                      { title: 'Feature', value: 'feature' as const },
+                      { title: 'Bug Report', value: 'bug_report' as const },
+                    ].map((opt) => (
+                      <button
+                        key={opt.value}
+                        type="button"
+                        onClick={() => setTypefeed(opt.value)}
+                        className={`px-3 py-1 rounded border ${typefeed === opt.value ? 'bg-blue-600 text-white border-[#0092C6]' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}`}
+                        disabled={submitting}
+                      >
+                        {opt.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
                   <label htmlFor="feedback" className="block text-sm font-medium text-gray-700 mb-1">Feedback</label>
                   <textarea
                     id="feedback"
@@ -167,7 +187,7 @@ export default function HomepageLayout({ children }: { children: React.ReactNode
                         const res = await fetch('/api/feedback', {
                           method: 'POST',
                           headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ feedbackText, rating })
+                          body: JSON.stringify({ feedbackText, rating, typefeed })
                         });
                         if (!res.ok) {
                           const data = await res.json().catch(() => ({}));

@@ -19,7 +19,7 @@ export const reportType = defineType({
           { title: 'Inappropriate Content', value: 'inappropriate' },
           { title: 'Copyright Violation', value: 'copyright' },
           { title: 'Other', value: 'other' },
-        ],
+        ], 
         layout: 'radio'
       },
       validation: (Rule) => Rule.required(),

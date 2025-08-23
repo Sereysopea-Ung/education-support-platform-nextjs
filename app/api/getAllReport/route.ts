@@ -16,7 +16,7 @@ const getAllReport = await client.fetch(`
       email
     },
     _createdAt
-  }
+  } 
 `);
 
 export async function GET(req: Request) {
